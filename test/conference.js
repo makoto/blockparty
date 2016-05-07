@@ -1,30 +1,32 @@
 contract('Event', function(accounts) {
-  it('shold have name', function(done){
-    var meta = Conference.deployed();
-    meta.name.call().then(function(name) {
-      assert.equal(name, 'CodeUp');
-    }).then(done).catch(done);
-  })
+  describe('on creation', function(){
+    it('shold have name', function(done){
+      var meta = Conference.deployed();
+      meta.name.call().then(function(name) {
+        assert.equal(name, 'CodeUp');
+      }).then(done).catch(done);
+    })
 
-  it('shold have registered', function(done){
-    var meta = Conference.deployed();
-    meta.registered.call().then(function(value) {
-      assert.equal(value, 0);
-    }).then(done).catch(done);
-  })
+    it('shold have registered', function(done){
+      var meta = Conference.deployed();
+      meta.registered.call().then(function(value) {
+        assert.equal(value, 0);
+      }).then(done).catch(done);
+    })
 
-  it('shold have attended', function(done){
-    var meta = Conference.deployed();
-    meta.attended.call().then(function(value) {
-      assert.equal(value, 0);
-    }).then(done).catch(done);
-  })
+    it('shold have attended', function(done){
+      var meta = Conference.deployed();
+      meta.attended.call().then(function(value) {
+        assert.equal(value, 0);
+      }).then(done).catch(done);
+    })
 
-  it('shold have balance', function(done){
-    var meta = Conference.deployed();
-    meta.balance.call().then(function(value) {
-      assert.equal(value, 0);
-    }).then(done).catch(done);
+    it('shold have balance', function(done){
+      var meta = Conference.deployed();
+      meta.balance.call().then(function(value) {
+        assert.equal(value, 0);
+      }).then(done).catch(done);
+    })
   })
 
   it("should put 10000 Conference in the first account", function(done) {
