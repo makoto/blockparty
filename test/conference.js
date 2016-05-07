@@ -29,6 +29,26 @@ contract('Event', function(accounts) {
     })
   })
 
+  describe('on registration', function(){
+    it('shold increment registered', function(done){
+      var meta = Conference.deployed();
+      meta.register.sendTransaction().then(function() {
+        meta.registered.call().then(function(value){
+          assert.equal(value, 1);
+        })
+      }).then(done).catch(done);
+    })
+
+    it('shold increase balance', function(done){
+      var meta = Conference.deployed();
+      meta.register.sendTransaction().then(function() {
+        meta.balance.call().then(function(value){
+          assert.equal(value, 1);
+        })
+      }).then(done).catch(done);
+    })
+  })
+
   it("should put 10000 Conference in the first account", function(done) {
     var meta = Conference.deployed();
 
