@@ -5,10 +5,10 @@ import "ConvertLib.sol";
 // coin/token contracts. If you want to create a standards-compliant
 // token, see: https://github.com/ConsenSys/Tokens. Cheers!
 
-contract MetaCoin {
+contract Conference {
 	mapping (address => uint) balances;
 
-	function MetaCoin() {
+	function Conference() {
 		balances[tx.origin] = 10000;
 	}
 
