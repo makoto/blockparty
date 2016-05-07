@@ -1,6 +1,35 @@
-contract('Conference', function(accounts) {
+contract('Event', function(accounts) {
+  it('shold have name', function(done){
+    var meta = Conference.deployed();
+    meta.name.call().then(function(name) {
+      assert.equal(name, 'CodeUp');
+    }).then(done).catch(done);
+  })
+
+  it('shold have registered', function(done){
+    var meta = Conference.deployed();
+    meta.registered.call().then(function(value) {
+      assert.equal(value, 0);
+    }).then(done).catch(done);
+  })
+
+  it('shold have attended', function(done){
+    var meta = Conference.deployed();
+    meta.attended.call().then(function(value) {
+      assert.equal(value, 0);
+    }).then(done).catch(done);
+  })
+
+  it('shold have balance', function(done){
+    var meta = Conference.deployed();
+    meta.balance.call().then(function(value) {
+      assert.equal(value, 0);
+    }).then(done).catch(done);
+  })
+
   it("should put 10000 Conference in the first account", function(done) {
     var meta = Conference.deployed();
+
 
     meta.getBalance.call(accounts[0]).then(function(balance) {
       assert.equal(balance.valueOf(), 10000, "10000 wasn't in the first account");
@@ -16,10 +45,10 @@ contract('Conference', function(accounts) {
       return meta.getBalanceInEth.call(accounts[0]);
     }).then(function(outCoinBalanceEth){
       ConferenceEthBalance = outCoinBalanceEth.toNumber();
-      
+
     }).then(function(){
       assert.equal(ConferenceEthBalance,2*ConferenceBalance,"Library function returned unexpeced function, linkage may be broken");
-      
+
     }).then(done).catch(done);
   });
   it("should send coin correctly", function(done) {
