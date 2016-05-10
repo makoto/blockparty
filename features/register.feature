@@ -16,5 +16,7 @@ And  Codeup has contract has the following information
 | balance    | 1                  |
 And  Codeup remaining capacity is 19
 
+### A user can unregister until a day before the event starts
 ### A user cannot register the event because the capacity is filled up
+### A user cannot register the same event more than once
 ### A user cannot register the event because its too late
