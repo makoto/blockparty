@@ -10,8 +10,7 @@ module.exports = {
     "images/": "images/"
   },
   deploy: [
-    "Conference",
-    "ConvertLib"
+    "Conference"
   ],
   rpc: {
     host: "localhost",
