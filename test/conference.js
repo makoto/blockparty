@@ -47,6 +47,21 @@ contract('Event', function(accounts) {
         })
       }).then(done).catch(done);
     })
+
+    it('shold transfer Ether', function(done){
+      var meta = Conference.deployed();
+      var account = accounts[0]
+      var beforeAccountBalance = web3.eth.getBalance(account)
+      var transaction = 200;
+      meta.register.sendTransaction({from:account, value:transaction}).then(function() {
+        var  accountBalance = web3.eth.getBalance(account)
+        //  sender balance
+        assert.equal(accountBalance, beforeAccountBalance - transaction);
+        // contract balance
+        var  contractBalance = web3.eth.getBalance(meta.address)
+        assert.equal(contractBalance, transaction);
+      }).then(done).catch(done);
+    })
   })
 });
 
