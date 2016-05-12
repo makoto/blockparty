@@ -43,9 +43,16 @@ contract('Event', function(accounts) {
       var meta = Conference.deployed();
       meta.register.sendTransaction().then(function() {
         meta.balance.call().then(function(value){
-          assert.equal(value, 1);
+          assert.equal(value.toString(), 1);
         })
       }).then(done).catch(done);
     })
   })
 });
+
+// Testing them from `truffle console`
+// var meta = Conference.deployed();
+// web3.eth.defaultAccount = web3.eth.accounts[0];
+// meta.registered.call().then(function(value) {
+//   console.log('value', value.toString());
+// })
