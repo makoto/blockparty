@@ -41,25 +41,30 @@ contract('Event', function(accounts) {
 
     it('shold increase balance', function(done){
       var meta = Conference.deployed();
-      meta.register.sendTransaction().then(function() {
-        meta.balance.call().then(function(value){
-          assert.equal(value.toString(), 1);
-        })
-      }).then(done).catch(done);
+      var account = accounts[0]
+      var beforeContractBalance = web3.eth.getBalance(meta.address);
+      var transaction = Math.pow(10,18);
+      meta.register.sendTransaction({value:transaction}).then(function() {
+        return meta.balance.call();
+      })
+      .then(function(value){
+        assert.equal(value.toString() - beforeContractBalance, transaction);
+      })
+      .then(done).catch(done);
     })
 
-    it('shold transfer Ether', function(done){
+    it('shold throw error if 1 Ether is not sent', function(done){
       var meta = Conference.deployed();
       var account = accounts[0]
       var beforeAccountBalance = web3.eth.getBalance(account)
-      var transaction = 200;
-      meta.register.sendTransaction({from:account, value:transaction}).then(function() {
+      var badTransaction = 5;
+      meta.register.sendTransaction({from:account, value:badTransaction}).then(function() {
         var  accountBalance = web3.eth.getBalance(account)
         //  sender balance
-        assert.equal(accountBalance, beforeAccountBalance - transaction);
+        assert.equal(accountBalance.toString(), beforeAccountBalance.toString());
         // contract balance
         var  contractBalance = web3.eth.getBalance(meta.address)
-        assert.equal(contractBalance, transaction);
+        assert.equal(contractBalance.toString(), 0);
       }).then(done).catch(done);
     })
   })
