@@ -5,7 +5,7 @@ contract Conference {
 	int public registered;
 	int public attended;
 
-	event Register(uint256 value, uint256 deposit);
+	event Register(uint256 value, uint256 deposit, uint256 balance);
 
 	function Conference() {
 		name = 'CodeUp';
@@ -17,10 +17,10 @@ contract Conference {
 	}
 
 	function register(){
-		Register(msg.value, deposit);
 		if (msg.value != deposit) throw;
 
 		balance = balance + (deposit * 1);
 		registered++;
+		Register(msg.value, deposit, balance);
 	}
 }
