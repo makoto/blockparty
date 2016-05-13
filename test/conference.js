@@ -114,6 +114,16 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
+    it('shold not be attended if have not called attended function', function(done){
+      var meta = Conference.deployed();
+      var transaction = Math.pow(10,18);
+      meta.register.sendTransaction({value:transaction}).then(function() {
+        return meta.isAttended.call()
+      }).then(function(value){
+        assert.equal(value, false)
+      })
+      .then(done).catch(done);
+    })
   })
 });
 
