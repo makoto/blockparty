@@ -110,6 +110,10 @@ contract('Conference', function(accounts) {
         return meta.isAttended.call()
       }).then(function(value){
         assert.equal(value, true)
+      }).then(function(){
+        return meta.attended.call()
+      }).then(function(value){
+        assert.equal(value, 1)
       })
       .then(done).catch(done);
     })
