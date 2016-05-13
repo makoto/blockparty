@@ -1,4 +1,4 @@
-contract('Event', function(accounts) {
+contract('Conference', function(accounts) {
   describe('on creation', function(){
     it('shold have name', function(done){
       var meta = Conference.deployed();
@@ -66,6 +66,19 @@ contract('Event', function(accounts) {
         var  contractBalance = web3.eth.getBalance(meta.address)
         assert.equal(contractBalance.toString(), 0);
       }).then(done).catch(done);
+    })
+
+    it('shold be registered', function(done){
+      var meta = Conference.deployed();
+      var account = accounts[0]
+      var transaction = Math.pow(10,18);
+      meta.register.sendTransaction({value:transaction}).then(function() {
+        return meta.isRegistered.call();
+      })
+      .then(function(value){
+        assert.equal(value, true);
+      })
+      .then(done).catch(done);
     })
   })
 });
