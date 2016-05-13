@@ -31,7 +31,7 @@ contract Conference {
 		Register(msg.value, deposit, balance);
 	}
 
-	/*function attend(){
+	function attend(){
 		if (isRegistered() != true) throw;
 
 		participants[msg.sender].attended = true;
@@ -39,7 +39,7 @@ contract Conference {
 	}
 
 	function isRegistered() returns (bool){
-		if (participants[msg.sender] == true){
+		if (participants[msg.sender].addr != 0x0){
 			return true;
 		} else {
 			return false;
@@ -47,10 +47,10 @@ contract Conference {
 	}
 
 	function isAttended() returns (bool){
-		if (isRegistered() && participants[msg.sender].attended){
+		if (isRegistered() && (participants[msg.sender].attended == true)){
 			return true;
 		} else {
 			return false;
 		}
-	}*/
+	}
 }
