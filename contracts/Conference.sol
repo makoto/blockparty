@@ -2,6 +2,7 @@ contract Conference {
 	string public name;
 	uint256 public balance;
 	uint256 public deposit;
+	uint256 public pot;
 	int public capacity;
 	int public registered;
 	int public attended;
@@ -44,5 +45,17 @@ contract Conference {
 
 	function isAttended() returns (bool){
 		return isRegistered() && participants[msg.sender].attended;
+	}
+
+	function payback(){
+		pot = balance / attended;
+		Participant _participant;
+
+		for (uint i=0; i<registered.length; i++){
+				_participant = registered[i];
+				if(_participant.attended){
+					_participant.send(pot);
+				}
+		}
 	}
 }
