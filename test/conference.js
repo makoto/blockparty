@@ -57,7 +57,7 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('shold be registered', function(done){
+    it('shold be registered for same account', function(done){
       var meta = Conference.deployed();
       var account = accounts[0]
       var transaction = Math.pow(10,18);
@@ -69,6 +69,19 @@ contract('Conference', function(accounts) {
       })
       .then(done).catch(done);
     })
+
+    it('shold not be registered for different accounts', function(done){
+      var meta = Conference.deployed();
+      var transaction = Math.pow(10,18);
+      meta.register.sendTransaction({from:accounts[1], value:transaction}).then(function() {
+        return meta.isRegistered.call({from:accounts[2]});
+      })
+      .then(function(value){
+        assert.equal(value, false);
+      })
+      .then(done).catch(done);
+    })
+
 
     // Need to find out how to test when error is thrown.
     // it('shold throw error if 1 Ether is not sent', function(done){
@@ -85,6 +98,22 @@ contract('Conference', function(accounts) {
     //     assert.equal(contractBalance.toString(), 0);
     //   }).then(done).catch(done);
     // })
+  })
+
+  describe('on attend', function(){
+    it('shold be attended', function(done){
+      var meta = Conference.deployed();
+      var transaction = Math.pow(10,18);
+      meta.register.sendTransaction({value:transaction}).then(function() {
+        return meta.attend.sendTransaction()
+      }).then(function(){
+        return meta.isAttended.call()
+      }).then(function(value){
+        assert.equal(value, true)
+      })
+      .then(done).catch(done);
+    })
+
   })
 });
 
