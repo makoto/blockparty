@@ -82,8 +82,9 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-
     // Need to find out how to test when error is thrown.
+    // http://stackoverflow.com/questions/36595575/what-is-the-pattern-for-handling-throw-on-a-solidity-contract-in-tests
+    // https://ethereum.stackexchange.com/questions/2505/catch-on-throw-from-contract
     // it('shold throw error if 1 Ether is not sent', function(done){
     //   var meta = Conference.deployed();
     //   var account = accounts[0]
