@@ -12,7 +12,7 @@ contract Conference {
 		bool attended;
 	}
 
-	event Register(uint256 value, uint256 deposit, uint256 balance);
+	event Register(uint256 value, uint256 deposit);
 
 	function Conference() {
 		name = 'CodeUp';
@@ -23,12 +23,12 @@ contract Conference {
 	}
 
 	function register(){
+		Register(msg.value, deposit);
 		if (msg.value != deposit) throw;
 
 		participants[msg.sender] = Participant(msg.sender, false);
 		balance = balance + (deposit * 1);
 		registered++;
-		Register(msg.value, deposit, balance);
 	}
 
 	function attend(){
@@ -39,18 +39,10 @@ contract Conference {
 	}
 
 	function isRegistered() returns (bool){
-		if (participants[msg.sender].addr != 0x0){
-			return true;
-		} else {
-			return false;
-		}
+		return participants[msg.sender].addr != 0x0;
 	}
 
 	function isAttended() returns (bool){
-		if (isRegistered() && (participants[msg.sender].attended == true)){
-			return true;
-		} else {
-			return false;
-		}
+		return isRegistered() && participants[msg.sender].attended;
 	}
 }
