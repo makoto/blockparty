@@ -24,3 +24,5 @@ Users receive the following
 | Phil      | 0      |
 
 #### Users cannot receive payback because event has not happend
+#### Only organiser can trigger the payback function
+#### Consideration: Let each participant claim his/her own rather than the oragniser payback to everyone so that organiser does not have to pay gas for everybody.
