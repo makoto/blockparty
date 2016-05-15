@@ -30,7 +30,7 @@ contract Conference {
 	function register(){
 		Register(msg.sender, msg.sender.balance, msg.value);
 		if (msg.value != deposit) throw;
-		/*if (isRegistered()) throw;*/
+		if (isRegistered()) throw;
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(msg.sender, false);
