@@ -140,12 +140,12 @@ contract('Conference2', function(accounts) {
       var transaction = web3.toWei(1, "ether");
       var gas = 1000000;
       var previousBalances = [];
-      previousBalances[0] = web3.eth.getBalance(accounts[0]);
-      previousBalances[1] = web3.eth.getBalance(accounts[1]);
-      previousBalances[2] = web3.eth.getBalance(accounts[2]);
 
       var balanceDiff = function(index){
-        return web3.fromWei(previousBalances[index], "ether") - web3.fromWei(web3.eth.getBalance(accounts[index]), "ether")
+        var realDiff = web3.fromWei(web3.eth.getBalance(accounts[index]).minus(previousBalances[index]), "ether");
+        // Ignore small diff introduced by gas price;
+        var roundedDiff = Math.round(realDiff * 1000) / 1000;
+        return roundedDiff;
       }
       // 3 registrations
       meta.register.sendTransaction({from:accounts[0], value:transaction, gas:gas}).then(function() {
@@ -160,25 +160,41 @@ contract('Conference2', function(accounts) {
         return meta.attend.sendTransaction({from:accounts[0], gas:gas})
       }).then(function(){
         return meta.attend.sendTransaction({from:accounts[1], gas:gas})
-        // payback gets 3 ehter / 2 = 1.5 each
       }).then(function(){
-        return meta.payback.sendTransaction({from:accounts[4], gas:gas})
+        previousBalances[0] = web3.eth.getBalance(accounts[0]);
+        previousBalances[1] = web3.eth.getBalance(accounts[1]);
+        previousBalances[2] = web3.eth.getBalance(accounts[2]);
+        // payback gets 3 ehter / 2 = 1.5 each
+        return meta.payback.sendTransaction({from:accounts[0], gas:gas})
       }).then(function(){
         // no money is left on contract
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(0, "ether"))
-        console.log('0', web3.fromWei(web3.eth.getBalance(accounts[0]), "ether").toString())
-        console.log('1', web3.fromWei(web3.eth.getBalance(accounts[1]), "ether").toString())
-        console.log('2', web3.fromWei(web3.eth.getBalance(accounts[2]), "ether").toString())
-        assert.equal(balanceDiff(0), 0.5)
-        assert.equal(balanceDiff(1), 0.5)
-        assert.equal(balanceDiff(2), -1)
+        assert.equal(web3.eth.getBalance(meta.address), web3.toWei(0, "ether"))
+        // got some money
+        assert.equal(balanceDiff(0), 1.5)
+        assert.equal(balanceDiff(1), 1.5)
+        // lost some money
+        assert.equal(balanceDiff(2), 0)
       })
       .then(done).catch(done);
     })
   })
 })
 
-
+// Just a generic test to check Ether transaction is working;
+contract('Transaction test', function(accounts) {
+  it('shold send ether from one account to another', function(done){
+    var before0 = web3.eth.getBalance(accounts[0]);
+    var before1 = web3.eth.getBalance(accounts[1]);
+    var gas = 21000; // gas price taken from the log of testrpc
+    web3.eth.sendTransaction({from:accounts[0], to:accounts[1], gas:gas, value: web3.toWei(100, "ether")}, function(){
+      after0 = web3.eth.getBalance(accounts[0]);
+      after1 = web3.eth.getBalance(accounts[1]);
+      assert.equal( after0.minus(before0).plus(gas).toNumber(), web3.toWei(-100, "ether"));
+      assert.equal( after1.minus(before1).toNumber() , web3.toWei(100, "ether"));
+      done();
+    })
+  })
+})
 
 // Testing them from `truffle console`
 // var meta = Conference.deployed();

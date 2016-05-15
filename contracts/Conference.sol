@@ -56,12 +56,12 @@ contract Conference {
 		pot = balance / uint(attended);
 		for(uint i=1;i<=registered;i++)
 		{
-				if(participants[participantsIndex[i]].attended){
-					Payback(participantsIndex[i], pot, participantsIndex[i].balance,  true);
-					participantsIndex[i].send(pot);
-				}else{
-					Payback(participantsIndex[i], pot, participantsIndex[i].balance, false);
-				}
+			if(participants[participantsIndex[i]].attended){
+				Payback(participantsIndex[i], pot, participantsIndex[i].balance,  true);
+				participantsIndex[i].send(pot);
+			}else{
+				Payback(participantsIndex[i], pot, participantsIndex[i].balance, false);
+			}
 		}
 	}
 }
