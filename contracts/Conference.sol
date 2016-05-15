@@ -2,13 +2,13 @@ contract Conference {
 	string public name;
 	uint256 public balance;
 	uint256 public deposit;
-	uint256 public pot;
 	uint public capacity;
 	uint public registered;
 	uint public attended;
 	mapping (address => Participant) public participants;
 	mapping (uint => address) participantsIndex;
 	bool paid;
+	uint256 _pot;
 
 	struct Participant {
 		address addr;
@@ -17,7 +17,7 @@ contract Conference {
 
 	event Register(address addr, uint256 balance, uint256 value);
 	event Attend(address addr, uint256 balance);
-	event Payback(address addr, uint256 pot, uint256 balance, bool paid);
+	event Payback(address addr, uint256 _pot, uint256 balance, bool paid);
 
 	function Conference() {
 		name = 'CodeUp';
@@ -52,15 +52,18 @@ contract Conference {
 		return isRegistered() && participants[msg.sender].attended;
 	}
 
+	function pot() returns(uint256){
+		return balance / uint(attended);
+	}
+
 	function payback(){
-		pot = balance / uint(attended);
 		for(uint i=1;i<=registered;i++)
 		{
 			if(participants[participantsIndex[i]].attended){
-				Payback(participantsIndex[i], pot, participantsIndex[i].balance,  true);
-				participantsIndex[i].send(pot);
+				Payback(participantsIndex[i], pot(), participantsIndex[i].balance,  true);
+				participantsIndex[i].send(pot());
 			}else{
-				Payback(participantsIndex[i], pot, participantsIndex[i].balance, false);
+				Payback(participantsIndex[i], pot(), participantsIndex[i].balance, false);
 			}
 		}
 	}
