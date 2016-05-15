@@ -207,8 +207,8 @@ contract('Transaction test', function(accounts) {
     var before1 = web3.eth.getBalance(accounts[1]);
     var gas = 21000; // gas price taken from the log of testrpc
     web3.eth.sendTransaction({from:accounts[0], to:accounts[1], gas:gas, value: web3.toWei(100, "ether")}, function(){
-      after0 = web3.eth.getBalance(accounts[0]);
-      after1 = web3.eth.getBalance(accounts[1]);
+      var after0 = web3.eth.getBalance(accounts[0]);
+      var after1 = web3.eth.getBalance(accounts[1]);
       assert.equal( after0.minus(before0).plus(gas).toNumber(), web3.toWei(-100, "ether"));
       assert.equal( after1.minus(before1).toNumber() , web3.toWei(100, "ether"));
       done();
