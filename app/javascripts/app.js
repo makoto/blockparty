@@ -1,3 +1,14 @@
+import {} from "../stylesheets/app.css";
+// Failing to load Pudding automatically
+var Pudding = require("ether-pudding");
+
+var web3 = new Web3();
+Pudding.setWeb3(web3);
+web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
+Conference.load(Pudding);
+
+var math = require('mathjs');
+console.log('hello', math.round(math.e, 3));
 var accounts;
 var account;
 var balance;
@@ -7,34 +18,40 @@ function setStatus(message) {
   status.innerHTML = message;
 };
 
-function refreshBalance() {
+function setAttribute(name) {
   var meta = Conference.deployed();
-
-  meta.getBalance.call(account, {from: account}).then(function(value) {
-    var balance_element = document.getElementById("balance");
-    balance_element.innerHTML = value.valueOf();
+  meta[name].call().then(function(value) {
+    var element = document.getElementById(name);
+    element.innerHTML = value.valueOf();
   }).catch(function(e) {
     console.log(e);
     setStatus("Error getting balance; see log.");
   });
 };
 
-function sendCoin() {
+function action(name) {
   var meta = Conference.deployed();
-
-  var amount = parseInt(document.getElementById("amount").value);
-  var receiver = document.getElementById("receiver").value;
-
+  var amount = Math.pow(10,18)
+  var participant = document.getElementById("participant").value;
+  console.log('amount', amount)
   setStatus("Initiating transaction... (please wait)");
 
-  meta.sendCoin(receiver, amount, {from: account}).then(function() {
+  meta[name](null, {from:participant, value:amount}).then(function() {
     setStatus("Transaction complete!");
-    refreshBalance();
+    setAttribute('name');
+    setAttribute('deposit');
+    setAttribute('pot');
+    setAttribute('balance');
+    setAttribute('registered');
+    setAttribute('attended');
   }).catch(function(e) {
     console.log(e);
     setStatus("Error sending coin; see log.");
   });
 };
+window.action = action;
+window.setAttribute = setAttribute;
+window.setStatus = setStatus;
 
 window.onload = function() {
   web3.eth.getAccounts(function(err, accs) {
@@ -47,10 +64,14 @@ window.onload = function() {
       alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
       return;
     }
-
     accounts = accs;
+    console.log(accounts);
     account = accounts[0];
-
-    refreshBalance();
+    setAttribute('name');
+    setAttribute('deposit');
+    setAttribute('pot');
+    setAttribute('balance');
+    setAttribute('registered');
+    setAttribute('attended');
   });
 }
