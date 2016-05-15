@@ -14,4 +14,5 @@ Then the contract has the following information
 | balance    | 1                |
 | attended   | 1                |
 
-### A user cannot check in because he has not registered
+### A user cannot attend because he has not registered
+### The conference organiser is the only one who can checkin participants
