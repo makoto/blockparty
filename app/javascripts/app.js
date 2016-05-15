@@ -49,6 +49,18 @@ function action(name) {
     setStatus("Error sending coin; see log.");
   });
 };
+
+function watchEvent(){
+  var meta = Conference.deployed();
+  var event = meta.allEvents({fromBlock: 0, toBlock: 'latest'}).watch(function(error, result){
+    if (error) {
+      console.log("Error: " + error);
+    } else {
+      console.log("Event: ",result.event, result.args);
+    }
+  });
+}
+
 window.action = action;
 window.setAttribute = setAttribute;
 window.setStatus = setStatus;
@@ -67,6 +79,7 @@ window.onload = function() {
     accounts = accs;
     console.log(accounts);
     account = accounts[0];
+    watchEvent();
     setAttribute('name');
     setAttribute('deposit');
     setAttribute('pot');
