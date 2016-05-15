@@ -1,8 +1,10 @@
 contract('Conference', function(accounts) {
   describe('on creation', function(){
     it('shold have name', function(done){
-      var meta = Conference.deployed();
-      meta.name.call().then(function(name) {
+      // var meta = Conference.deployed();
+      Conference.new().then(function(meta) {
+        return meta.name.call()
+      }).then(function(name) {
         assert.equal(name, 'CodeUp');
       }).then(done).catch(done);
     })
@@ -31,10 +33,13 @@ contract('Conference', function(accounts) {
 
   describe('on registration', function(){
     it('shold increment registered', function(done){
-      var meta = Conference.deployed();
       var account = accounts[0]
       var transaction = Math.pow(10,18);
-      meta.register.sendTransaction({value:transaction}).then(function() {
+      var meta;
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction({value:transaction});
+      }).then(function() {
         return meta.registered.call();
       })
       .then(function(value){
@@ -44,11 +49,15 @@ contract('Conference', function(accounts) {
     })
 
     it('shold increase balance', function(done){
-      var meta = Conference.deployed();
       var account = accounts[0]
-      var beforeContractBalance = web3.eth.getBalance(meta.address);
+      var beforeContractBalance;
       var transaction = Math.pow(10,18);
-      meta.register.sendTransaction({value:transaction}).then(function() {
+      var meta;
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        beforeContractBalance = web3.eth.getBalance(meta.address);
+        return meta.register.sendTransaction({value:transaction});
+      }).then(function() {
         return meta.balance.call();
       })
       .then(function(value){
@@ -58,10 +67,13 @@ contract('Conference', function(accounts) {
     })
 
     it('shold be registered for same account', function(done){
-      var meta = Conference.deployed();
       var account = accounts[0]
       var transaction = Math.pow(10,18);
-      meta.register.sendTransaction({value:transaction}).then(function() {
+      var meta;
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction({value:transaction});
+      }).then(function() {
         return meta.isRegistered.call();
       })
       .then(function(value){
@@ -71,9 +83,12 @@ contract('Conference', function(accounts) {
     })
 
     it('shold not be registered for different accounts', function(done){
-      var meta = Conference.deployed();
       var transaction = Math.pow(10,18);
-      meta.register.sendTransaction({from:accounts[1], value:transaction}).then(function() {
+      var meta;
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction({from:accounts[0], value:transaction});
+      }).then(function() {
         return meta.isRegistered.call({from:accounts[2]});
       })
       .then(function(value){
@@ -103,9 +118,12 @@ contract('Conference', function(accounts) {
 
   describe('on attend', function(){
     it('shold be attended', function(done){
-      var meta = Conference.deployed();
       var transaction = Math.pow(10,18);
-      meta.register.sendTransaction({value:transaction}).then(function() {
+      var meta;
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction({value:transaction});
+      }).then(function() {
         return meta.attend.sendTransaction()
       }).then(function(){
         return meta.isAttended.call()
@@ -120,9 +138,12 @@ contract('Conference', function(accounts) {
     })
 
     it('shold not be attended if have not called attended function', function(done){
-      var meta = Conference.deployed();
       var transaction = Math.pow(10,18);
-      meta.register.sendTransaction({value:transaction}).then(function() {
+      var meta;
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction({value:transaction});
+      }).then(function() {
         return meta.isAttended.call()
       }).then(function(value){
         assert.equal(value, false)
@@ -133,7 +154,7 @@ contract('Conference', function(accounts) {
 });
 
 // Create new contract to reset data.
-contract('Conference2', function(accounts) {
+contract('Conference payback', function(accounts) {
   describe('on payback', function(){
     it('shold be attended', function(done){
       var meta = Conference.deployed();
