@@ -1,7 +1,6 @@
 contract('Conference', function(accounts) {
   describe('on creation', function(){
     it('shold have name', function(done){
-      // var meta = Conference.deployed();
       Conference.new().then(function(meta) {
         return meta.name.call()
       }).then(function(name) {
@@ -10,22 +9,25 @@ contract('Conference', function(accounts) {
     })
 
     it('shold have registered', function(done){
-      var meta = Conference.deployed();
-      meta.registered.call().then(function(value) {
+      Conference.new().then(function(meta) {
+        return meta.registered.call()
+      }).then(function(value) {
         assert.equal(value, 0);
       }).then(done).catch(done);
     })
 
     it('shold have attended', function(done){
-      var meta = Conference.deployed();
-      meta.attended.call().then(function(value) {
+      Conference.new().then(function(meta) {
+        return meta.attended.call()
+      }).then(function(value) {
         assert.equal(value, 0);
       }).then(done).catch(done);
     })
 
     it('shold have balance', function(done){
-      var meta = Conference.deployed();
-      meta.balance.call().then(function(value) {
+      Conference.new().then(function(meta) {
+        return meta.balance.call()
+      }).then(function(value) {
         assert.equal(value, 0);
       }).then(done).catch(done);
     })
@@ -151,10 +153,7 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
   })
-});
 
-// Create new contract to reset data.
-contract('Conference payback', function(accounts) {
   describe('on payback', function(){
     it('shold be attended', function(done){
       var meta = Conference.deployed();
