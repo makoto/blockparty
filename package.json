@@ -31,6 +31,7 @@
     "copy-webpack-plugin": "^3.0.0",
     "css-loader": "^0.23.1",
     "ether-pudding": "^2.0.9",
+    "event-emitter": "^0.3.4",
     "extract-text-webpack-plugin": "^1.0.1",
     "json-loader": "^0.5.4",
     "material-ui": "^0.15.0",
