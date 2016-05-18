@@ -1,90 +1,92 @@
-import {} from "../stylesheets/app.css";
-// Failing to load Pudding automatically
-var Pudding = require("ether-pudding");
+// import {} from "../stylesheets/app.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import ConferenceDetail from './ConferenceDetail';
+import FormInput from './FormInput';
+import IconButton from 'material-ui/IconButton';
+import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance'
+import AppBar from 'material-ui/AppBar';
+import Subheader from 'material-ui/Subheader';
+import EventEmitter from 'event-emitter';
 
-var web3 = new Web3();
+const App = (props) => (
+  <div>
+    <MuiThemeProvider muiTheme={getMuiTheme()}>
+      <div>
+        <AppBar
+          title="Block Party - NO BLOCK NO PARTY"
+          iconElementLeft={<IconButton><AccountBalanceIcon /></IconButton>}
+        />
+        <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} />
+        <Subheader>Registration</Subheader>
+        <FormInput action={action} />
+      </div>
+    </MuiThemeProvider>
+  </div>
+);
+
+// Some settings to connect to Ethereum.
+const Pudding = require("ether-pudding");
+const web3 = new Web3();
 Pudding.setWeb3(web3);
 web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 Conference.load(Pudding);
+const contract = Conference.deployed();
+const eventEmitter = EventEmitter()
 
-var math = require('mathjs');
-console.log('hello', math.round(math.e, 3));
-var accounts;
-var account;
-var balance;
+// Functions to interact with contract
+function getDetail(callback){
+  ['name', 'deposit', 'pot', 'balance', 'registered', 'attended'].forEach(name => {
+    contract[name].call().then(value => {
+      callback({[name]:value});
+    }).catch(e => {
+      console.log('error', e);
+    });
+  })
+}
 
-function setStatus(message) {
-  var status = document.getElementById("status");
-  status.innerHTML = message;
-};
-
-function setAttribute(name) {
-  var meta = Conference.deployed();
-  meta[name].call().then(function(value) {
-    var element = document.getElementById(name);
-    element.innerHTML = value.valueOf();
-  }).catch(function(e) {
-    console.log(e);
-    setStatus("Error getting balance; see log.");
-  });
-};
-
-function action(name) {
-  var meta = Conference.deployed();
+function action(name, address, callback) {
   var amount = Math.pow(10,18)
-  var participant = document.getElementById("participant").value;
-  console.log('amount', amount)
-  setStatus("Initiating transaction... (please wait)");
+  console.log('name', name, 'address', address, 'callback', callback)
 
-  meta[name](null, {from:participant, value:amount}).then(function() {
-    setStatus("Transaction complete!");
-    setAttribute('name');
-    setAttribute('deposit');
-    setAttribute('pot');
-    setAttribute('balance');
-    setAttribute('registered');
-    setAttribute('attended');
+  contract[name](null, {from:address, value:amount}).then(function() {
+    getDetail(function(model){
+      eventEmitter.emit('change', model);
+    });
+    if(callback) callback();
   }).catch(function(e) {
     console.log(e);
-    setStatus("Error sending coin; see log.");
   });
-};
+}
 
 function watchEvent(){
-  var meta = Conference.deployed();
-  var event = meta.allEvents({fromBlock: 0, toBlock: 'latest'}).watch(function(error, result){
+  var event = contract.allEvents({fromBlock: 0, toBlock: 'latest'}).watch(function(error, result){
     if (error) {
       console.log("Error: " + error);
     } else {
-      console.log("Event: ",result.event, result.args);
+
     }
   });
 }
 
-window.action = action;
-window.setAttribute = setAttribute;
-window.setStatus = setStatus;
+// Log all available accounts
+web3.eth.getAccounts(function(err, accs) {
+  if (err != null) {
+    alert("There was an error fetching your accounts.");
+    return;
+  }
+  if (accs.length == 0) {
+    alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
+    return;
+  }
+  console.log(accs);
+});
 
 window.onload = function() {
-  web3.eth.getAccounts(function(err, accs) {
-    if (err != null) {
-      alert("There was an error fetching your accounts.");
-      return;
-    }
-
-    if (accs.length == 0) {
-      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-      return;
-    }
-    accounts = accs;
-    console.log(accounts);
-    account = accounts[0];
-    watchEvent();
-    setAttribute('name');
-    setAttribute('deposit');
-    setAttribute('pot');
-    setAttribute('balance');
-    setAttribute('registered');
-    setAttribute('attended');
-  });
+  ReactDOM.render(
+    <App getDetail={getDetail} eventEmitter={eventEmitter} action={action} web3={web3} />,
+    document.getElementById('app')
+  );
 }
