@@ -7,6 +7,9 @@ class ConferenceDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount(){
     // Initialize
     this.props.getDetail(model =>{
       this.setState(model);
