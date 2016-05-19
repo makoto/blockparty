@@ -13,9 +13,7 @@ class FormInput extends React.Component {
   }
 
   handleAction(actionName) {
-    return function (e) {
-      this.props.action(actionName, this.state.address.trim())
-    }.bind(this)
+    this.props.action(actionName, this.state.address.trim())
   }
 
   handleInput(e) {
@@ -29,20 +27,20 @@ class FormInput extends React.Component {
       <form>
         <TextField
           hintText="Your Account Address"
-          value={this.state.message}
+          value={this.state.address}
           onChange={this.handleInput.bind(this)}
         />
         <RaisedButton
           label="Register"
-          onClick={this.handleAction('register')}
+          onClick={this.handleAction.bind(this, 'register')}
         />
         <RaisedButton
           label="Attend"
-          onClick={this.handleAction('attend')}
+          onClick={this.handleAction.bind(this, 'attend')}
         />
         <RaisedButton
           label="Payback"
-          onClick={this.handleAction('payback')}
+          onClick={this.handleAction.bind(this, 'payback')}
         />
       </form>
     );
