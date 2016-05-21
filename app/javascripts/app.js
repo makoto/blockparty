@@ -57,8 +57,8 @@ function getDetail(callback){
 function action(name, address, callback) {
   var amount = Math.pow(10,18)
   console.log('name', name, 'address', address, 'callback', callback)
-
-  contract[name](null, {from:address, value:amount}).then(function() {
+  var gas = 2000000;
+  contract[name](null, {from:address, value:amount, gas:gas}).then(function() {
     getDetail(function(model){
       eventEmitter.emit('change', model);
     });
