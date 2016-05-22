@@ -13,30 +13,70 @@ const styles = {
   }
 };
 
-const Participants = (props) => (
-  <Paper zDepth={1} style={styles.paperRight}>
-      <h4>Participants</h4>
-      <Table>
-        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-          <TableRow>
-            <TableHeaderColumn width={100} >Address</TableHeaderColumn>
-            <TableHeaderColumn width={10} >Balance</TableHeaderColumn>
-            <TableHeaderColumn width={10} >Attend?</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody displayRowCheckbox={false}>
-          <TableRow>
-            <TableRowColumn width={100} >9ccbabcae82457811c0d9c40f785beb690d27a21</TableRowColumn>
-            <TableRowColumn width={10} >124</TableRowColumn>
-            <TableRowColumn width={10} >Yes</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn width={100} >25c84abcc57a558bba6a2586baa25ea6434f9a9fc</TableRowColumn>
-            <TableRowColumn width={10} >20</TableRowColumn>
-            <TableRowColumn width={10} >No</TableRowColumn>
-          </TableRow>
-        </TableBody>
-      </Table>
-  </Paper>
-);
+class Participants extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {participants:[]};
+  }
+
+  componentDidMount(){
+    // Initialize
+    this.props.getParticipants(participants =>{
+      this.setState({participants});
+    });
+
+    this.props.eventEmitter.on('change', model => {
+      this.props.getParticipants(participants =>{
+        this.setState({participants});
+      });
+    });
+  }
+
+  toEther(value){
+    return this.props.math.round(this.props.web3.fromWei(value, "ether"), 3).toString();
+  }
+
+  toNumber(value){
+    if(value) return value.toNumber();
+  }
+
+  yesNo(value){
+    if(value) {
+      return 'Yes';
+    }else{
+      return 'No';
+    }
+  }
+
+
+  render() {
+    return (
+      <Paper zDepth={1} style={styles.paperRight}>
+          <h4>Participants</h4>
+          <Table>
+            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+              <TableRow>
+                <TableHeaderColumn width={100} >Address</TableHeaderColumn>
+                <TableHeaderColumn width={10} >Balance</TableHeaderColumn>
+                <TableHeaderColumn width={10} >Attend?</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody displayRowCheckbox={false}>
+              {
+                this.state.participants.map((participant) => {
+                  return (
+                    <TableRow>
+                      <TableRowColumn width={100} >{participant.address}</TableRowColumn>
+                      <TableRowColumn width={10} >{this.toEther(participant.balance)}</TableRowColumn>
+                      <TableRowColumn width={10} >{this.yesNo(participant.attended)}</TableRowColumn>
+                    </TableRow>
+                  )
+                })
+              }
+            </TableBody>
+          </Table>
+      </Paper>
+    );
+  }
+}
 export default Participants;

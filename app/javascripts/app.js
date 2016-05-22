@@ -11,6 +11,7 @@ import AppBar from 'material-ui/AppBar';
 import {List, ListItem} from 'material-ui/List';
 import EventEmitter from 'event-emitter';
 import Paper from 'material-ui/Paper';
+import math from 'mathjs';
 
 const styles = {
   div:{
@@ -129,8 +130,8 @@ const App = (props) => (
           iconElementLeft={<Avatar src="https://cdn3.iconfinder.com/data/icons/hotel-facility/1024/ic_nightclub-512.png" size="50" backgroundColor="white" />}
         />
         <div style={styles.div}>
-          <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} />
-          <Participants />
+          <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} />
+          <Participants eventEmitter={eventEmitter} getParticipants={getParticipants} web3={web3} math={math} />
         </div>
         <FormInput action={action} />
       </div>
@@ -140,7 +141,7 @@ const App = (props) => (
 
 window.onload = function() {
   ReactDOM.render(
-    <App getDetail={getDetail} eventEmitter={eventEmitter} action={action} web3={web3} />,
+    <App getDetail={getDetail} eventEmitter={eventEmitter} action={action} getParticipants={getParticipants} web3={web3} math={math} />,
     document.getElementById('app')
   );
 }

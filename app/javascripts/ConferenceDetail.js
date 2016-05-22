@@ -46,7 +46,9 @@ class ConferenceDetail extends React.Component {
   }
 
   toEther(value){
-    return this.props.web3.fromWei(value, "ether").toString();
+    if(typeof(value) != "undefined"){
+      return this.props.math.round(this.props.web3.fromWei(value, "ether").toNumber(), 3).toString();
+    }
   }
 
   toNumber(value){
