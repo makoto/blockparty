@@ -54,6 +54,25 @@ function getDetail(callback){
   });
 }
 
+function getParticipants(callback){
+  contract.registered.call().then(function(value){
+    // var contractBalance = web3.eth.getBalance(contract.address);
+    console.log('contract', contract.address, web3.fromWei(contractBalance, "ether").toNumber());
+    let participantsArray = []
+    for (var i = 1; i <= value.toNumber(); i++) {
+      contract.participantsIndex.call(i).then(function(address){
+        var balance = web3.eth.getBalance(address)
+        console.log('address', address, web3.fromWei(balance, "ether").toNumber())
+        return address;
+      }).then(function(address){
+        return contract.participants.call(address)
+      }).then(function(participant){
+        console.log('participant', participant)
+      })
+    }
+  })
+}
+
 function action(name, address, callback) {
   var amount = Math.pow(10,18)
   console.log('name', name, 'address', address, 'callback', callback)
@@ -80,6 +99,10 @@ function watchEvent(){
 
 // Log all available accounts
 web3.eth.getAccounts(function(err, accs) {
+  window.accounts = accs;
+  window.web3 = web3;
+  window.getParticipants = getParticipants;
+  window.contract = contract;
   if (err != null) {
     alert("There was an error fetching your accounts.");
     return;
@@ -90,6 +113,7 @@ web3.eth.getAccounts(function(err, accs) {
   }
   console.log(accs);
 });
+
 
 window.onload = function() {
   ReactDOM.render(
