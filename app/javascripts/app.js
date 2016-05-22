@@ -54,22 +54,32 @@ function getDetail(callback){
   });
 }
 
+function getContractBalance(){
+  return web3.fromWei(web3.eth.getBalance(contract.address), "ether").toNumber();
+}
+
 function getParticipants(callback){
   contract.registered.call().then(function(value){
-    // var contractBalance = web3.eth.getBalance(contract.address);
-    console.log('contract', contract.address, web3.fromWei(contractBalance, "ether").toNumber());
     let participantsArray = []
     for (var i = 1; i <= value.toNumber(); i++) {
-      contract.participantsIndex.call(i).then(function(address){
-        var balance = web3.eth.getBalance(address)
-        console.log('address', address, web3.fromWei(balance, "ether").toNumber())
-        return address;
-      }).then(function(address){
-        return contract.participants.call(address)
-      }).then(function(participant){
-        console.log('participant', participant)
-      })
+      participantsArray.push(i);
     }
+    Promise.all(participantsArray.map(index => {
+      return contract.participantsIndex.call(index).then(function(address){
+        return contract.participants.call(address);
+      })
+    })).then(function(participants){
+      return participants.map(participant => {
+        var balance =  web3.fromWei(web3.eth.getBalance(participant[0]), "ether").toNumber();
+        var object =  {
+          address: participant[0],
+          attended: participant[1],
+          balance: balance
+        }
+        console.log('participant', object);
+        return object
+      })
+    }).then(function(participant){ if(participant) callback(participant); })
   })
 }
 
