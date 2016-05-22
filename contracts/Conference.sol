@@ -66,5 +66,6 @@ contract Conference {
 				Payback(participantsIndex[i], pot(), participantsIndex[i].balance, false);
 			}
 		}
+		balance = 0;
 	}
 }
