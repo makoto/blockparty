@@ -27,6 +27,7 @@ const styles = {
   }
 };
 
+
 class ConferenceDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +47,7 @@ class ConferenceDetail extends React.Component {
   }
 
   toEther(value){
-    if(typeof(value) != "undefined"){
+    if(value){
       return this.props.math.round(this.props.web3.fromWei(value, "ether").toNumber(), 3).toString();
     }
   }
@@ -55,43 +56,50 @@ class ConferenceDetail extends React.Component {
     if(value) return value.toNumber();
   }
 
+  getContractBalance(){
+    return this.props.web3.fromWei(this.props.web3.eth.getBalance(this.props.contract.address), "ether").toNumber();
+  }
+
   render() {
     return (
       <Paper zDepth={1} style={styles.paperLeft}>
         <h4 style={{textAlign:'center'}}>Event Info</h4>
         <List>
-          <ListItem innerDivStyle={styles.innerDiv} insetChildren={true}
+          <ListItem innerDivStyle={styles.innerDiv} insetChildren={true} disabled={true}
             primaryText={
               <p>Name<span style={styles.list}>{this.state.name}</span></p>
             }
+            secondaryText={
+              <span style={{float:'right'}}>{this.props.contract.address}({this.state.contractBalance})</span>
+            }
           />
-          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<EventIcon />}
+          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<EventIcon />} disabled={true}
             primaryText={
               <p>Date<span style={styles.list}>23/5/2016</span></p>
             }
           />
-          <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()}
+          <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
             primaryText={
               <p>Deposit<span style={styles.list}>{this.toEther(this.state.deposit)}(£7)</span></p>
             }
           />
         <Divider />
-          <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()}
+          <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
             primaryText={
               <p>Pot<span style={styles.list}>{this.toEther(this.state.pot)}</span></p>
             }
           />
-          <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()}
+          <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
           primaryText={
             <p>Balance<span style={styles.list}>{this.toEther(this.state.balance)}</span></p>
           }
           />
-          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleOutlineIcon />}
+          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleOutlineIcon />} disabled={true}
           primaryText={
             <p>Registered<span style={styles.list}>{this.toNumber(this.state.registered)}</span></p>
           }
           />
-          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleIcon />}
+          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleIcon />} disabled={true}
           primaryText={
             <p>Attended<span style={styles.list}>{this.toNumber(this.state.attended)}</span></p>
           }

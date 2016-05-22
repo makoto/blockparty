@@ -42,15 +42,12 @@ function getDetail(callback){
       'pot': values[2],
       'balance': values[3],
       'registered': values[4],
-      'attended': values[5]
+      'attended': values[5],
+      'contractBalance': web3.fromWei(web3.eth.getBalance(contract.address), "ether").toNumber()
     });
   }).catch(errors => {
     console.log('errors', errors);
   });
-}
-
-function getContractBalance(){
-  return web3.fromWei(web3.eth.getBalance(contract.address), "ether").toNumber();
 }
 
 function getParticipants(callback){
@@ -97,7 +94,7 @@ function watchEvent(){
     if (error) {
       console.log("Error: " + error);
     } else {
-
+      console.log('watchEvent result', result);
     }
   });
 }
@@ -130,7 +127,7 @@ const App = (props) => (
           iconElementLeft={<Avatar src="https://cdn3.iconfinder.com/data/icons/hotel-facility/1024/ic_nightclub-512.png" size="50" backgroundColor="white" />}
         />
         <div style={styles.div}>
-          <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} />
+          <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
           <Participants eventEmitter={eventEmitter} getParticipants={getParticipants} web3={web3} math={math} />
         </div>
         <FormInput action={action} />
@@ -141,7 +138,7 @@ const App = (props) => (
 
 window.onload = function() {
   ReactDOM.render(
-    <App getDetail={getDetail} eventEmitter={eventEmitter} action={action} getParticipants={getParticipants} web3={web3} math={math} />,
+    <App getDetail={getDetail} eventEmitter={eventEmitter} action={action} getParticipants={getParticipants} web3={web3} math={math} contract={contract} />,
     document.getElementById('app')
   );
 }

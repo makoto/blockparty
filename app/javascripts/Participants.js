@@ -33,7 +33,7 @@ class Participants extends React.Component {
   }
 
   toEther(value){
-    return this.props.math.round(this.props.web3.fromWei(value, "ether"), 3).toString();
+    return this.props.math.round(value, 3).toString();
   }
 
   toNumber(value){
