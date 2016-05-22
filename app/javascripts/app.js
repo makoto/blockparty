@@ -122,8 +122,10 @@ const App = (props) => (
   <div>
     <MuiThemeProvider muiTheme={getMuiTheme()}>
       <div>
-        <AppBar titleStyle={{textAlign:'center'}} style={{backgroundColor:"#607D8B"}}
-          title="BLOCK PARTY - NO BLOCK NO PARTY"
+        <AppBar titleStyle={{textAlign:'center', fontSize:'xx-large', fontFamily:'Lobster'}} style={{backgroundColor:"#607D8B"}}
+          title={
+            <span>Block Party<span style={{fontSize:'small', fontFamily:'sans-serif'}}> - NO BLOCK NO PARTY -</span></span>
+          }
           iconElementLeft={<Avatar src="https://cdn3.iconfinder.com/data/icons/hotel-facility/1024/ic_nightclub-512.png" size="50" backgroundColor="white" />}
         />
         <div style={styles.div}>
