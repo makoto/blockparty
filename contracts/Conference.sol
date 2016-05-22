@@ -6,7 +6,7 @@ contract Conference {
 	uint public registered;
 	uint public attended;
 	mapping (address => Participant) public participants;
-	mapping (uint => address) participantsIndex;
+	mapping (uint => address) public participantsIndex;
 	bool paid;
 	uint256 _pot;
 
