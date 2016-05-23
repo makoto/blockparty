@@ -129,7 +129,7 @@ const App = (props) => (
           title={
             <span>Block Party<span style={{fontSize:'small', fontFamily:'sans-serif'}}> - NO BLOCK NO PARTY -</span></span>
           }
-          iconElementLeft={<Avatar src="https://cdn3.iconfinder.com/data/icons/hotel-facility/1024/ic_nightclub-512.png" size="50" backgroundColor="white" />}
+          iconElementLeft={<Avatar src="/images/nightclub-white.png" size="50" backgroundColor="white" />}
         />
         <div style={styles.div}>
           <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
