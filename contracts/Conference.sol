@@ -39,6 +39,7 @@ contract Conference {
 
 	function attend(){
 		if (isRegistered() != true) throw;
+		if (isAttended()) throw;
 		Attend(msg.sender, msg.sender.balance);
 		participants[msg.sender].attended = true;
 		attended++;
