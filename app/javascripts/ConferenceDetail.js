@@ -56,6 +56,14 @@ class ConferenceDetail extends React.Component {
     if(value) return value.toNumber();
   }
 
+  youGet(){
+    if(this.state.pot && this.state.pot.toNumber() > 0){
+      return (
+        <span>(You get {this.props.math.round(this.props.web3.fromWei(this.state.pot - this.state.deposit, "ether"), 3)} bonus)</span>
+      )
+    }
+  }
+
   getContractBalance(){
     return this.props.web3.fromWei(this.props.web3.eth.getBalance(this.props.contract.address), "ether").toNumber();
   }
@@ -85,14 +93,14 @@ class ConferenceDetail extends React.Component {
           />
         <Divider />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
-            primaryText={
-              <p>Pot<span style={styles.list}>{this.toEther(this.state.pot)}</span></p>
-            }
+          primaryText={
+            <p>Pot<span style={styles.list}>{this.toEther(this.state.balance)}</span></p>
+          }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
-          primaryText={
-            <p>Balance<span style={styles.list}>{this.toEther(this.state.balance)}</span></p>
-          }
+            primaryText={
+              <p>Payout<span style={styles.list}>{this.toEther(this.state.pot)}{this.youGet()}</span></p>
+            }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleOutlineIcon />} disabled={true}
           primaryText={
