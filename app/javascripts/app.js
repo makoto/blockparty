@@ -76,14 +76,13 @@ function getParticipants(callback){
 }
 
 function action(name, address, callback) {
-  var options = {from:address, gas:gas}
+  var options = {from:address}
 
   if (name == "register") {
     options.value = Math.pow(10,18)
   }
 
   console.log('name', name, 'address', address, 'callback', callback)
-  var gas = 2000000;
   contract[name](null, options).then(function() {
     getDetail(function(model){
       eventEmitter.emit('change', model);
