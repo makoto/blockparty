@@ -74,9 +74,10 @@ function getParticipants(callback){
     }).then(participant => { if(participant) callback(participant); })
   })
 }
-
+var gas = 100000000;
+window.gas = gas
 function action(name, address, callback) {
-  var options = {from:address, gas:10000000000}
+  var options = {from:address, gas:window.gas}
 
   if (name == "register") {
     options.value = Math.pow(10,18)
