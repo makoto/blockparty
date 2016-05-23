@@ -74,7 +74,7 @@ function getParticipants(callback){
     }).then(participant => { if(participant) callback(participant); })
   })
 }
-var gas = 100000000;
+var gas = 1000000;
 window.gas = gas
 function action(name, address, callback) {
   var options = {from:address, gas:window.gas}
