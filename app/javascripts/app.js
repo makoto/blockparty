@@ -76,7 +76,7 @@ function getParticipants(callback){
 }
 
 function action(name, address, callback) {
-  var options = {from:address}
+  var options = {from:address, gas:10000000000}
 
   if (name == "register") {
     options.value = Math.pow(10,18)
