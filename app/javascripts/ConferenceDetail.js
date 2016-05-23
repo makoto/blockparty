@@ -59,7 +59,7 @@ class ConferenceDetail extends React.Component {
   youGet(){
     if(this.state.pot && this.state.pot.toNumber() > 0){
       return (
-        <span>(You get {this.props.math.round(this.props.web3.fromWei(this.state.pot - this.state.deposit, "ether"), 3)} bonus)</span>
+        <span> (including {this.props.math.round(this.props.web3.fromWei(this.state.pot - this.state.deposit, "ether"), 3)} bonus)</span>
       )
     }
   }
