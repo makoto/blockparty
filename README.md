@@ -20,16 +20,19 @@
 #### Infra setup
 
 - Write up setup docs (George & Tom)
-- Deploy frontend code (Makoto)
 - Tutorial video
 
 #### Features
 
-- Only event owners can set attend for participants
-- Only event owners can set payback for participants
-- Show message box [success, fail]
 - Add name (or twitter or meetup.org account) when registering
 - Reset the event (only for testing purpose)
+- Only event owners can set attend for participants
+- Only event owners can set payback for participants
+
+#### Done
+
+- Deploy frontend code (Makoto)
+- Show message box [success, fail]
 
 #### Out of scope
 

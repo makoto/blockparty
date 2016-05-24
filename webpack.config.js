@@ -32,6 +32,7 @@ module.exports = {
       { test: /\.(js|jsx|es6)$/, exclude: /node_modules/, loader: "babel-loader"},
       { test: /\.scss$/i, loader: ExtractTextPlugin.extract(["css", "sass"])},
       { test: /\.css/, loader: "style-loader!css-loader" },
+      { test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/, loader: 'url-loader?limit=100000' },
       { test: /\.json$/i, loader: "json"}
     ]
   },

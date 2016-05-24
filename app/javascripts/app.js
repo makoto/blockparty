@@ -1,10 +1,12 @@
 // import {} from "../stylesheets/app.css";
+import 'react-notifications/lib/notifications.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ConferenceDetail from './ConferenceDetail';
 import FormInput from './FormInput';
+import Notification from './Notification';
 import Participants from './Participants';
 import Avatar from 'material-ui/Avatar';
 import AppBar from 'material-ui/AppBar';
@@ -78,6 +80,7 @@ var gas = 1000000;
 window.gas = gas
 function action(name, address, callback) {
   var options = {from:address, gas:window.gas}
+  eventEmitter.emit('notification', {status:'info', message:'Requested'});
 
   if (name == "register") {
     options.value = Math.pow(10,18)
@@ -87,10 +90,11 @@ function action(name, address, callback) {
   contract[name](null, options).then(function() {
     getDetail(function(model){
       eventEmitter.emit('change', model);
+      eventEmitter.emit('notification', {status:'success', message:'Successfully Updated'});
     });
     if(callback) callback();
   }).catch(function(e) {
-    console.log(e);
+    eventEmitter.emit('notification', {status:'error', message:'Error has occored'});
   });
 }
 
@@ -110,6 +114,7 @@ web3.eth.getAccounts(function(err, accs) {
   window.web3 = web3;
   window.getParticipants = getParticipants;
   window.contract = contract;
+  window.eventEmitter = eventEmitter;
   if (err != null) {
     alert("There was an error fetching your accounts.");
     return;
@@ -131,6 +136,7 @@ const App = (props) => (
           }
           iconElementLeft={<Avatar src="/images/nightclub-white.png" size="50" backgroundColor="white" />}
         />
+        <Notification eventEmitter={eventEmitter} />
         <div style={styles.div}>
           <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
           <Participants eventEmitter={eventEmitter} getParticipants={getParticipants} web3={web3} math={math} />
