@@ -57,7 +57,7 @@ class FormInput extends React.Component {
           </SelectField>
           <TextField
             hintText="@twitter_handle"
-            floatingLabelText="You twitter handle"
+            floatingLabelText="Twitter handle"
             floatingLabelFixed={true}
             value={this.state.name}
             onChange={this.handleName.bind(this)}

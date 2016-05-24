@@ -73,7 +73,7 @@ class Participants extends React.Component {
                     <TableRow>
                       <TableRowColumn width={50}>
                         {getTwitterIcon(participant.name)}
-                        <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a></span>
+                        <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
                         (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
                         </TableRowColumn>
                       <TableRowColumn width={10} >{this.toEther(participant.balance)}</TableRowColumn>
