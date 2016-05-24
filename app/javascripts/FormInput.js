@@ -41,13 +41,20 @@ class FormInput extends React.Component {
     return (
       <Paper zDepth={1}>
         <form>
-
+          <TextField
+            hintText="@twitter_handle"
+            floatingLabelText="Twitter handle"
+            floatingLabelFixed={true}
+            value={this.state.name}
+            onChange={this.handleName.bind(this)}
+            style={{margin:'0 5px'}}
+          />
           <SelectField
             value={this.state.address}
             onChange={this.handleSelect.bind(this)}
             floatingLabelText="Account address"
             floatingLabelFixed={true}
-            style={{width:'25em'}}
+            style={{width:'25em', verticalAlign:'top', margin:'0 5px'}}
             >
             {
               this.props.accounts.map(account => {
@@ -55,13 +62,7 @@ class FormInput extends React.Component {
               })
             }
           </SelectField>
-          <TextField
-            hintText="@twitter_handle"
-            floatingLabelText="Twitter handle"
-            floatingLabelFixed={true}
-            value={this.state.name}
-            onChange={this.handleName.bind(this)}
-          />
+
           <RaisedButton secondary={true}
             label="Register" style={styles}
             onClick={this.handleAction.bind(this, 'register')}
