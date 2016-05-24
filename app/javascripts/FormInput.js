@@ -13,12 +13,16 @@ class FormInput extends React.Component {
     super(props);
 
     this.state = {
-      address:props.accounts[0]
+      address:props.accounts[0],
+      name:null
     };
   }
 
   handleAction(actionName) {
-    this.props.action(actionName, this.state.address.trim())
+    this.setState({
+      name: null,
+    });
+    this.props.action(actionName, this.state.address.trim(), this.state.name)
   }
 
   handleSelect(event,index,value){
@@ -27,11 +31,10 @@ class FormInput extends React.Component {
     });
   }
 
-  handleInput(e) {
-    // console.log('handleInput', e)
-    // this.setState({
-    //   address: e.target.value,
-    // });
+  handleName(e) {
+    this.setState({
+      name: e.target.value,
+    });
   }
 
   render() {
@@ -44,14 +47,21 @@ class FormInput extends React.Component {
             onChange={this.handleSelect.bind(this)}
             floatingLabelText="Account address"
             floatingLabelFixed={true}
-            fullWidth={true}
-          >
+            style={{width:'25em'}}
+            >
             {
               this.props.accounts.map(account => {
                 return (<MenuItem value={account} primaryText={account} />)
               })
             }
           </SelectField>
+          <TextField
+            hintText="@twitter_handle"
+            floatingLabelText="You twitter handle"
+            floatingLabelFixed={true}
+            value={this.state.name}
+            onChange={this.handleName.bind(this)}
+          />
           <RaisedButton secondary={true}
             label="Register" style={styles}
             onClick={this.handleAction.bind(this, 'register')}

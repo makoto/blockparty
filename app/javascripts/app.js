@@ -65,10 +65,11 @@ function getParticipants(callback){
       })
     })).then(function(participants){
       return participants.map(participant => {
-        var balance =  web3.fromWei(web3.eth.getBalance(participant[0]), "ether").toNumber();
+        var balance =  web3.fromWei(web3.eth.getBalance(participant[1]), "ether").toNumber();
         var object =  {
-          address: participant[0],
-          attended: participant[1],
+          name: participant[0],
+          address: participant[1],
+          attended: participant[2],
           balance: balance
         }
         console.log('participant', object);
@@ -79,21 +80,19 @@ function getParticipants(callback){
 }
 var gas = 1000000;
 window.gas = gas
-function action(name, address, callback) {
+function action(name, address, argument) {
   var options = {from:address, gas:window.gas}
   eventEmitter.emit('notification', {status:'info', message:'Requested'});
-
   if (name == "register") {
     options.value = Math.pow(10,18)
   }
 
-  console.log('name', name, 'address', address, 'callback', callback)
-  contract[name](null, options).then(function() {
+  console.log('name', name, 'address', address, 'argument', argument)
+  contract[name](argument, options).then(function() {
     getDetail(function(model){
       eventEmitter.emit('change', model);
       eventEmitter.emit('notification', {status:'success', message:'Successfully Updated'});
     });
-    if(callback) callback();
   }).catch(function(e) {
     eventEmitter.emit('notification', {status:'error', message:'Error has occored'});
   });

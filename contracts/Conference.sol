@@ -11,11 +11,12 @@ contract Conference {
 	uint256 _pot;
 
 	struct Participant {
+		string participantName;
 		address addr;
 		bool attended;
 	}
 
-	event Register(address addr, uint256 balance, uint256 value);
+	event Register(string participantName, address addr, uint256 balance, uint256 value);
 	event Attend(address addr, uint256 balance);
 	event Payback(address addr, uint256 _pot, uint256 balance, bool paid);
 
@@ -27,13 +28,13 @@ contract Conference {
 		attended = 0;
 	}
 
-	function register(){
-		Register(msg.sender, msg.sender.balance, msg.value);
+	function register(string _participant){
+		Register(_participant, msg.sender, msg.sender.balance, msg.value);
 		if (msg.value != deposit) throw;
 		if (isRegistered()) throw;
 		registered++;
 		participantsIndex[registered] = msg.sender;
-		participants[msg.sender] = Participant(msg.sender, false);
+		participants[msg.sender] = Participant(_participant, msg.sender, false);
 		balance = balance + (deposit * 1);
 	}
 
