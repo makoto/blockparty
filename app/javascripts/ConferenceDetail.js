@@ -44,6 +44,11 @@ class ConferenceDetail extends React.Component {
     this.props.eventEmitter.on('change', model => {
       this.setState(model);
     });
+    this.serverRequest = $.get('https://www.cryptocompare.com/api/data/price?fsym=ETH&tsyms=GBP', function (result) {
+      this.setState({
+        rate: result.Data[0].Price
+      });
+    }.bind(this));
   }
 
   toEther(value){
@@ -85,7 +90,7 @@ class ConferenceDetail extends React.Component {
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
             primaryText={
-              <p>Deposit<span style={styles.list}>{this.toEther(this.state.deposit)}(£7)</span></p>
+              <p>Deposit<span style={styles.list}>{this.toEther(this.state.deposit)} (£{this.state.rate})</span></p>
             }
           />
         <Divider />
