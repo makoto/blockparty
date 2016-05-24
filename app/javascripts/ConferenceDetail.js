@@ -90,7 +90,7 @@ class ConferenceDetail extends React.Component {
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
             primaryText={
-              <p>Deposit<span style={styles.list}>{this.toEther(this.state.deposit)} (£{this.state.rate})</span></p>
+              <p>Deposit<span style={styles.list}>{this.toEther(this.state.deposit)} (&pound;{this.state.rate})</span></p>
             }
           />
         <Divider />
