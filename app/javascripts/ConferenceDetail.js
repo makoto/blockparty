@@ -75,10 +75,7 @@ class ConferenceDetail extends React.Component {
         <List>
           <ListItem innerDivStyle={styles.innerDiv} insetChildren={true} disabled={true}
             primaryText={
-              <p>Name<span style={styles.list}>{this.state.name}</span></p>
-            }
-            secondaryText={
-              <span style={{float:'right'}}>{this.props.contract.address}({this.state.contractBalance})</span>
+              <p>Name<span style={styles.list}>{this.state.name}(<a target='_blank' href={ `https://testnet.etherscan.io/address/${this.props.contract.address}` }>{this.props.contract.address.slice(0,5)}...</a>)</span></p>
             }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<EventIcon />} disabled={true}

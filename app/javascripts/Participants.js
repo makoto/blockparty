@@ -56,7 +56,7 @@ class Participants extends React.Component {
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
-                <TableHeaderColumn width={100} >Address</TableHeaderColumn>
+                <TableHeaderColumn width={10} >Address</TableHeaderColumn>
                 <TableHeaderColumn width={10} >Balance</TableHeaderColumn>
                 <TableHeaderColumn width={10} >Attend?</TableHeaderColumn>
               </TableRow>
@@ -66,7 +66,7 @@ class Participants extends React.Component {
                 this.state.participants.map((participant) => {
                   return (
                     <TableRow>
-                      <TableRowColumn width={100} >{participant.address}</TableRowColumn>
+                      <TableRowColumn width={10} ><a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a></TableRowColumn>
                       <TableRowColumn width={10} >{this.toEther(participant.balance)}</TableRowColumn>
                       <TableRowColumn width={10} >{this.yesNo(participant.attended)}</TableRowColumn>
                     </TableRow>
