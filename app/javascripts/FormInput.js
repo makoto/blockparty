@@ -40,7 +40,7 @@ class FormInput extends React.Component {
         <form>
 
           <SelectField
-            value={this.props.accounts[0]}
+            value={this.state.address}
             onChange={this.handleSelect.bind(this)}
             floatingLabelText="Account address"
             floatingLabelFixed={true}
