@@ -74,6 +74,10 @@ class FormInput extends React.Component {
             label="Payback" style={styles}
             onClick={this.handleAction.bind(this, 'payback')}
           />
+        <RaisedButton secondary={true}
+            label="Reset" style={styles}
+            onClick={this.handleAction.bind(this, 'reset')}
+          />
         </form>
       </Paper>
     );

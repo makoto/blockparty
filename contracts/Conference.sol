@@ -9,6 +9,7 @@ contract Conference {
 	mapping (uint => address) public participantsIndex;
 	bool paid;
 	uint256 _pot;
+	address owner;
 
 	struct Participant {
 		string participantName;
@@ -19,6 +20,7 @@ contract Conference {
 	event Register(string participantName, address addr, uint256 balance, uint256 value);
 	event Attend(address addr, uint256 balance);
 	event Payback(address addr, uint256 _pot, uint256 balance, bool paid);
+	event Reset(address addr, uint256 balance);
 
 	function Conference() {
 		name = 'CodeUp';
@@ -26,6 +28,7 @@ contract Conference {
 		balance = 0;
 		registered = 0;
 		attended = 0;
+		owner = msg.sender;
 	}
 
 	function register(string _participant){
@@ -69,5 +72,20 @@ contract Conference {
 			}
 		}
 		balance = 0;
+	}
+
+	function reset(){
+		if(balance > 0){
+			owner.send(balance);
+		}
+		Reset(owner, balance);
+		for(uint i=1;i<=registered;i++)
+		{
+			delete participants[participantsIndex[i]];
+			delete participantsIndex[i];
+		}
+		balance = 0;
+		registered = 0;
+		attended = 0;
 	}
 }
