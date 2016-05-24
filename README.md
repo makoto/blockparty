@@ -33,9 +33,9 @@
 
 - Deploy frontend code (Makoto)
 - Show message box [success, fail]
+- Dropdown box of available accounts to take action
 
 #### Out of scope
 
-- Dropdown box of available accounts to take action
 - Cancel the event (automatically refund)
 - Refresh info when someone else register/attend

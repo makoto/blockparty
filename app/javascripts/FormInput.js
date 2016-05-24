@@ -3,6 +3,8 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 const styles = {margin:12}
 
@@ -11,7 +13,7 @@ class FormInput extends React.Component {
     super(props);
 
     this.state = {
-      address:''
+      address:props.accounts[0]
     };
   }
 
@@ -19,21 +21,37 @@ class FormInput extends React.Component {
     this.props.action(actionName, this.state.address.trim())
   }
 
-  handleInput(e) {
+  handleSelect(event,index,value){
     this.setState({
-      address: e.target.value,
+      address: value,
     });
+  }
+
+  handleInput(e) {
+    // console.log('handleInput', e)
+    // this.setState({
+    //   address: e.target.value,
+    // });
   }
 
   render() {
     return (
       <Paper zDepth={1}>
         <form>
-          <TextField  style={styles} fullWidth={true}
-            hintText="Your Account Address"
-            value={this.state.address}
-            onChange={this.handleInput.bind(this)}
-          />
+
+          <SelectField
+            value={this.props.accounts[0]}
+            onChange={this.handleSelect.bind(this)}
+            floatingLabelText="Account address"
+            floatingLabelFixed={true}
+            fullWidth={true}
+          >
+            {
+              this.props.accounts.map(account => {
+                return (<MenuItem value={account} primaryText={account} />)
+              })
+            }
+          </SelectField>
           <RaisedButton secondary={true}
             label="Register" style={styles}
             onClick={this.handleAction.bind(this, 'register')}

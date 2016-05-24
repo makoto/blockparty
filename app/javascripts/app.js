@@ -14,6 +14,7 @@ import {List, ListItem} from 'material-ui/List';
 import EventEmitter from 'event-emitter';
 import Paper from 'material-ui/Paper';
 import math from 'mathjs';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 const styles = {
   div:{
@@ -108,23 +109,20 @@ function watchEvent(){
   });
 }
 
-// Log all available accounts
-web3.eth.getAccounts(function(err, accs) {
-  window.accounts = accs;
-  window.web3 = web3;
-  window.getParticipants = getParticipants;
-  window.contract = contract;
-  window.eventEmitter = eventEmitter;
-  if (err != null) {
-    alert("There was an error fetching your accounts.");
-    return;
-  }
-  if (accs.length == 0) {
-    alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-    return;
-  }
-  console.log(accs);
-});
+function getAccounts(callback){
+  web3.eth.getAccounts(function(err, accs) {
+    if (err != null) {
+      eventEmitter.emit('notification', {status:'error', message:'There was an error fetching your accounts.'});
+      return;
+    }
+    if (accs.length == 0) {
+      var message = "Couldn't get any accounts! Make sure your Ethereum client is configured correctly.";
+      eventEmitter.emit('notification', {status:'error', message:message});
+      return;
+    }
+    callback(accs);
+  })
+}
 
 const App = (props) => (
   <div>
@@ -141,15 +139,35 @@ const App = (props) => (
           <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
           <Participants eventEmitter={eventEmitter} getParticipants={getParticipants} web3={web3} math={math} />
         </div>
-        <FormInput action={action} />
+        <FormInput accounts = {accounts} action = {action} />
       </div>
     </MuiThemeProvider>
   </div>
 );
 
 window.onload = function() {
-  ReactDOM.render(
-    <App getDetail={getDetail} eventEmitter={eventEmitter} action={action} getParticipants={getParticipants} web3={web3} math={math} contract={contract} />,
-    document.getElementById('app')
-  );
+  console.log("LOAD")
+  getAccounts(accs => {
+    console.log("ACCOUNTS")
+    window.accounts = accs;
+    window.web3 = web3;
+    window.getParticipants = getParticipants;
+    window.contract = contract;
+    window.eventEmitter = eventEmitter;
+    console.log(accs);
+    injectTapEventPlugin();
+    ReactDOM.render(
+      <App
+        accounts = {accounts}
+        getDetail = {getDetail}
+        eventEmitter = {eventEmitter}
+        action = {action}
+        getParticipants = {getParticipants}
+        web3 = {web3}
+        math = {math}
+        contract={contract}
+      />,
+      document.getElementById('app')
+    );
+  })
 }
