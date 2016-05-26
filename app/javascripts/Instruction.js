@@ -72,6 +72,9 @@ export default class Instruction extends React.Component {
           <blockquote style={{backgroundColor:'black', color:'white', padding:'1em'}}>
             geth --testnet --unlock 0,1 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain http://blockparty.io.s3-website-eu-west-1.amazonaws.com
           </blockquote>
+          <p>
+            NOTE: <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0</span> will unlock with one account. <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0 1</span> will unlock with two accounts.
+          </p>
           <h2>How to play?</h2>
           <ul>
             <li>Step 1: Type your twitter account, pick one of your address, then press 'Register'. It will take 10 to 30 seconds to get verified and you will receive notification.</li>
