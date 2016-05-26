@@ -11,11 +11,19 @@ const styles = {margin:12}
 class FormInput extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      address:props.accounts[0],
-      name:null
+      address:null,
+      name:null,
+      accounts:[]
     };
+
+    this.props.getAccounts(accounts => {
+      this.state = {
+        address:accounts[0],
+        accounts:accounts,
+        name:null
+      };
+    })
   }
 
   handleAction(actionName) {
@@ -57,7 +65,7 @@ class FormInput extends React.Component {
             style={{width:'25em', verticalAlign:'top', margin:'0 5px'}}
             >
             {
-              this.props.accounts.map(account => {
+              this.state.accounts.map(account => {
                 return (<MenuItem value={account} primaryText={account} />)
               })
             }

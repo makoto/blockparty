@@ -7,6 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ConferenceDetail from './ConferenceDetail';
 import FormInput from './FormInput';
 import Notification from './Notification';
+import Instruction from './Instruction';
 import Participants from './Participants';
 import Avatar from 'material-ui/Avatar';
 import AppBar from 'material-ui/AppBar';
@@ -80,6 +81,7 @@ function getParticipants(callback){
 }
 var gas = 1000000;
 window.gas = gas
+window.eventEmitter = eventEmitter;
 function action(name, address, argument) {
   var options = {from:address, gas:window.gas}
   eventEmitter.emit('notification', {status:'info', message:'Requested'});
@@ -111,7 +113,7 @@ function watchEvent(){
 function getAccounts(callback){
   web3.eth.getAccounts(function(err, accs) {
     if (err != null) {
-      eventEmitter.emit('notification', {status:'error', message:'There was an error fetching your accounts.'});
+      eventEmitter.emit('instruction')
       return;
     }
     if (accs.length == 0) {
@@ -133,40 +135,33 @@ const App = (props) => (
           }
           iconElementLeft={<Avatar src="/images/nightclub-white.png" size="50" backgroundColor="white" />}
         />
+        <Instruction eventEmitter={eventEmitter} />
         <Notification eventEmitter={eventEmitter} />
         <div style={styles.div}>
           <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
           <Participants eventEmitter={eventEmitter} getParticipants={getParticipants} web3={web3} math={math} />
         </div>
-        <FormInput accounts = {accounts} action = {action} />
+        <FormInput getAccounts = {getAccounts} action = {action} />
       </div>
     </MuiThemeProvider>
   </div>
 );
 
+window.web3 = web3;
 window.onload = function() {
   console.log("LOAD")
-  getAccounts(accs => {
-    console.log("ACCOUNTS")
-    window.accounts = accs;
-    window.web3 = web3;
-    window.getParticipants = getParticipants;
-    window.contract = contract;
-    window.eventEmitter = eventEmitter;
-    console.log(accs);
-    injectTapEventPlugin();
-    ReactDOM.render(
-      <App
-        accounts = {accounts}
-        getDetail = {getDetail}
-        eventEmitter = {eventEmitter}
-        action = {action}
-        getParticipants = {getParticipants}
-        web3 = {web3}
-        math = {math}
-        contract={contract}
-      />,
-      document.getElementById('app')
-    );
-  })
+  injectTapEventPlugin();
+  ReactDOM.render(
+    <App
+      getAccounts = {getAccounts}
+      getDetail = {getDetail}
+      eventEmitter = {eventEmitter}
+      action = {action}
+      getParticipants = {getParticipants}
+      web3 = {web3}
+      math = {math}
+      contract={contract}
+    />,
+    document.getElementById('app')
+  );
 }

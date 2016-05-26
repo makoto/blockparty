@@ -38,7 +38,7 @@ class ConferenceDetail extends React.Component {
     // Initialize
     this.props.getDetail(model =>{
       this.setState(model);
-    });
+    })
 
     // Listen to watcher event.
     this.props.eventEmitter.on('change', model => {
