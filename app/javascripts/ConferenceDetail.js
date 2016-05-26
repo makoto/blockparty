@@ -40,6 +40,15 @@ class ConferenceDetail extends React.Component {
       this.setState(model);
     })
 
+    // If the app failed to get detail from contract (meaning either connecting
+    // to wrong network or the contract id does not match to the one deployed),
+    // it will show instruction page.
+    setTimeout(function(){
+      if(typeof(this.state.name) == 'undefined'){
+        this.props.eventEmitter.emit('instruction');
+      }
+    }.bind(this), 1000)
+
     // Listen to watcher event.
     this.props.eventEmitter.on('change', model => {
       this.setState(model);
