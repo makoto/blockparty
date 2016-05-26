@@ -14,7 +14,8 @@ class FormInput extends React.Component {
     this.state = {
       address:null,
       name:null,
-      accounts:[]
+      accounts:[],
+      detail:{}
     };
 
     this.props.getAccounts(accounts => {
@@ -23,6 +24,15 @@ class FormInput extends React.Component {
         accounts:accounts
       })
     })
+    this.props.getDetail(detail => {
+      this.setState({
+        detail:detail
+      })
+    })
+    this.props.eventEmitter.on('change', detail => {
+      console.log('DETAIL', detail)
+      this.setState({detail:detail});
+    });
   }
 
   handleAction(actionName) {
@@ -37,6 +47,23 @@ class FormInput extends React.Component {
       address: value,
     });
   }
+
+  showRegister(){
+    return this.state.detail.canRegister
+  }
+
+  showAttend(){
+    return this.state.detail.canRegister
+  }
+
+  showPayback(){
+    return this.state.detail.canPayback
+  }
+
+  showReset(){
+    return this.state.detail.canReset
+  }
+
 
   handleName(e) {
     this.setState({
@@ -70,19 +97,19 @@ class FormInput extends React.Component {
             }
           </SelectField>
 
-          <RaisedButton secondary={true}
+          <RaisedButton secondary={this.showRegister()} disabled={!this.showRegister()}
             label="Register" style={styles}
             onClick={this.handleAction.bind(this, 'register')}
           />
-          <RaisedButton secondary={true}
+        <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
             label="Attend" style={styles}
             onClick={this.handleAction.bind(this, 'attend')}
           />
-          <RaisedButton secondary={true}
+        <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
             label="Payback" style={styles}
             onClick={this.handleAction.bind(this, 'payback')}
           />
-        <RaisedButton secondary={true}
+        <RaisedButton secondary={this.showReset()} disabled={!this.showReset()}
             label="Reset" style={styles}
             onClick={this.handleAction.bind(this, 'reset')}
           />

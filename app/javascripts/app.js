@@ -41,7 +41,8 @@ function getDetail(callback){
   Promise.all(['name', 'deposit', 'payout', 'balance', 'registered', 'attended'].map(name => {
     return contract[name].call();
   })).then(values => {
-    callback({
+
+    var detail = {
       'name': values[0],
       'deposit': values[1],
       'payout': values[2],
@@ -49,7 +50,19 @@ function getDetail(callback){
       'registered': values[4],
       'attended': values[5],
       'contractBalance': web3.fromWei(web3.eth.getBalance(contract.address), "ether").toNumber()
-    });
+    }
+
+    if(detail.registered.toNumber() > 0 && detail.attended.toNumber() > 0 && detail.payout.toNumber() > 0){
+      detail.canPayback = true
+    }
+    if(detail.registered.toNumber() > 0 && detail.attended.toNumber() > 0 && detail.payout.toNumber() == 0){
+      detail.canReset = true
+    }
+    if(!detail.canReset){
+      detail.canRegister = true
+    }
+
+    callback(detail);
   }).catch(errors => {
     console.log('errors', errors);
   });
@@ -143,7 +156,7 @@ const App = (props) => (
           <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
           <Participants eventEmitter={eventEmitter} getParticipants={getParticipants} web3={web3} math={math} />
         </div>
-        <FormInput getAccounts = {getAccounts} action = {action} />
+        <FormInput eventEmitter={eventEmitter} getAccounts = {getAccounts} getDetail = {getDetail} action = {action} />
       </div>
     </MuiThemeProvider>
   </div>
