@@ -18,11 +18,10 @@ class FormInput extends React.Component {
     };
 
     this.props.getAccounts(accounts => {
-      this.state = {
+      this.setState({
         address:accounts[0],
-        accounts:accounts,
-        name:null
-      };
+        accounts:accounts
+      })
     })
   }
 
