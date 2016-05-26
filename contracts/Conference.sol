@@ -75,12 +75,12 @@ contract Conference {
 	}
 
 	function reset(){
-		if(balance > 0){
-			owner.send(balance);
-		}
 		Reset(owner, balance);
 		for(uint i=1;i<=registered;i++)
 		{
+			if(balance > 0){
+				participantsIndex[i].send(deposit);
+			}
 			delete participants[participantsIndex[i]];
 			delete participantsIndex[i];
 		}
