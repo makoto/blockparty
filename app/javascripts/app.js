@@ -151,7 +151,7 @@ const App = (props) => (
         <Notification eventEmitter={eventEmitter} />
         <div style={styles.div}>
           <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
-          <Participants eventEmitter={eventEmitter} getParticipants={getParticipants} web3={web3} math={math} />
+          <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} web3={web3} math={math} />
         </div>
         <FormInput eventEmitter={eventEmitter} getAccounts = {getAccounts} getDetail = {getDetail} action = {action} />
       </div>

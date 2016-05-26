@@ -21,7 +21,10 @@ const styles = {
 class Participants extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {participants:[]};
+    this.state = {
+      participants:[],
+      detail:{}
+    };
   }
 
   componentDidMount(){
@@ -34,6 +37,14 @@ class Participants extends React.Component {
       this.props.getParticipants(participants =>{
         this.setState({participants});
       });
+    });
+    this.props.getDetail(detail => {
+      this.setState({
+        detail:detail
+      })
+    })
+    this.props.eventEmitter.on('change', detail => {
+      this.setState({detail:detail});
     });
   }
 
@@ -53,6 +64,27 @@ class Participants extends React.Component {
     }
   }
 
+  displayParticipants(){
+    if(!this.state.detail.name) return(<TableRowColumn style={{textAlign:'center'}} width={100} >No info available. Please follow instructions at 'About' page</TableRowColumn>)
+    if(this.state.participants.length > 0){
+      return this.state.participants.map((participant) => {
+        console.log('aaa')
+        return (
+          <TableRow>
+            <TableRowColumn width={50}>
+              {getTwitterIcon(participant.name)}
+              <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
+              (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
+              </TableRowColumn>
+            <TableRowColumn width={10} >{this.toEther(participant.balance)}</TableRowColumn>
+            <TableRowColumn width={10} >{this.yesNo(participant.attended)}</TableRowColumn>
+          </TableRow>
+        )
+      })
+    }else{
+      return(<TableRowColumn style={{textAlign:'center'}} width={100} >No one has registered yet. Be the first to register by typing your twitter handle and press 'Register'</TableRowColumn>)
+    }
+  }
 
   render() {
     return (
@@ -67,21 +99,7 @@ class Participants extends React.Component {
               </TableRow>
             </TableHeader>
             <TableBody displayRowCheckbox={false}>
-              {
-                this.state.participants.map((participant) => {
-                  return (
-                    <TableRow>
-                      <TableRowColumn width={50}>
-                        {getTwitterIcon(participant.name)}
-                        <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
-                        (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
-                        </TableRowColumn>
-                      <TableRowColumn width={10} >{this.toEther(participant.balance)}</TableRowColumn>
-                      <TableRowColumn width={10} >{this.yesNo(participant.attended)}</TableRowColumn>
-                    </TableRow>
-                  )
-                })
-              }
+              {this.displayParticipants()}
             </TableBody>
           </Table>
       </Paper>
