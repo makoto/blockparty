@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import FlatButton from 'material-ui/FlatButton';
 import ConferenceDetail from './ConferenceDetail';
 import FormInput from './FormInput';
 import Notification from './Notification';
@@ -134,6 +135,7 @@ const App = (props) => (
             <span>Block Party<span style={{fontSize:'small', fontFamily:'sans-serif'}}> - NO BLOCK NO PARTY -</span></span>
           }
           iconElementLeft={<Avatar src="/images/nightclub-white.png" size="50" backgroundColor="white" />}
+          iconElementRight={<FlatButton label="About" onClick={ () => {eventEmitter.emit('instruction')}} />}
         />
         <Instruction eventEmitter={eventEmitter} />
         <Notification eventEmitter={eventEmitter} />
