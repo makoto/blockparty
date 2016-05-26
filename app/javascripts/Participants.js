@@ -65,7 +65,23 @@ class Participants extends React.Component {
   }
 
   displayParticipants(){
-    if(!this.state.detail.name) return(<TableRowColumn style={{textAlign:'center'}} width={100} >No info available. Please follow instructions at 'About' page</TableRowColumn>)
+    if(!this.state.detail.name) return(
+      <TableRowColumn width={100} >
+        <p>
+          <h5>No info available.</h5>
+          The reason are more likely to be one of the followings.
+          <ul>
+            <li>
+              You are not connected to the correct Ethereum network (testnet) with correct options.
+            </li>
+            <li>
+              Your local node is out of sync (may take a few hours if this is your first time using Ethereum).
+            </li>
+          </ul>
+          Please follow the instructions at 'About' page to solve.
+        </p>
+      </TableRowColumn>
+    )
     if(this.state.participants.length > 0){
       return this.state.participants.map((participant) => {
         console.log('aaa')
