@@ -93,7 +93,9 @@ class ConferenceDetail extends React.Component {
       )
     }else{
       return (
-        <span style={styles.list}>No info available</span>
+        <span style={styles.list}>
+          The contract <a target='_blank' href={ `https://testnet.etherscan.io/address/${contractAddress}` }>{contractAddress.slice(0,10)}...</a> not available
+        </span>
       )
     }
   }
