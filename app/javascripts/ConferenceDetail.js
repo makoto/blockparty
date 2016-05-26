@@ -82,6 +82,52 @@ class ConferenceDetail extends React.Component {
     return this.props.web3.fromWei(this.props.web3.eth.getBalance(this.props.contract.address), "ether").toNumber();
   }
 
+
+
+  getNameContent(name, contractAddress){
+    if(name){
+      return (
+        <span style={styles.list}>
+          {name} (<a target='_blank' href={ `https://testnet.etherscan.io/address/${contractAddress}` }>{contractAddress.slice(0,5)}...</a>)
+        </span>
+      )
+    }else{
+      return (
+        <span style={styles.list}>No info available</span>
+      )
+    }
+  }
+
+  getDateContent(name){
+    if(name){
+      var d = new Date();
+      var curr_date = d.getDate();
+      var curr_month = d.getMonth() + 1; //Months are zero based
+      var curr_year = d.getFullYear();
+      var date = `${curr_date}-${curr_month}-${curr_year}`
+
+      return (
+        <span style={styles.list}>{date}</span>
+      )
+    }else{
+      return (
+        <span style={styles.list}>No info available</span>
+      )
+    }
+  }
+
+  getDepositContent(deposit, rate){
+    if(deposit){
+      return (
+        <span style={styles.list}>{this.toEther(deposit)} (&pound;{rate})</span>
+      )
+    }else{
+      return (
+        <span style={styles.list}>No info available</span>
+      )
+    }
+  }
+
   render() {
     return (
       <Paper zDepth={1} style={styles.paperLeft}>
@@ -89,17 +135,17 @@ class ConferenceDetail extends React.Component {
         <List>
           <ListItem innerDivStyle={styles.innerDiv} insetChildren={true} disabled={true}
             primaryText={
-              <p>Name<span style={styles.list}>{this.state.name} (<a target='_blank' href={ `https://testnet.etherscan.io/address/${this.props.contract.address}` }>{this.props.contract.address.slice(0,5)}...</a>)</span></p>
+              <p>Name{this.getNameContent(this.state.name, this.props.contract.address)}</p>
             }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<EventIcon />} disabled={true}
             primaryText={
-              <p>Date<span style={styles.list}>23/5/2016</span></p>
+              <p>Date{this.getDateContent(this.state.name)}</p>
             }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
             primaryText={
-              <p>Deposit<span style={styles.list}>{this.toEther(this.state.deposit)} (&pound;{this.state.rate})</span></p>
+              <p>Deposit{this.getDepositContent(this.state.deposit, this.state.rate)}</p>
             }
           />
         <Divider />

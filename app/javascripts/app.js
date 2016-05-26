@@ -38,10 +38,9 @@ const eventEmitter = EventEmitter()
 
 // Functions to interact with contract
 function getDetail(callback){
-  Promise.all(['name', 'deposit', 'payout', 'balance', 'registered', 'attended'].map(name => {
-    return contract[name].call();
+  Promise.all(['name', 'deposit', 'payout', 'balance', 'registered', 'attended'].map(attributeName => {
+    return contract[attributeName].call();
   })).then(values => {
-
     var detail = {
       'name': values[0],
       'deposit': values[1],
@@ -63,9 +62,7 @@ function getDetail(callback){
     }
 
     callback(detail);
-  }).catch(errors => {
-    console.log('errors', errors);
-  });
+  })
 }
 
 function getParticipants(callback){
