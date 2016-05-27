@@ -165,7 +165,7 @@ contract('Conference', function(accounts) {
   })
 
   describe('on payback', function(){
-    it('shold be attended', function(done){
+    it('shold get money back only if you attend', function(done){
       var meta = Conference.deployed();
       var transaction = web3.toWei(1, "ether");
       var gas = 1000000;
@@ -178,8 +178,10 @@ contract('Conference', function(accounts) {
         var roundedDiff = Math.round(realDiff * 1000) / 1000;
         return roundedDiff;
       }
-      // 3 registrations
-      meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas}).then(function() {
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+      }).then(function() {
         return meta.register.sendTransaction('@Cpt_Reliable', {from:accounts[1], value:transaction, gas:gas})
       }).then(function(){
         return meta.register.sendTransaction('@FLAKEY_99p', {from:accounts[2], value:transaction, gas:gas})
@@ -209,6 +211,55 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
   })
+
+  describe('on cancel', function(){
+    it('shold get money back', function(done){
+      var meta
+      var transaction = web3.toWei(1, "ether");
+      var gas = 1000000;
+      var previousBalances = [];
+      var twitterHandle = '@bighero6';
+
+      var balanceDiff = function(index){
+        var realDiff = web3.fromWei(web3.eth.getBalance(accounts[index]).minus(previousBalances[index]), "ether");
+        // Ignore small diff introduced by gas price;
+        var roundedDiff = Math.round(realDiff * 1000) / 1000;
+        return roundedDiff;
+      }
+      // 3 registrations
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+      }).then(function() {
+        return meta.register.sendTransaction('@Cpt_Reliable', {from:accounts[1], value:transaction, gas:gas})
+      }).then(function(){
+        return meta.register.sendTransaction('@FLAKEY_99p', {from:accounts[2], value:transaction, gas:gas})
+      }).then(function(){
+        // contract gets 3 ethers
+        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(3, "ether"))
+        // only account 0 and 1 attend
+      }).then(function(){
+        return meta.attend.sendTransaction({from:accounts[0], gas:gas})
+      }).then(function(){
+        return meta.attend.sendTransaction({from:accounts[1], gas:gas})
+      }).then(function(){
+        previousBalances[0] = web3.eth.getBalance(accounts[0]);
+        previousBalances[1] = web3.eth.getBalance(accounts[1]);
+        previousBalances[2] = web3.eth.getBalance(accounts[2]);
+        return meta.reset.sendTransaction({from:accounts[0], gas:gas})
+      }).then(function(){
+        // no money is left on contract
+        assert.equal(web3.eth.getBalance(meta.address), web3.toWei(0, "ether"))
+        // got deposit back
+        assert.equal(balanceDiff(0), 1)
+        assert.equal(balanceDiff(1), 1)
+        assert.equal(balanceDiff(2), 1)
+      })
+      .then(done).catch(done);
+    })
+  })
+
+
 })
 
 // Just a generic test to check Ether transaction is working;
