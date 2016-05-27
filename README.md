@@ -42,10 +42,11 @@
 ### Prerequisite
 
 - [geth](https://github.com/ethereum/go-ethereum/wiki/geth)
-- [truffle](http://truffle.readthedocs.org)
-- [testrpc](https://github.com/ethereumjs/testrpc)
 - [nodejs](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/)
+- [webpack](https://webpack.github.io/)
+- [truffle](http://truffle.readthedocs.org)
+- [testrpc](https://github.com/ethereumjs/testrpc)
 
 ### Running test
 
