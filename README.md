@@ -62,10 +62,13 @@
 
 ## TODO
 
+- Add date
 - Only event owners can set attend, payback, and reset
 - Only event owners can set payback for participants
 - Cancel the event (automatically refund)
 - Refresh info when someone else register/attend
+- Cannot register once the event is over.
+
 - Automatic check in
 - Waitlist
 - Transfer my spot
