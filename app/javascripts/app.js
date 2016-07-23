@@ -27,12 +27,10 @@ const styles = {
   }
 };
 
-// Some settings to connect to Ethereum.
-const Pudding = require("ether-pudding");
-const web3 = new Web3();
-Pudding.setWeb3(web3);
-web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
-Conference.load(Pudding);
+const web3 = new Web3;
+const provider = new Web3.providers.HttpProvider("http://localhost:8545");
+web3.setProvider(provider);
+Conference.setProvider(provider);
 const contract = Conference.deployed();
 const eventEmitter = EventEmitter()
 
