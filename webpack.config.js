@@ -12,8 +12,8 @@ var provided = {
 };
 
 // Get all the compiled contracts for our environment.
-var contracts_directory = path.join("./", "environments", environment, "contracts");
-fs.readdirSync("./environments/" + environment + "/contracts").forEach(function(file) {
+var contracts_directory = "./build/contracts";
+fs.readdirSync("./build/contracts").forEach(function(file) {
   if (path.basename(file).indexOf(".sol.js")) {
     provided[path.basename(file, ".sol.js")] = path.resolve(contracts_directory + "/" + file);
   }
@@ -23,7 +23,7 @@ console.log('**providedPlugins', providedPlugins)
 module.exports = {
   entry: './app/javascripts/app.js',
   output: {
-    path: "./environments/" + environment + "/build",
+    path: "./build",
     filename: 'app.js'
   },
   devtool:'#source-map',

@@ -263,20 +263,20 @@ contract('Conference', function(accounts) {
 })
 
 // Just a generic test to check Ether transaction is working;
-contract('Transaction test', function(accounts) {
-  it('shold send ether from one account to another', function(done){
-    var before0 = web3.eth.getBalance(accounts[0]);
-    var before1 = web3.eth.getBalance(accounts[1]);
-    var gas = 21000; // gas price taken from the log of testrpc
-    web3.eth.sendTransaction({from:accounts[0], to:accounts[1], gas:gas, value: web3.toWei(100, "ether")}, function(){
-      var after0 = web3.eth.getBalance(accounts[0]);
-      var after1 = web3.eth.getBalance(accounts[1]);
-      assert.equal( after0.minus(before0).plus(gas).toNumber(), web3.toWei(-100, "ether"));
-      assert.equal( after1.minus(before1).toNumber() , web3.toWei(100, "ether"));
-      done();
-    })
-  })
-})
+// contract('Transaction test', function(accounts) {
+//   it('shold send ether from one account to another', function(done){
+//     var before0 = web3.eth.getBalance(accounts[0]);
+//     var before1 = web3.eth.getBalance(accounts[1]);
+//     var gas = 21000; // gas price taken from the log of testrpc
+//     web3.eth.sendTransaction({from:accounts[0], to:accounts[1], gas:gas, value: web3.toWei(100, "ether")}, function(){
+//       var after0 = web3.eth.getBalance(accounts[0]);
+//       var after1 = web3.eth.getBalance(accounts[1]);
+//       assert.equal( after0.minus(before0).plus(gas).toNumber(), web3.toWei(-100, "ether"));
+//       assert.equal( after1.minus(before1).toNumber() , web3.toWei(100, "ether"));
+//       done();
+//     })
+//   })
+// })
 
 // Testing them from `truffle console`
 // var meta = Conference.deployed();
