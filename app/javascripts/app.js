@@ -27,10 +27,19 @@ const styles = {
   }
 };
 
-const web3 = new Web3;
-const provider = new Web3.providers.HttpProvider("http://localhost:8545");
+let web3, provider;
+
+if(typeof(web3) == 'undefined'){
+  web3 = new Web3;
+  provider = new Web3.providers.HttpProvider("http://localhost:8545");
+  console.log('NO MIST');
+}else{
+  provider = web3.currentProvider;
+  console.log('MIST');
+}
 web3.setProvider(provider);
 Conference.setProvider(provider);
+
 const contract = Conference.deployed();
 const eventEmitter = EventEmitter()
 
