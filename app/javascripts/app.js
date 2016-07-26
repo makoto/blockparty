@@ -29,7 +29,8 @@ const styles = {
 
 let provider;
 
-if(typeof web3 !== 'undefined'){   // If accessed via mist
+// mist loading proposal https://gist.github.com/frozeman/fbc7465d0b0e6c1c4c23
+if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
   provider = web3.currentProvider; // Keep provider info given from mist `web3` object
   web3 = new Web3;                 // Re-instantiate `web3` using `Web3` from Dapp
 }else{
