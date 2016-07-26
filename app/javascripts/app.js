@@ -31,13 +31,14 @@ let provider;
 
 if(typeof web3 !== 'undefined'){
   // Do not define web3 as the object already exist
-  web3 = new Web3(web3.currentProvider);
   provider = web3.currentProvider;
+  web3 = new Web3
 }else{
   provider = new Web3.providers.HttpProvider("http://localhost:8545");
-  let web3 = new Web3(provider);
+  let web3 = new Web3
   window.web3 = web3;
 }
+web3.setProvider(provider);
 Conference.setProvider(provider);
 
 const contract = Conference.deployed();
