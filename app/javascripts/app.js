@@ -27,17 +27,17 @@ const styles = {
   }
 };
 
-let web3, provider;
+let provider;
 
-if(typeof(web3) == 'undefined'){
-  web3 = new Web3;
-  provider = new Web3.providers.HttpProvider("http://localhost:8545");
-  console.log('NO MIST');
-}else{
+if(typeof web3 !== 'undefined'){
+  // Do not define web3 as the object already exist
+  web3 = new Web3(web3.currentProvider);
   provider = web3.currentProvider;
-  console.log('MIST');
+}else{
+  provider = new Web3.providers.HttpProvider("http://localhost:8545");
+  let web3 = new Web3(provider);
+  window.web3 = web3;
 }
-web3.setProvider(provider);
 Conference.setProvider(provider);
 
 const contract = Conference.deployed();
@@ -166,7 +166,6 @@ const App = (props) => (
   </div>
 );
 
-window.web3 = web3;
 window.onload = function() {
   console.log("LOAD")
   injectTapEventPlugin();
