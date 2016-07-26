@@ -27,10 +27,20 @@ const styles = {
   }
 };
 
-const web3 = new Web3;
-const provider = new Web3.providers.HttpProvider("http://localhost:8545");
+let provider;
+
+// mist loading proposal https://gist.github.com/frozeman/fbc7465d0b0e6c1c4c23
+if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
+  provider = web3.currentProvider; // Keep provider info given from mist `web3` object
+  web3 = new Web3;                 // Re-instantiate `web3` using `Web3` from Dapp
+}else{
+  provider = new Web3.providers.HttpProvider("http://localhost:8545");
+  let web3 = new Web3;             // Define and instantiate `web3` if accessed from web browser
+  window.web3 = web3;
+}
 web3.setProvider(provider);
 Conference.setProvider(provider);
+
 const contract = Conference.deployed();
 const eventEmitter = EventEmitter()
 
@@ -157,7 +167,6 @@ const App = (props) => (
   </div>
 );
 
-window.web3 = web3;
 window.onload = function() {
   console.log("LOAD")
   injectTapEventPlugin();
