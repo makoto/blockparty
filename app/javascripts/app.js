@@ -29,13 +29,12 @@ const styles = {
 
 let provider;
 
-if(typeof web3 !== 'undefined'){
-  // Do not define web3 as the object already exist
-  provider = web3.currentProvider;
-  web3 = new Web3
+if(typeof web3 !== 'undefined'){   // If accessed via mist
+  provider = web3.currentProvider; // Keep provider info given from mist `web3` object
+  web3 = new Web3;                 // Re-instantiate `web3` using `Web3` from Dapp
 }else{
   provider = new Web3.providers.HttpProvider("http://localhost:8545");
-  let web3 = new Web3
+  let web3 = new Web3;             // Define and instantiate `web3` if accessed from web browser
   window.web3 = web3;
 }
 web3.setProvider(provider);
