@@ -45,8 +45,12 @@
 - [nodejs](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/)
 - [webpack](https://webpack.github.io/)
-- [truffle](http://truffle.readthedocs.org)
+- [truffle](http://truffle.readthedocs.org) = version 2.0.4
 - [testrpc](https://github.com/ethereumjs/testrpc)
+
+### Installation
+
+- Run `npm`
 
 ### Running test
 
@@ -62,13 +66,31 @@
 
 ## TODO
 
-- Add date
-- Only event owners can set attend, payback, and reset
-- Only event owners can set payback for participants
-- Cancel the event (automatically refund)
-- Refresh info when someone else register/attend
-- Cannot register once the event is over.
+### Mainnet release candidate features
 
+#### Essential
+
+- Delete `reset` function (to be replaced by `cancel` event)
+- Add `cancel` event functionality (automatically refund)
+- Only event owners can execute `attend`, `payback`
+- Add event date
+- Cannot register on the day of event.
+- Cannot register once the event is over.
+- Add disclaimar doc
+
+#### Nice to have
+
+- Replace `throw` with returning ether (better practice for handling exceptions)
+- Add readonly views (so that people can see people who attended via mobile phone)
+- Upload the deployed source code to `etherscan.io` 
+
+### Backlog
+
+- Let participant to claim the payback rather than event owners to send payback
+- Change payback ratio (eg: first registered, more reward)
+- Let user to register by sending Ether (so that they could potentially register not via wallet but via exchange, etc)
 - Automatic check in
 - Waitlist
 - Transfer my spot
+- Refresh info when someone else register/attend
+
