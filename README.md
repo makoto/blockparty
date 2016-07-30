@@ -16,17 +16,30 @@
 </div>
 
 <h2>How to setup</h2>
+
+The link to [Proof Of Concept](http://blockparty.io.v02.s3-website-us-west-2.amazonaws.com/)
+
+<h3>Option 1: access from Mist</h3>
 <ul>
-  <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Ethereum Wallet</a>, and make sure you choose <em style={{fontWeight:'bold'}}>testnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
+  <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>testnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
+  <li>Step 2: Create at least 2 accounts on your wallet (so that you can simulate multiple users), and make sure you have some Ethers in both accounts. Here is the quick link on <a href='https://medium.com/@makoto_inoue/ether1-how-to-even-get-to-start-deploying-ethereum-d297cc68b5c7#.4no7evv94'> how to mine on testnet.</a> </li>
+  <li>Step 3: Refresh the page </li>
+</ul>
+
+<h3>Option 2: access from normal browser</h3>
+<ul>
+  <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>testnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
   <li>Step 2: Create at least 2 accounts on your wallet (so that you can simulate multiple users), and make sure you have some Ethers in both accounts. Here is the quick link on <a href='https://medium.com/@makoto_inoue/ether1-how-to-even-get-to-start-deploying-ethereum-d297cc68b5c7#.4no7evv94'> how to mine on testnet.</a> </li>
   <li>Step 3: Stop Ethereum Wallet</li>
   <li>Step 4: Start geth(Go Etheruem, command line tool) with the following options. (See the <a href='https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum'>installation instructions</a> for each platform)</li>
   <li>Step 5: Refresh this page </li>
 </ul>
-
-    geth --testnet --unlock 0,1 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain http://blockparty.io.s3-website-eu-west-1.amazonaws.com
-
-  NOTE: `--unlock 0` will unlock with one account. `--unlock 0 1` will unlock with two accounts.
+<blockquote style={{backgroundColor:'black', color:'white', padding:'1em'}}>
+  geth --testnet --unlock 0,1 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain http://blockparty.io.v02.s3-website-us-west-2.amazonaws.com/
+</blockquote>
+<p>
+  NOTE: <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0</span> will unlock with one account. <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0 1</span> will unlock with two accounts.
+</p>
 
 <h2>How to play?</h2>
 <ul>
@@ -82,7 +95,7 @@
 
 - Replace `throw` with returning ether (better practice for handling exceptions)
 - Add readonly views (so that people can see people who attended via mobile phone)
-- Upload the deployed source code to `etherscan.io` 
+- Upload the deployed source code to `etherscan.io`
 
 ### Backlog
 
@@ -93,4 +106,3 @@
 - Waitlist
 - Transfer my spot
 - Refresh info when someone else register/attend
-

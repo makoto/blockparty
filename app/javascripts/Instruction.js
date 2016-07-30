@@ -78,7 +78,7 @@ export default class Instruction extends React.Component {
             <li>Step 5: Refresh this page </li>
           </ul>
           <blockquote style={{backgroundColor:'black', color:'white', padding:'1em'}}>
-            geth --testnet --unlock 0,1 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain http://blockparty.io.s3-website-eu-west-1.amazonaws.com
+            geth --testnet --unlock 0,1 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain http://blockparty.io.v02.s3-website-us-west-2.amazonaws.com/
           </blockquote>
           <p>
             NOTE: <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0</span> will unlock with one account. <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0 1</span> will unlock with two accounts.
