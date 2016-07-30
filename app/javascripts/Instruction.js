@@ -45,6 +45,8 @@ export default class Instruction extends React.Component {
         contentStyle={{width:'90%', maxWidth:'none'}}
       >
         <div>
+          <div class="video-container"><iframe  style={{textAlign:'center'}} width="560" height="315" src="https://www.youtube.com/embed/gM2qkv1sySY" frameborder="0" allowfullscreen></iframe></div>
+
           <h2>What is this?</h2>
           <p>
             Have you ever encountered free party or meetup and realised that half the people registered did not actually turn up?
@@ -62,6 +64,7 @@ export default class Instruction extends React.Component {
           </div>
 
           <h2>How to setup</h2>
+
           <h3>Option 1: access from Mist</h3>
           <ul>
             <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>testnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>

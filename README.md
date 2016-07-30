@@ -1,4 +1,7 @@
 <h2>What is this?</h2>
+
+[![Demo Video](./blockparty.gif)](https://www.youtube.com/embed/gM2qkv1sySY)
+
 <p>
   Have you ever encountered free party or meetup and realised that half the people registered did not actually turn up?
   BlockParty solves this problem by providing a simple incentive for people to register only if they mean it.
