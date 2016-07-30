@@ -34,7 +34,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "json-loader": "^0.5.4",
-    "material-ui": "^0.15.0",
+    "material-ui": "^0.15.2",
     "mathjs": "^3.2.1",
     "node-sass": "^3.7.0",
     "react": "^15.2.1",
