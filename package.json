@@ -37,7 +37,7 @@
     "material-ui": "^0.15.2",
     "mathjs": "^3.2.1",
     "node-sass": "^3.7.0",
-    "react": "^15.2.1",
+    "react": "^15.3",
     "react-addons-css-transition-group": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-mixin": "^3.0.5",
