@@ -152,7 +152,7 @@ const App = (props) => (
           title={
             <span>Block Party<span style={{fontSize:'small', fontFamily:'sans-serif'}}> - NO BLOCK NO PARTY -</span></span>
           }
-          iconElementLeft={<Avatar src="/images/nightclub-white.png" size="50" backgroundColor="white" />}
+          iconElementLeft={<Avatar src="/images/nightclub-white.png" size={50} backgroundColor="rgb(96, 125, 139)" />}
           iconElementRight={<FlatButton label="About" onClick={ () => {eventEmitter.emit('instruction')}} />}
         />
         <Instruction eventEmitter={eventEmitter} />
