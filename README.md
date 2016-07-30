@@ -82,13 +82,17 @@ The link to [Proof Of Concept](http://blockparty.io.v02.s3-website-us-west-2.ama
 
 ## TODO
 
+### Testnet release candidate features
+
+- Delete `reset` function (to be replaced by `cancel` event)
+- Only event owners can execute `attend`, `payback`
+- `suicide` once payout is complete
+
 ### Mainnet release candidate features
 
 #### Essential
 
-- Delete `reset` function (to be replaced by `cancel` event)
 - Add `cancel` event functionality (automatically refund)
-- Only event owners can execute `attend`, `payback`
 - Add event date
 - Cannot register on the day of event.
 - Cannot register once the event is over.
@@ -101,6 +105,13 @@ The link to [Proof Of Concept](http://blockparty.io.v02.s3-website-us-west-2.ama
 - Upload the deployed source code to `etherscan.io`
 
 ### Backlog
+
+#### Refactoring
+
+- Add redux
+- Add testing for frontend
+
+#### New features
 
 - Let participant to claim the payback rather than event owners to send payback
 - Change payback ratio (eg: first registered, more reward)
