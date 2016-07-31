@@ -6,7 +6,7 @@ contract Conference {
 	uint public registered;
 	uint public attended;
 	address public owner;
-
+	bool public ended;
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
 	bool paid;
@@ -30,6 +30,7 @@ contract Conference {
 		registered = 0;
 		attended = 0;
 		owner = msg.sender;
+		ended = false;
 	}
 
 	function register(string _participant){
@@ -73,6 +74,7 @@ contract Conference {
 			}
 		}
 		balance = 0;
+		ended = true;
 	}
 
 	function cancel(){
@@ -88,5 +90,6 @@ contract Conference {
 		balance = 0;
 		registered = 0;
 		attended = 0;
+		ended = true;
 	}
 }
