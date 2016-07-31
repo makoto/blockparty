@@ -57,15 +57,15 @@ class FormInput extends React.Component {
   }
 
   showAttend(){
-    return this.state.detail.canRegister
+    return this.state.detail.canAttend
   }
 
   showPayback(){
     return this.state.detail.canPayback
   }
 
-  showReset(){
-    return this.state.detail.canReset
+  showCancel(){
+    return this.state.detail.canCancel
   }
 
   handleName(e) {
@@ -86,7 +86,7 @@ class FormInput extends React.Component {
             label="Payback" style={styles}
             onClick={this.handleAction.bind(this, 'payback')}
         />
-        <RaisedButton secondary={this.showReset()} disabled={!this.showReset()}
+        <RaisedButton secondary={this.showCancel()} disabled={!this.showCancel()}
             label="Cancel" style={styles}
             onClick={this.handleAction.bind(this, 'cancel')}
         />
