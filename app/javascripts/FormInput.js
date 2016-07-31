@@ -110,8 +110,8 @@ class FormInput extends React.Component {
             onClick={this.handleAction.bind(this, 'payback')}
           />
         <RaisedButton secondary={this.showReset()} disabled={!this.showReset()}
-            label="Reset" style={styles}
-            onClick={this.handleAction.bind(this, 'reset')}
+            label="Cancel" style={styles}
+            onClick={this.handleAction.bind(this, 'cancel')}
           />
         </form>
       </Paper>

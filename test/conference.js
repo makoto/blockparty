@@ -246,7 +246,7 @@ contract('Conference', function(accounts) {
         previousBalances[0] = web3.eth.getBalance(accounts[0]);
         previousBalances[1] = web3.eth.getBalance(accounts[1]);
         previousBalances[2] = web3.eth.getBalance(accounts[2]);
-        return meta.reset.sendTransaction({from:accounts[0], gas:gas})
+        return meta.cancel.sendTransaction({from:accounts[0], gas:gas})
       }).then(function(){
         // no money is left on contract
         assert.equal(web3.eth.getBalance(meta.address), web3.toWei(0, "ether"))

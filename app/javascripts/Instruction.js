@@ -92,7 +92,6 @@ export default class Instruction extends React.Component {
             <li>Step 2: Try registering with another account. Each time you register, you deposit 1 ETHER to the contract</li>
             <li>Step 3: Select one of the registered account and then press 'Attend'. 'Payout' seciont tells you how much you may potentially get.</li>
             <li>Step 4: Press 'Payback' button and see one of your accounts get the payout ammount.</li>
-            <li>If you want to play again, press 'Reset', which reset the meetup.</li>
           </ul>
         </div>
       </Dialog>

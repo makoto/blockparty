@@ -20,7 +20,7 @@ contract Conference {
 	event Register(string participantName, address addr, uint256 balance, uint256 value);
 	event Attend(address addr, uint256 balance);
 	event Payback(address addr, uint256 _payout, uint256 balance, bool paid);
-	event Reset(address addr, uint256 balance);
+	event Cancel(address addr, uint256 balance);
 
 	function Conference() {
 		name = 'CodeUp';
@@ -74,8 +74,8 @@ contract Conference {
 		balance = 0;
 	}
 
-	function reset(){
-		Reset(owner, balance);
+	function cancel(){
+		Cancel(owner, balance);
 		for(uint i=1;i<=registered;i++)
 		{
 			if(balance > 0){
