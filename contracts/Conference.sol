@@ -5,11 +5,12 @@ contract Conference {
 	uint public capacity;
 	uint public registered;
 	uint public attended;
+	address public owner;
+
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
 	bool paid;
 	uint256 _payout;
-	address owner;
 
 	struct Participant {
 		string participantName;

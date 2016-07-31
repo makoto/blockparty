@@ -48,6 +48,10 @@ class FormInput extends React.Component {
     });
   }
 
+  isOwner(){
+    return this.state.accounts.includes(this.state.detail.owner);
+  }
+
   showRegister(){
     return this.state.detail.canRegister
   }
@@ -64,7 +68,6 @@ class FormInput extends React.Component {
     return this.state.detail.canReset
   }
 
-
   handleName(e) {
     this.setState({
       name: e.target.value,
@@ -72,6 +75,24 @@ class FormInput extends React.Component {
   }
 
   render() {
+    let adminButtons;
+    if(this.isOwner()){
+      adminButtons = <span>
+        <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
+            label="Attend" style={styles}
+            onClick={this.handleAction.bind(this, 'attend')}
+        />
+        <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
+            label="Payback" style={styles}
+            onClick={this.handleAction.bind(this, 'payback')}
+        />
+        <RaisedButton secondary={this.showReset()} disabled={!this.showReset()}
+            label="Cancel" style={styles}
+            onClick={this.handleAction.bind(this, 'cancel')}
+        />
+      </span>
+    }
+
     return (
       <Paper zDepth={1}>
         <form>
@@ -101,18 +122,7 @@ class FormInput extends React.Component {
             label="Register" style={styles}
             onClick={this.handleAction.bind(this, 'register')}
           />
-        <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
-            label="Attend" style={styles}
-            onClick={this.handleAction.bind(this, 'attend')}
-          />
-        <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
-            label="Payback" style={styles}
-            onClick={this.handleAction.bind(this, 'payback')}
-          />
-        <RaisedButton secondary={this.showReset()} disabled={!this.showReset()}
-            label="Cancel" style={styles}
-            onClick={this.handleAction.bind(this, 'cancel')}
-          />
+          {adminButtons}
         </form>
       </Paper>
     );
