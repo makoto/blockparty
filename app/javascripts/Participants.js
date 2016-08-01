@@ -62,12 +62,18 @@ class Participants extends React.Component {
 
   displayBalance(amount){
     let color = 'black';
-    if (amount > 0) color = 'green' ;
-    if (amount < 0) color = 'red' ;
-
+    let message = '';
+    if (amount > 0){
+      color = 'green';
+      message = 'Earned';
+    }
+    if (amount < 0){
+      color = 'red' ;
+      message = 'Lost';
+    }
     return(
       <span style={{color:color}}>
-        { this.props.math.round(amount, 3).toString() }
+        {message} { this.props.math.round(amount, 3).toString() }
       </span>
     )
   }
@@ -99,10 +105,10 @@ class Participants extends React.Component {
               <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
               (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
               </TableRowColumn>
+            <TableRowColumn width={10} >{this.yesNo(participant.attended)}</TableRowColumn>
             <TableRowColumn width={10} >
               { this.displayBalance(web3.fromWei(this.toNumber(participant.payout))) }
             </TableRowColumn>
-            <TableRowColumn width={10} >{this.yesNo(participant.attended)}</TableRowColumn>
           </TableRow>
         )
       })
@@ -119,8 +125,8 @@ class Participants extends React.Component {
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn width={50} >Name</TableHeaderColumn>
-                <TableHeaderColumn width={10} >Payout</TableHeaderColumn>
                 <TableHeaderColumn width={10} >Attend?</TableHeaderColumn>
+                <TableHeaderColumn width={10} >Payout</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody displayRowCheckbox={false}>
