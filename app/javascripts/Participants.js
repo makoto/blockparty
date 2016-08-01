@@ -48,10 +48,6 @@ class Participants extends React.Component {
     });
   }
 
-  toEther(value){
-    return this.props.math.round(value, 3).toString();
-  }
-
   toNumber(value){
     if(value) return value.toNumber();
   }
@@ -62,6 +58,18 @@ class Participants extends React.Component {
     }else{
       return 'No';
     }
+  }
+
+  displayBalance(amount){
+    let color = 'black';
+    if (amount > 0) color = 'green' ;
+    if (amount < 0) color = 'red' ;
+
+    return(
+      <span style={{color:color}}>
+        { this.props.math.round(amount, 3).toString() }
+      </span>
+    )
   }
 
   displayParticipants(){
@@ -91,7 +99,9 @@ class Participants extends React.Component {
               <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
               (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
               </TableRowColumn>
-            <TableRowColumn width={10} >{this.toEther(web3.fromWei(this.toNumber(participant.payout)))}</TableRowColumn>
+            <TableRowColumn width={10} >
+              { this.displayBalance(web3.fromWei(this.toNumber(participant.payout))) }
+            </TableRowColumn>
             <TableRowColumn width={10} >{this.yesNo(participant.attended)}</TableRowColumn>
           </TableRow>
         )
