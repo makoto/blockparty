@@ -84,7 +84,6 @@ class Participants extends React.Component {
     )
     if(this.state.participants.length > 0){
       return this.state.participants.map((participant) => {
-        console.log('aaa')
         return (
           <TableRow>
             <TableRowColumn width={50}>
@@ -92,7 +91,7 @@ class Participants extends React.Component {
               <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
               (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
               </TableRowColumn>
-            <TableRowColumn width={10} >{this.toEther(participant.balance)}</TableRowColumn>
+            <TableRowColumn width={10} >{this.toEther(web3.fromWei(this.toNumber(participant.payout)))}</TableRowColumn>
             <TableRowColumn width={10} >{this.yesNo(participant.attended)}</TableRowColumn>
           </TableRow>
         )
@@ -110,7 +109,7 @@ class Participants extends React.Component {
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn width={50} >Name</TableHeaderColumn>
-                <TableHeaderColumn width={10} >Balance</TableHeaderColumn>
+                <TableHeaderColumn width={10} >Payout</TableHeaderColumn>
                 <TableHeaderColumn width={10} >Attend?</TableHeaderColumn>
               </TableRow>
             </TableHeader>

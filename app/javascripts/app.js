@@ -99,6 +99,7 @@ function getParticipants(callback){
           name: participant[0],
           address: participant[1],
           attended: participant[2],
+          payout: participant[3],
           balance: balance
         }
         console.log('participant', object);
