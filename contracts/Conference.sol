@@ -16,6 +16,7 @@ contract Conference {
 		string participantName;
 		address addr;
 		bool attended;
+		int payout;
 	}
 
 	event Register(string participantName, address addr, uint256 balance, uint256 value);
@@ -39,7 +40,7 @@ contract Conference {
 		if (isRegistered()) throw;
 		registered++;
 		participantsIndex[registered] = msg.sender;
-		participants[msg.sender] = Participant(_participant, msg.sender, false);
+		participants[msg.sender] = Participant(_participant, msg.sender, false, 0);
 		balance = balance + (deposit * 1);
 	}
 
@@ -68,8 +69,10 @@ contract Conference {
 		{
 			if(participants[participantsIndex[i]].attended){
 				Payback(participantsIndex[i], payout(), participantsIndex[i].balance,  true);
+				participants[participantsIndex[i]].payout = int(payout() - deposit);
 				participantsIndex[i].send(payout());
 			}else{
+				participants[participantsIndex[i]].payout = int(deposit - (deposit * 2));
 				Payback(participantsIndex[i], payout(), participantsIndex[i].balance, false);
 			}
 		}

@@ -207,6 +207,18 @@ contract('Conference', function(accounts) {
         assert.equal(balanceDiff(1), 1.5)
         // lost some money
         assert.equal(balanceDiff(2), 0)
+        return meta.participants.call(accounts[0]);
+      }).then(function(participant){
+        // Got some money
+        assert.equal(participant[3], web3.toWei(0.5, "ether"))
+        return meta.participants.call(accounts[1]);
+      }).then(function(participant){
+        // Got some money
+        assert.equal(participant[3], web3.toWei(0.5, "ether"))
+        return meta.participants.call(accounts[2]);
+      }).then(function(participant){
+        // Lost some money
+        assert.equal(participant[3], web3.toWei(-1, "ether"))
       })
       .then(done).catch(done);
     })
