@@ -75,7 +75,7 @@ class FormInput extends React.Component {
   }
 
   render() {
-    let adminButtons;
+    let adminButtons, registerButton;
     if(this.isOwner()){
       adminButtons = <span>
         <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
@@ -91,6 +91,15 @@ class FormInput extends React.Component {
             onClick={this.handleAction.bind(this, 'cancel')}
         />
       </span>
+    }
+
+    if(this.state.accounts.length > 0){
+      registerButton = <RaisedButton secondary={this.showRegister()} disabled={!this.showRegister()}
+        label="Register" style={styles}
+        onClick={this.handleAction.bind(this, 'register')}
+      />
+    }else{
+      registerButton = <span>No account is set</span>
     }
 
     return (
@@ -118,10 +127,7 @@ class FormInput extends React.Component {
             }
           </SelectField>
 
-          <RaisedButton secondary={this.showRegister()} disabled={!this.showRegister()}
-            label="Register" style={styles}
-            onClick={this.handleAction.bind(this, 'register')}
-          />
+          {registerButton}
           {adminButtons}
         </form>
       </Paper>
