@@ -103,7 +103,7 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('shold throw error if 1 Ether is not sent', function(done){
+    it('shold not register if wrong amount of deposit is sent', function(done){
       var badTransaction = 5;
       var twitterHandle = '@bighero6';
       var meta;
@@ -112,16 +112,18 @@ contract('Conference', function(accounts) {
       Conference.new().then(function(_meta){
         meta = _meta;
         beforeContractBalance = web3.eth.getBalance(meta.address)
-        return meta.register.sendTransaction(twitterHandle, {from:account, value:badTransaction})
-      }).then(function() {
-        throw("SHOULD NOT COME HERE");
-      }).catch(function(){
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:badTransaction})
+      }).then(function(){
         var  contractBalance = web3.eth.getBalance(meta.address)
         var  accountBalance = web3.eth.getBalance(accounts[0]);
         // Contract did not get any ether
         assert.equal(contractBalance.toString(), beforeContractBalance.toString());
         // Lost for some gas
         assert.notEqual(accountBalance.toString(), beforeAccountBalance.toString());
+      }).then(function() {
+        return meta.isRegistered.call({from:accounts[0]});
+      }).then(function(value){
+        assert.equal(value, false);
       }).then(done).catch(done);
     })
   })

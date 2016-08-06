@@ -34,9 +34,16 @@ contract Conference {
 		ended = false;
 	}
 
-	function register(string _participant){
+	modifier sentDeposit {
+		if (msg.value == deposit) {
+			_
+		}else{
+			msg.sender.send(msg.value);
+		}
+	}
+
+	function register(string _participant) sentDeposit{
 		Register(_participant, msg.sender, msg.sender.balance, msg.value);
-		if (msg.value != deposit) throw;
 		if (isRegistered()) throw;
 		registered++;
 		participantsIndex[registered] = msg.sender;
