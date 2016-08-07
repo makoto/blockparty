@@ -91,7 +91,7 @@ contract Conference {
 		ended = true;
 	}
 
-	function cancel(){
+	function cancel() onlyByOwner{
 		Cancel(owner, balance);
 		for(uint i=1;i<=registered;i++)
 		{

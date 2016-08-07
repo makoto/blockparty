@@ -255,6 +255,33 @@ contract('Conference', function(accounts) {
   })
 
   describe('on cancel', function(){
+    it('cannot be canceld if non owner calls', function(done){
+      var meta
+      var transaction = web3.toWei(1, "ether");
+      var gas = 1000000;
+      var previousBalances = [];
+      var twitterHandle = '@bighero6';
+      var nonOwner = accounts[1];
+
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+      }).then(function(){
+        // contract gets 1 ether
+        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        // only account 0 and 1 attend
+      }).then(function(){
+        previousBalances[0] = web3.eth.getBalance(accounts[0]);
+        return meta.cancel.sendTransaction({from:nonOwner, gas:gas})
+      }).then(function(){
+        // money is still left on contract
+        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        // did not get deposit back
+        assert.equal(previousBalances[0].toNumber(), web3.eth.getBalance(accounts[0]).toNumber())
+      })
+      .then(done).catch(done);
+    })
+
     it('everybody receives refund', function(done){
       var meta
       var transaction = web3.toWei(1, "ether");
