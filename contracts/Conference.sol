@@ -44,27 +44,31 @@ contract Conference {
 
 	function register(string _participant) sentDeposit{
 		Register(_participant, msg.sender, msg.sender.balance, msg.value);
-		if (isRegistered()) throw;
+		if (isRegistered(msg.sender)) throw;
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, 0);
 		balance = balance + (deposit * 1);
 	}
 
-	function attend(){
-		if (isRegistered() != true) throw;
-		if (isAttended()) throw;
-		Attend(msg.sender, msg.sender.balance);
-		participants[msg.sender].attended = true;
+	modifier onlyByOwner {
+		if (msg.sender == owner) _
+	}
+
+	function attend(address _addr) onlyByOwner{
+		if (isRegistered(_addr) != true) throw;
+		if (isAttended(_addr)) throw;
+		Attend(_addr, msg.sender.balance);
+		participants[_addr].attended = true;
 		attended++;
 	}
 
-	function isRegistered() returns (bool){
-		return participants[msg.sender].addr != 0x0;
+	function isRegistered(address _addr) returns (bool){
+		return participants[_addr].addr != 0x0;
 	}
 
-	function isAttended() returns (bool){
-		return isRegistered() && participants[msg.sender].attended;
+	function isAttended(address _addr) returns (bool){
+		return isRegistered(_addr) && participants[_addr].attended;
 	}
 
 	function payout() returns(uint256){
