@@ -75,7 +75,7 @@ contract Conference {
 		return balance / uint(attended);
 	}
 
-	function payback(){
+	function payback() onlyByOwner{
 		for(uint i=1;i<=registered;i++)
 		{
 			if(participants[participantsIndex[i]].attended){
