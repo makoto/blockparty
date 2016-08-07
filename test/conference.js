@@ -1,6 +1,6 @@
 contract('Conference', function(accounts) {
   describe('on creation', function(){
-    it('shold have name', function(done){
+    it('has name', function(done){
       Conference.new().then(function(meta) {
         return meta.name.call()
       }).then(function(name) {
@@ -8,7 +8,7 @@ contract('Conference', function(accounts) {
       }).then(done).catch(done);
     })
 
-    it('shold have registered', function(done){
+    it('registered is zero', function(done){
       Conference.new().then(function(meta) {
         return meta.registered.call()
       }).then(function(value) {
@@ -16,7 +16,7 @@ contract('Conference', function(accounts) {
       }).then(done).catch(done);
     })
 
-    it('shold have attended', function(done){
+    it('attended is zero', function(done){
       Conference.new().then(function(meta) {
         return meta.attended.call()
       }).then(function(value) {
@@ -24,7 +24,7 @@ contract('Conference', function(accounts) {
       }).then(done).catch(done);
     })
 
-    it('shold have balance', function(done){
+    it('balance is zero', function(done){
       Conference.new().then(function(meta) {
         return meta.balance.call()
       }).then(function(value) {
@@ -34,7 +34,7 @@ contract('Conference', function(accounts) {
   })
 
   describe('on registration', function(){
-    it('shold increment registered', function(done){
+    it('increments registered', function(done){
       var account = accounts[0]
       var transaction = Math.pow(10,18);
       var twitterHandle = '@bighero6';
@@ -51,7 +51,7 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('shold increase balance', function(done){
+    it('increases balance', function(done){
       var account = accounts[0]
       var beforeContractBalance;
       var transaction = Math.pow(10,18);
@@ -70,7 +70,7 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('shold be registered for same account', function(done){
+    it('isRegistered for the registered account is true', function(done){
       var account = accounts[0]
       var transaction = Math.pow(10,18);
       var twitterHandle = '@bighero6';
@@ -87,7 +87,7 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('shold not be registered for different accounts', function(done){
+    it('isRegistered for the different account is not true', function(done){
       var transaction = Math.pow(10,18);
       var twitterHandle = '@bighero6';
       var meta;
@@ -103,7 +103,7 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('shold not register if wrong amount of deposit is sent', function(done){
+    it('cannot be registered if wrong amount of deposit is sent', function(done){
       var badTransaction = 5;
       var twitterHandle = '@bighero6';
       var meta;
@@ -129,7 +129,7 @@ contract('Conference', function(accounts) {
   })
 
   describe('on attend', function(){
-    it('shold be attended', function(done){
+    it('isAttended is true if owner calls attend function', function(done){
       var transaction = Math.pow(10,18);
       var twitterHandle = '@bighero6';
       var owner = accounts[0]
@@ -153,7 +153,7 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('non owner cannot call', function(done){
+    it('isAttended is false if non owner calls attend function', function(done){
       var transaction = Math.pow(10,18);
       var twitterHandle = '@bighero6';
       var meta;
@@ -178,7 +178,7 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('shold not be attended if have not called attended function', function(done){
+    it('isAttended is false if attended function for the account is not called', function(done){
       var transaction = Math.pow(10,18);
       var twitterHandle = '@bighero6';
       var meta;
@@ -195,7 +195,7 @@ contract('Conference', function(accounts) {
   })
 
   describe('on payback', function(){
-    it('shold get money back only if you attend', function(done){
+    it('receives payout if you attend', function(done){
       var meta = Conference.deployed();
       var transaction = web3.toWei(1, "ether");
       var gas = 1000000;
@@ -255,7 +255,7 @@ contract('Conference', function(accounts) {
   })
 
   describe('on cancel', function(){
-    it('shold get money back', function(done){
+    it('everybody receives refund', function(done){
       var meta
       var transaction = web3.toWei(1, "ether");
       var gas = 1000000;
