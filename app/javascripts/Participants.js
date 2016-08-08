@@ -6,6 +6,7 @@ import Subheader from 'material-ui/Subheader';
 import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const getTwitterIcon = (name) =>(
   <Avatar style={{verticalAlign:'middle'}} src={`https://avatars.io/twitter/${name}`} size={26} />
@@ -22,9 +23,22 @@ class Participants extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      accounts:[],
+      address: null,
       participants:[],
       detail:{}
     };
+    this.props.getAccounts(accounts => {
+      this.setState({
+        address:accounts[0],
+        accounts:accounts
+      })
+    })
+    this.props.getDetail(detail => {
+      this.setState({
+        detail:detail
+      })
+    })
   }
 
   componentDidMount(){
@@ -48,15 +62,32 @@ class Participants extends React.Component {
     });
   }
 
+  isOwner(){
+    return this.state.accounts.includes(this.state.detail.owner);
+  }
+
   toNumber(value){
     if(value) return value.toNumber();
   }
 
-  yesNo(value){
-    if(value) {
+  handleAction(actionName, participantAddress) {
+    this.props.action(actionName, this.state.address.trim(), participantAddress)
+  }
+
+  yesNo(participant){
+    if(participant.attended) {
       return 'Yes';
     }else{
-      return 'No';
+      if(this.isOwner()){
+        return (
+          <RaisedButton
+            label="Attend" secondary={true}
+            onClick={this.handleAction.bind(this, 'attend', participant.address)}
+          />
+        )
+      }else{
+        return 'No';
+      }
     }
   }
 
@@ -105,7 +136,7 @@ class Participants extends React.Component {
               <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
               (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
               </TableRowColumn>
-            <TableRowColumn width={10} >{this.yesNo(participant.attended)}</TableRowColumn>
+            <TableRowColumn width={10} >{this.yesNo(participant)}</TableRowColumn>
             <TableRowColumn width={10} >
               { this.displayBalance(web3.fromWei(this.toNumber(participant.payout))) }
             </TableRowColumn>

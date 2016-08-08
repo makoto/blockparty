@@ -56,10 +56,6 @@ class FormInput extends React.Component {
     return this.state.detail.canRegister
   }
 
-  showAttend(){
-    return this.state.detail.canAttend
-  }
-
   showPayback(){
     return this.state.detail.canPayback
   }
@@ -78,10 +74,6 @@ class FormInput extends React.Component {
     let adminButtons, registerButton;
     if(this.isOwner()){
       adminButtons = <span>
-        <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
-            label="Attend" style={styles}
-            onClick={this.handleAction.bind(this, 'attend')}
-        />
         <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
             label="Payback" style={styles}
             onClick={this.handleAction.bind(this, 'payback')}

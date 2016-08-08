@@ -117,7 +117,6 @@ function action(name, address, argument) {
     options.value = Math.pow(10,18)
   }
 
-  console.log('name', name, 'address', address, 'argument', argument)
   contract[name](argument, options).then(function() {
     getDetail(function(model){
       eventEmitter.emit('change', model);
@@ -168,7 +167,7 @@ const App = (props) => (
         <Notification eventEmitter={eventEmitter} />
         <div style={styles.div}>
           <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
-          <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} web3={web3} math={math} />
+          <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} getAccounts={getAccounts} action = {action} web3={web3} math={math} />
         </div>
         <FormInput eventEmitter={eventEmitter} getAccounts = {getAccounts} getDetail = {getDetail} action = {action} />
       </div>
