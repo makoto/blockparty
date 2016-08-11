@@ -18,7 +18,35 @@ contract('Conference', function(accounts) {
       }).then(function() {
         return meta.registered.call();
       }).then(function(registered) {
-        assert.equal(registered, 1)
+        assert.equal(registered.toString(), 1)
+      }).then(done).catch(done);
+    })
+
+    it('does not return more than you sent', function(done){
+      var transaction = Math.pow(10,18);
+      var twitterHandle = '@bighero6';
+      var meta;
+      var beforeAccountBalance;
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.setLimitOfParticipants.sendTransaction(2)
+      }).then(function() {
+        return meta.register.sendTransaction(twitterHandle, {value:transaction});
+      }).then(function() {
+        return meta.register.sendTransaction('anotherName', {from: accounts[1], value:transaction});
+      }).then(function() {
+        return meta.registered.call();
+      }).then(function(registered) {
+        assert.equal(registered, 2)
+        var invalidTransaction = (transaction / 2);
+        beforeAccountBalance = web3.eth.getBalance(accounts[2]);
+        return meta.register.sendTransaction('anotherName', {from: accounts[2], value:invalidTransaction});
+      }).then(function() {
+        return meta.registered.call();
+      }).then(function(registered) {
+        assert.equal(web3.eth.getBalance(meta.address), 2 * transaction);
+        // does not become exactly equal because it loses some gas.
+        assert.equal(beforeAccountBalance > web3.eth.getBalance(accounts[2]), true);
       }).then(done).catch(done);
     })
   })

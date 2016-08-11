@@ -43,17 +43,21 @@ contract Conference {
 		}
 	}
 
-	function register(string _participant) sentDeposit{
+	modifier withinLimit {
+		if (registered < limitOfParticipants ) {
+			_
+		}else{
+			msg.sender.send(msg.value);
+		}
+	}
+
+	function register(string _participant) sentDeposit withinLimit{
 		Register(_participant, msg.sender, msg.sender.balance, msg.value);
 		if (isRegistered(msg.sender)) throw;
-		if (registered >= limitOfParticipants ){
-			msg.sender.send(msg.value);
-		}else{
-			registered++;
-			participantsIndex[registered] = msg.sender;
-			participants[msg.sender] = Participant(_participant, msg.sender, false, 0);
-			balance = balance + (deposit * 1);
-		}
+		registered++;
+		participantsIndex[registered] = msg.sender;
+		participants[msg.sender] = Participant(_participant, msg.sender, false, 0);
+		balance = balance + (deposit * 1);
 	}
 
 	function setLimitOfParticipants(uint _limitOfParticipants) {
