@@ -1,4 +1,28 @@
 contract('Conference', function(accounts) {
+
+  describe('on setLimitOfParticipants', function(){
+    it('does not allow to register more than the limit', function(done){
+      var transaction = Math.pow(10,18);
+      var twitterHandle = '@bighero6';
+      var meta;
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.setLimitOfParticipants.sendTransaction(1)
+      }).then(function() {
+        return meta.register.sendTransaction(twitterHandle, {value:transaction});
+      }).then(function() {
+        return meta.registered.call();
+      }).then(function(registered) {
+        assert.equal(registered, 1)
+        return meta.register.sendTransaction('anotherName', {from: accounts[1], value:transaction});
+      }).then(function() {
+        return meta.registered.call();
+      }).then(function(registered) {
+        assert.equal(registered, 1)
+      }).then(done).catch(done);
+    })
+  })
+
   describe('on creation', function(){
     it('has name', function(done){
       Conference.new().then(function(meta) {
