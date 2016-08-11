@@ -46,7 +46,7 @@ const eventEmitter = EventEmitter()
 
 // Functions to interact with contract
 function getDetail(callback){
-  Promise.all(['name', 'deposit', 'payout', 'balance', 'registered', 'attended'].map(attributeName => {
+  Promise.all(['name', 'deposit', 'payout', 'balance', 'registered', 'attended', 'owner', 'ended'].map(attributeName => {
     return contract[attributeName].call();
   })).then(values => {
     var detail = {
@@ -56,18 +56,26 @@ function getDetail(callback){
       'balance': values[3],
       'registered': values[4],
       'attended': values[5],
+      'owner': values[6],
+      'ended': values[7],
       'contractBalance': web3.fromWei(web3.eth.getBalance(contract.address), "ether").toNumber()
     }
 
-    if(detail.registered.toNumber() > 0 && detail.attended.toNumber() > 0 && detail.payout.toNumber() > 0){
-      detail.canPayback = true
-    }
-    if(detail.registered.toNumber() > 0 && detail.attended.toNumber() > 0 && detail.payout.toNumber() == 0){
-      detail.canReset = true
-    }
-    if(!detail.canReset){
+    if(detail.ended){
+      detail.canRegister = false
+      detail.canAttend = false
+      detail.canPayback = false
+    }else{
+      if(detail.registered.toNumber() > 0 ){
+        detail.canAttend = true
+      }
+
+      if(detail.registered.toNumber() > 0 && detail.attended.toNumber() > 0 && detail.payout.toNumber() > 0){
+        detail.canPayback = true
+      }
       detail.canRegister = true
     }
+    detail.canCancel = true
 
     callback(detail);
   })
@@ -90,6 +98,7 @@ function getParticipants(callback){
           name: participant[0],
           address: participant[1],
           attended: participant[2],
+          payout: participant[3],
           balance: balance
         }
         console.log('participant', object);
@@ -108,7 +117,6 @@ function action(name, address, argument) {
     options.value = Math.pow(10,18)
   }
 
-  console.log('name', name, 'address', address, 'argument', argument)
   contract[name](argument, options).then(function() {
     getDetail(function(model){
       eventEmitter.emit('change', model);
@@ -159,7 +167,7 @@ const App = (props) => (
         <Notification eventEmitter={eventEmitter} />
         <div style={styles.div}>
           <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
-          <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} web3={web3} math={math} />
+          <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} getAccounts={getAccounts} action = {action} web3={web3} math={math} />
         </div>
         <FormInput eventEmitter={eventEmitter} getAccounts = {getAccounts} getDetail = {getDetail} action = {action} />
       </div>

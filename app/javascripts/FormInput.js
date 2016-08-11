@@ -48,11 +48,11 @@ class FormInput extends React.Component {
     });
   }
 
-  showRegister(){
-    return this.state.detail.canRegister
+  isOwner(){
+    return this.state.accounts.includes(this.state.detail.owner);
   }
 
-  showAttend(){
+  showRegister(){
     return this.state.detail.canRegister
   }
 
@@ -60,10 +60,9 @@ class FormInput extends React.Component {
     return this.state.detail.canPayback
   }
 
-  showReset(){
-    return this.state.detail.canReset
+  showCancel(){
+    return this.state.detail.canCancel
   }
-
 
   handleName(e) {
     this.setState({
@@ -72,6 +71,29 @@ class FormInput extends React.Component {
   }
 
   render() {
+    let adminButtons, registerButton;
+    if(this.isOwner()){
+      adminButtons = <span>
+        <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
+            label="Payback" style={styles}
+            onClick={this.handleAction.bind(this, 'payback')}
+        />
+        <RaisedButton secondary={this.showCancel()} disabled={!this.showCancel()}
+            label="Cancel" style={styles}
+            onClick={this.handleAction.bind(this, 'cancel')}
+        />
+      </span>
+    }
+
+    if(this.state.accounts.length > 0){
+      registerButton = <RaisedButton secondary={this.showRegister()} disabled={!this.showRegister()}
+        label="Register" style={styles}
+        onClick={this.handleAction.bind(this, 'register')}
+      />
+    }else{
+      registerButton = <span>No account is set</span>
+    }
+
     return (
       <Paper zDepth={1}>
         <form>
@@ -97,22 +119,8 @@ class FormInput extends React.Component {
             }
           </SelectField>
 
-          <RaisedButton secondary={this.showRegister()} disabled={!this.showRegister()}
-            label="Register" style={styles}
-            onClick={this.handleAction.bind(this, 'register')}
-          />
-        <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
-            label="Attend" style={styles}
-            onClick={this.handleAction.bind(this, 'attend')}
-          />
-        <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
-            label="Payback" style={styles}
-            onClick={this.handleAction.bind(this, 'payback')}
-          />
-        <RaisedButton secondary={this.showReset()} disabled={!this.showReset()}
-            label="Reset" style={styles}
-            onClick={this.handleAction.bind(this, 'reset')}
-          />
+          {registerButton}
+          {adminButtons}
         </form>
       </Paper>
     );
