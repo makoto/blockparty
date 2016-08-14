@@ -46,7 +46,7 @@ const eventEmitter = EventEmitter()
 
 // Functions to interact with contract
 function getDetail(callback){
-  Promise.all(['name', 'deposit', 'payout', 'balance', 'registered', 'attended', 'owner', 'ended'].map(attributeName => {
+  Promise.all(['name', 'deposit', 'payout', 'balance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants'].map(attributeName => {
     return contract[attributeName].call();
   })).then(values => {
     var detail = {
@@ -58,6 +58,7 @@ function getDetail(callback){
       'attended': values[5],
       'owner': values[6],
       'ended': values[7],
+      'limitOfParticipants': values[8],
       'contractBalance': web3.fromWei(web3.eth.getBalance(contract.address), "ether").toNumber()
     }
 

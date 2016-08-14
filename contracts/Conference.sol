@@ -2,7 +2,7 @@ contract Conference {
 	string public name;
 	uint256 public balance;
 	uint256 public deposit;
-	uint public capacity;
+	uint public limitOfParticipants;
 	uint public registered;
 	uint public attended;
 	address public owner;
@@ -30,6 +30,7 @@ contract Conference {
 		balance = 0;
 		registered = 0;
 		attended = 0;
+		limitOfParticipants = 10;
 		owner = msg.sender;
 		ended = false;
 	}
@@ -42,13 +43,25 @@ contract Conference {
 		}
 	}
 
-	function register(string _participant) sentDeposit{
+	modifier withinLimit {
+		if (registered < limitOfParticipants ) {
+			_
+		}else{
+			msg.sender.send(msg.value);
+		}
+	}
+
+	function register(string _participant) sentDeposit withinLimit{
 		Register(_participant, msg.sender, msg.sender.balance, msg.value);
 		if (isRegistered(msg.sender)) throw;
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, 0);
 		balance = balance + (deposit * 1);
+	}
+
+	function setLimitOfParticipants(uint _limitOfParticipants) {
+		limitOfParticipants = _limitOfParticipants;
 	}
 
 	modifier onlyByOwner {
