@@ -18,7 +18,8 @@
 
 <h2> Demo </h2>
 
-[The demo site](http://blockparty.io.v02.s3-website-us-west-2.amazonaws.com/) = For the real site, participants can only `Register` and pay deposit to the site. Since this is a demo site, it allows you to `Register`, `Attend`, then press `Payback` button to simulate how it all works. Pressing `Reset` will reset the status so that you can play again.
+- [The demo site](http://blockparty.io.v02.s3-website-us-west-2.amazonaws.com/)
+Real sites allows for participants to only `Register` and pay deposit to the site. Since this is a demo site, it allows you to `Register`, `Attend`, then press `Payback` button to simulate how it all works. Pressing `Reset` will reset the status so that you can play again.
 
 <h2>How to setup</h2>
 
