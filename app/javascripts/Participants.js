@@ -78,7 +78,7 @@ class Participants extends React.Component {
     if(participant.attended) {
       return 'Yes';
     }else{
-      if(this.isOwner()){
+      if(this.isOwner() && !this.state.detail.ended){
         return (
           <RaisedButton
             label="Attend" secondary={true}
