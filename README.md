@@ -5,8 +5,6 @@
 <p>
   Have you ever encountered free party or meetup and realised that half the people registered did not actually turn up?
   BlockParty solves this problem by providing a simple incentive for people to register only if they mean it.
-  <br/>
-  This is a PoC(Proof of concept) site on <em style={{fontWeight:'bold'}}>testnet</em> where you can simulate how it all works.
 </p>
 <h2>How does this work?</h2>
 <p>
@@ -18,9 +16,11 @@
   <img width='80%' style:"display:inline-block;" src="http://blockparty.io.s3-website-eu-west-1.amazonaws.com/images/diagram.png"></img>
 </div>
 
-<h2>How to setup</h2>
+<h2> Demo </h2>
 
-The link to [Proof Of Concept](http://blockparty.io.v02.s3-website-us-west-2.amazonaws.com/)
+[The demo site](http://blockparty.io.v02.s3-website-us-west-2.amazonaws.com/) = For the real site, participants can only `Register` and pay deposit to the site. Since this is a demo site, it allows you to `Register`, `Attend`, then press `Payback` button to simulate how it all works. Pressing `Reset` will reset the status so that you can play again.
+
+<h2>How to setup</h2>
 
 <h3>Option 1: access from Mist</h3>
 <ul>
