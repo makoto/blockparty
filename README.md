@@ -84,8 +84,6 @@ The link to [Proof Of Concept](http://blockparty.io.v02.s3-website-us-west-2.ama
 ### Testnet release candidate features
 
 - Add limit on number of registration
-- You cannot `register|attend` once payout is complete
-- Disable `attend` button once payout is complete
 - `suicide` once payout is complete
 
 ### Mainnet release candidate features
