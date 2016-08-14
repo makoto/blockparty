@@ -163,7 +163,7 @@ class ConferenceDetail extends React.Component {
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleOutlineIcon />} disabled={true}
           primaryText={
-            <p>Registered<span style={styles.list}>{this.toNumber(this.state.registered)}</span></p>
+            <p>Going (spots left)<span style={styles.list}>{this.toNumber(this.state.registered)}({this.toNumber(this.state.limitOfParticipants)})</span></p>
           }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleIcon />} disabled={true}
