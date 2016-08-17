@@ -42,6 +42,13 @@ contract Conference {
 			msg.sender.send(msg.value);
 		}
 	}
+	modifier onlyActive {
+		if (ended == false) {
+			_
+		}else{
+			msg.sender.send(msg.value);
+		}
+	}
 
 	modifier withinLimit {
 		if (registered < limitOfParticipants ) {
@@ -51,7 +58,7 @@ contract Conference {
 		}
 	}
 
-	function register(string _participant) sentDeposit withinLimit{
+	function register(string _participant) sentDeposit withinLimit onlyActive{
 		Register(_participant, msg.sender, msg.sender.balance, msg.value);
 		if (isRegistered(msg.sender)) throw;
 		registered++;
