@@ -89,6 +89,7 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 #### Essential
 
+- Indicate once the event is end (either canceled or paid back)
 - Show event location
 - Show who event owner is
 - Add disclaimer doc
