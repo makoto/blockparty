@@ -22,7 +22,7 @@ contract('Conference', function(accounts) {
       }).then(done).catch(done);
     })
 
-    it('does not return more than you sent', function(done){
+    it('returns only your deposit for multiple invalidations', function(done){
       var transaction = Math.pow(10,18);
       var twitterHandle = '@bighero6';
       var meta;
@@ -40,6 +40,7 @@ contract('Conference', function(accounts) {
         assert.equal(registered, 2)
         var invalidTransaction = (transaction / 2);
         beforeAccountBalance = web3.eth.getBalance(accounts[2]);
+        // Over capacity as well as wrong deposit value.
         return meta.register.sendTransaction('anotherName', {from: accounts[2], value:invalidTransaction});
       }).then(function() {
         return meta.registered.call();
@@ -331,6 +332,40 @@ contract('Conference', function(accounts) {
       })
       .then(done).catch(done);
     })
+
+    it('cannot register any more', function(done){
+      var meta;
+      var transaction = web3.toWei(1, "ether");
+      var gas = 1000000;
+      var twitterHandle = '@bighero6';
+      var owner = accounts[0];
+      var currentRegistered;
+
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+      }).then(function(){
+        // contract gets 1 ether
+        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        return meta.attend.sendTransaction(accounts[0], {gas:gas})
+      }).then(function(){
+        return meta.payback.sendTransaction({from:owner, gas:gas})
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        currentRegistered = registered
+        return meta.register.sendTransaction('some handler', {from:accounts[1], value:transaction, gas:gas})
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        assert.equal(currentRegistered.toNumber(), registered.toNumber())
+      }).then(function(){
+        return meta.ended.call()
+      }).then(function(ended){
+        assert.equal(ended, true)
+      })
+      .then(done).catch(done);
+    })
   })
 
   describe('on cancel', function(){
@@ -404,6 +439,70 @@ contract('Conference', function(accounts) {
         assert.equal(balanceDiff(2), 1)
       })
       .then(done).catch(done);
+    })
+
+    it('cannot register any more', function(done){
+      var meta;
+      var transaction = web3.toWei(1, "ether");
+      var gas = 1000000;
+      var twitterHandle = '@bighero6';
+      var owner = accounts[0];
+      var currentRegistered;
+
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+      }).then(function(){
+        return meta.cancel.sendTransaction({from:owner, gas:gas})
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        currentRegistered = registered
+        return meta.register.sendTransaction('some handler', {from:accounts[1], value:transaction, gas:gas})
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        assert.equal(currentRegistered.toNumber(), registered.toNumber())
+      }).then(function(){
+        return meta.ended.call()
+      }).then(function(ended){
+        assert.equal(ended, true)
+      })
+      .then(done).catch(done);
+    })
+
+    it('cannot be canceled if the event is already ended', function(done){
+      var meta;
+      var transaction = web3.toWei(1, "ether");
+      var gas = 1000000;
+      var twitterHandle = '@bighero6';
+      var owner = accounts[0];
+      var currentRegistered;
+
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+      }).then(function(){
+        // contract gets 1 ether
+        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        return meta.attend.sendTransaction(accounts[0], {gas:gas})
+      }).then(function(){
+        return meta.payback.sendTransaction({from:owner, gas:gas})
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        currentRegistered = registered
+        return meta.cancel.sendTransaction()
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        assert.equal(currentRegistered.toNumber(), registered.toNumber())
+      }).then(function(){
+        return meta.ended.call()
+      }).then(function(ended){
+        assert.equal(ended, true)
+      })
+      .then(done).catch(done);
+
     })
   })
 

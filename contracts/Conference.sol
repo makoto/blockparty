@@ -35,7 +35,7 @@ contract Conference {
 		ended = false;
 	}
 
-	modifier sentDeposit {
+	modifier sentDepositOrReturn {
 		if (msg.value == deposit) {
 			_
 		}else{
@@ -43,7 +43,21 @@ contract Conference {
 		}
 	}
 
-	modifier withinLimit {
+	modifier onlyActive {
+		if (ended == false) {
+			_
+		}
+	}
+
+	modifier onlyActiveOrReturn {
+		if (ended == false) {
+			_
+		}else{
+			msg.sender.send(msg.value);
+		}
+	}
+
+	modifier withinLimitOrReturn {
 		if (registered < limitOfParticipants ) {
 			_
 		}else{
@@ -51,7 +65,7 @@ contract Conference {
 		}
 	}
 
-	function register(string _participant) sentDeposit withinLimit{
+	function register(string _participant) sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn{
 		Register(_participant, msg.sender, msg.sender.balance, msg.value);
 		if (isRegistered(msg.sender)) throw;
 		registered++;
@@ -104,7 +118,7 @@ contract Conference {
 		ended = true;
 	}
 
-	function cancel() onlyByOwner{
+	function cancel() onlyByOwner onlyActive{
 		Cancel(owner, balance);
 		for(uint i=1;i<=registered;i++)
 		{
@@ -117,6 +131,6 @@ contract Conference {
 		balance = 0;
 		registered = 0;
 		attended = 0;
-		ended = false;
+		ended = true;
 	}
 }
