@@ -89,7 +89,6 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 #### Essential
 
-- Add `cancel` event functionality (automatically refund)
 - Show event location
 - Show who event owner is
 - Add disclaimer doc
@@ -107,7 +106,6 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 - Add redux
 - Add testing for frontend
-
 
 #### New features
 

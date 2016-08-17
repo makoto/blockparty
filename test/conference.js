@@ -440,6 +440,36 @@ contract('Conference', function(accounts) {
       })
       .then(done).catch(done);
     })
+
+    it('cannot register any more', function(done){
+      var meta;
+      var transaction = web3.toWei(1, "ether");
+      var gas = 1000000;
+      var twitterHandle = '@bighero6';
+      var owner = accounts[0];
+      var currentRegistered;
+
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+      }).then(function(){
+        return meta.cancel.sendTransaction({from:owner, gas:gas})
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        currentRegistered = registered
+        return meta.register.sendTransaction('some handler', {from:accounts[1], value:transaction, gas:gas})
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        assert.equal(currentRegistered.toNumber(), registered.toNumber())
+      }).then(function(){
+        return meta.ended.call()
+      }).then(function(ended){
+        assert.equal(ended, true)
+      })
+      .then(done).catch(done);
+    })
+
   })
 
 

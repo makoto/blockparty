@@ -124,6 +124,6 @@ contract Conference {
 		balance = 0;
 		registered = 0;
 		attended = 0;
-		ended = false;
+		ended = true;
 	}
 }
