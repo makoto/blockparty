@@ -470,6 +470,40 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
+    it('cannot be canceled if the event is already ended', function(done){
+      var meta;
+      var transaction = web3.toWei(1, "ether");
+      var gas = 1000000;
+      var twitterHandle = '@bighero6';
+      var owner = accounts[0];
+      var currentRegistered;
+
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+      }).then(function(){
+        // contract gets 1 ether
+        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        return meta.attend.sendTransaction(accounts[0], {gas:gas})
+      }).then(function(){
+        return meta.payback.sendTransaction({from:owner, gas:gas})
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        currentRegistered = registered
+        return meta.cancel.sendTransaction()
+      }).then(function(){
+        return meta.registered.call()
+      }).then(function(registered){
+        assert.equal(currentRegistered.toNumber(), registered.toNumber())
+      }).then(function(){
+        return meta.ended.call()
+      }).then(function(ended){
+        assert.equal(ended, true)
+      })
+      .then(done).catch(done);
+
+    })
   })
 
 

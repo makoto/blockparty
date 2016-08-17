@@ -42,6 +42,13 @@ contract Conference {
 			msg.sender.send(msg.value);
 		}
 	}
+
+	modifier onlyActive {
+		if (ended == false) {
+			_
+		}
+	}
+
 	modifier onlyActiveOrReturn {
 		if (ended == false) {
 			_
@@ -111,7 +118,7 @@ contract Conference {
 		ended = true;
 	}
 
-	function cancel() onlyByOwner{
+	function cancel() onlyByOwner onlyActive{
 		Cancel(owner, balance);
 		for(uint i=1;i<=registered;i++)
 		{
