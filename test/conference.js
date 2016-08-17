@@ -22,7 +22,7 @@ contract('Conference', function(accounts) {
       }).then(done).catch(done);
     })
 
-    it('does not return more than you sent', function(done){
+    it('returns only your deposit for multiple invalidations', function(done){
       var transaction = Math.pow(10,18);
       var twitterHandle = '@bighero6';
       var meta;
@@ -40,6 +40,7 @@ contract('Conference', function(accounts) {
         assert.equal(registered, 2)
         var invalidTransaction = (transaction / 2);
         beforeAccountBalance = web3.eth.getBalance(accounts[2]);
+        // Over capacity as well as wrong deposit value.
         return meta.register.sendTransaction('anotherName', {from: accounts[2], value:invalidTransaction});
       }).then(function() {
         return meta.registered.call();
