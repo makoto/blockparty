@@ -131,6 +131,13 @@ class ConferenceDetail extends React.Component {
   }
 
   render() {
+    let attendancyStatus;
+    if (this.state.ended) {
+      attendancyStatus = <p>Attended<span style={styles.list}>{this.toNumber(this.state.attended)}</span></p>
+    }else{
+      attendancyStatus = <p>Going (spots left)<span style={styles.list}>{this.toNumber(this.state.registered)}({this.toNumber(this.state.limitOfParticipants) - this.toNumber(this.state.registered)})</span></p>
+    }
+
     return (
       <Paper zDepth={1} style={styles.paperLeft}>
         <h4 style={{textAlign:'center'}}>Event Info</h4>
@@ -161,15 +168,8 @@ class ConferenceDetail extends React.Component {
               <p>Payout<span style={styles.list}>{this.toEther(this.state.payout)}{this.youGet()}</span></p>
             }
           />
-          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleOutlineIcon />} disabled={true}
-          primaryText={
-            <p>Going (spots left)<span style={styles.list}>{this.toNumber(this.state.registered)}({this.toNumber(this.state.limitOfParticipants) - this.toNumber(this.state.registered)})</span></p>
-          }
-          />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleIcon />} disabled={true}
-          primaryText={
-            <p>Attended<span style={styles.list}>{this.toNumber(this.state.attended)}</span></p>
-          }
+          primaryText={attendancyStatus}
           />
         </List>
       </Paper>
