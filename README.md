@@ -84,23 +84,22 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 ### Testnet release candidate features
 
-- `suicide` once payout is complete
 
 ### Mainnet release candidate features
 
 #### Essential
 
 - Add `cancel` event functionality (automatically refund)
-- Add event date
-- Cannot register on the day of event.
-- Cannot register once the event is over.
-- Add disclaimar doc
+- Show event location
+- Show who event owner is
+- Add disclaimer doc
+- Upload the deployed source code to `etherscan.io`
 
 #### Nice to have
 
 - Replace `throw` with returning ether (better practice for handling exceptions)
 - Add readonly views (so that people can see people who attended via mobile phone)
-- Upload the deployed source code to `etherscan.io`
+- Support metamask
 
 ### Backlog
 
@@ -108,6 +107,7 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 - Add redux
 - Add testing for frontend
+
 
 #### New features
 
@@ -118,3 +118,4 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 - Waitlist
 - Transfer my spot
 - Refresh info when someone else register/attend
+- Support metamask
