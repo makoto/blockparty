@@ -66,6 +66,7 @@ function getDetail(callback){
       detail.canRegister = false
       detail.canAttend = false
       detail.canPayback = false
+      detail.canCancel = false
     }else{
       if(detail.registered.toNumber() > 0 ){
         detail.canAttend = true
@@ -75,9 +76,8 @@ function getDetail(callback){
         detail.canPayback = true
       }
       detail.canRegister = true
+      detail.canCancel = true
     }
-    detail.canCancel = true
-
     callback(detail);
   })
 }
