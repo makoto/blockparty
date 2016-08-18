@@ -86,16 +86,16 @@ class FormInput extends React.Component {
     }
 
     if(this.state.accounts.length > 0){
-      console.log('detail', this.state.detail.ended, this.state.detail)
+      var availableSpots = this.state.detail.limitOfParticipants - this.state.detail.registered;
       if(this.state.detail.ended){
         registerButton = <span>This even is over </span>
-      }else if (this.state.detail.limitOfParticipants > this.state.detail.registered){
+      }else if (availableSpots <= 0){
+        registerButton = <span>No more spots left</span>
+      }else{
         registerButton = <RaisedButton secondary={this.showRegister()} disabled={!this.showRegister()}
           label="Register" style={styles}
           onClick={this.handleAction.bind(this, 'register')}
         />
-      }else{
-        registerButton = <span>No more spots left</span>
       }
     }else{
       registerButton = <span>No account is set</span>
