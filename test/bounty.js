@@ -4,6 +4,7 @@ contract('Bounty', function(accounts) {
     var bounty = Bounty.deployed();
     var errorEvent = bounty.Error({});
     errorEvent.watch(function(err, result) {
+      console.log('Error', result.args)
       errorEvent.stopWatching();
     })
     var event = bounty.TargetCreation({});
@@ -47,8 +48,10 @@ contract('Bounty', function(accounts) {
     var bounty = Bounty.deployed();
     var errorEvent = bounty.Error({});
     errorEvent.watch(function(err, result) {
+      console.log('Error', result.args)
       errorEvent.stopWatching();
     })
+
     var event = bounty.TargetCreation({});
     event.watch(function(err, result) {
       event.stopWatching();
