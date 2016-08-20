@@ -40,7 +40,7 @@ contract Bounty is PullPaymentCapable {
     }else{
       Error('Security breach!!');
     }
-	}
+  }
 
   function claim(Conference target) hasResearcher(target) hasBug(target){
     address researcher = researchers[target];
