@@ -1,36 +1,51 @@
-import './PullPaymentCapable.sol';
-import './Token.sol';
+import './Conference.sol';
+import './zeppelin/PullPaymentCapable.sol';
 
 /*
  * Bounty
- * This bounty will pay out if you can cause a Token's balance
+ * This bounty will pay out if you can cause a Conference's balance
  * to be lower than its totalSupply, which would mean that it doesn't
  * have sufficient ether for everyone to withdraw.
  */
 contract Bounty is PullPaymentCapable {
-
+  uint public totalBounty;
   bool public claimed;
   mapping(address => address) public researchers;
-
-  function() {
+  event TargetCreation(address createdAddress);
+  event Error(string message);
+  function contribute() {
+    totalBounty = msg.value;
     if (claimed) throw;
   }
 
-  function createTarget() returns(Token) {
-    Token target = new Token(0);
+  function createTarget() returns(Conference) {
+    Conference target = new Conference();
     researchers[target] = msg.sender;
+    TargetCreation(target);
     return target;
   }
 
-  function claim(Token target) {
+  modifier hasResearcher(Conference target) {
     address researcher = researchers[target];
-    if (researcher == 0) throw;
-    // check Token contract invariants
-    if (target.totalSupply() == target.balance) {
-      throw;
+    if (researcher != 0){
+      _
+    }else{
+      Error('there are no researcher');
     }
+	}
+
+  modifier hasBug(Conference target) {
+    if (target.totalBalance() != target.balance){
+      _
+    }else{
+      Error('Security breach!!');
+    }
+	}
+
+  function claim(Conference target) hasResearcher(target) hasBug(target){
+    address researcher = researchers[target];
     asyncSend(researcher, this.balance);
+    totalBounty = 0;
     claimed = true;
   }
-
 }
