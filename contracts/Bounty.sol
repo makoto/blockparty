@@ -32,7 +32,7 @@ contract Bounty is PullPaymentCapable {
     }else{
       Error('there are no researcher');
     }
-	}
+  }
 
   modifier hasBug(Conference target) {
     if (target.totalBalance() != target.balance){
