@@ -91,9 +91,7 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 #### Nice to have
 
-- Show event location
 - Show who event owner is
-- Support metamask
 - Replace `throw` with returning ether (better practice for handling exceptions)
 - Add readonly views (so that people can see people who attended via mobile phone)
 
