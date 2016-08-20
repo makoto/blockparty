@@ -78,12 +78,6 @@ class ConferenceDetail extends React.Component {
     }
   }
 
-  getContractBalance(){
-    return this.props.web3.fromWei(this.props.web3.eth.getBalance(this.props.contract.address), "ether").toNumber();
-  }
-
-
-
   getNameContent(name, contractAddress){
     if(name){
       return (
