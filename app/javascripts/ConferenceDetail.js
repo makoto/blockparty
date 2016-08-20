@@ -5,6 +5,7 @@ import Paper from 'material-ui/Paper';
 import PeopleOutlineIcon from 'material-ui/svg-icons/social/people-outline';
 import PeopleIcon from 'material-ui/svg-icons/social/people';
 import EventIcon from 'material-ui/svg-icons/action/event';
+import PlaceIcon from 'material-ui/svg-icons/maps/place';
 import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
 
@@ -144,6 +145,15 @@ class ConferenceDetail extends React.Component {
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<EventIcon />} disabled={true}
             primaryText={
               <p>Date{this.getDateContent(this.state.name)}</p>
+            }
+          />
+          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PlaceIcon />} disabled={true}
+            primaryText={
+              <p>Location
+                <span style={styles.list}>
+                  <a target='_blank' href='https://goo.gl/maps/HUHAKwvt2bo'>Simply Business (1 Finsbury Square, London EC2A 1AE)</a>
+                </span>
+              </p>
             }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
