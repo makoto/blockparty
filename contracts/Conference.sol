@@ -1,6 +1,6 @@
 contract Conference {
 	string public name;
-	uint256 public balance;
+	uint256 public totalBalance;
 	uint256 public deposit;
 	uint public limitOfParticipants;
 	uint public registered;
@@ -27,7 +27,7 @@ contract Conference {
 	function Conference() {
 		name = 'CodeUp';
 		deposit = 1000000000000000000;		// 1 ETH = 10**18 wai
-		balance = 0;
+		totalBalance = 0;
 		registered = 0;
 		attended = 0;
 		limitOfParticipants = 10;
@@ -71,7 +71,7 @@ contract Conference {
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, 0);
-		balance = balance + (deposit * 1);
+		totalBalance = totalBalance + (deposit * 1);
 	}
 
 	function setLimitOfParticipants(uint _limitOfParticipants) {
@@ -99,7 +99,7 @@ contract Conference {
 	}
 
 	function payout() returns(uint256){
-		return balance / uint(attended);
+		return totalBalance / uint(attended);
 	}
 
 	function payback() onlyByOwner{
@@ -114,21 +114,21 @@ contract Conference {
 				Payback(participantsIndex[i], payout(), participantsIndex[i].balance, false);
 			}
 		}
-		balance = 0;
+		totalBalance = 0;
 		ended = true;
 	}
 
 	function cancel() onlyByOwner onlyActive{
-		Cancel(owner, balance);
+		Cancel(owner, totalBalance);
 		for(uint i=1;i<=registered;i++)
 		{
-			if(balance > 0){
+			if(totalBalance > 0){
 				participantsIndex[i].send(deposit);
 			}
 			delete participants[participantsIndex[i]];
 			delete participantsIndex[i];
 		}
-		balance = 0;
+		totalBalance = 0;
 		registered = 0;
 		attended = 0;
 		ended = true;

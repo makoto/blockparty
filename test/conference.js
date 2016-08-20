@@ -79,7 +79,7 @@ contract('Conference', function(accounts) {
 
     it('balance is zero', function(done){
       Conference.new().then(function(meta) {
-        return meta.balance.call()
+        return meta.totalBalance.call()
       }).then(function(value) {
         assert.equal(value, 0);
       }).then(done).catch(done);
@@ -115,7 +115,7 @@ contract('Conference', function(accounts) {
         beforeContractBalance = web3.eth.getBalance(meta.address);
         return meta.register.sendTransaction(twitterHandle, {value:transaction});
       }).then(function() {
-        return meta.balance.call();
+        return meta.totalBalance.call();
       })
       .then(function(value){
         assert.equal(value.toString() - beforeContractBalance, transaction);
