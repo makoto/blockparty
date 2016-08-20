@@ -28,7 +28,6 @@ const styles = {
 };
 
 let provider;
-
 // mist loading proposal https://gist.github.com/frozeman/fbc7465d0b0e6c1c4c23
 if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
   provider = web3.currentProvider; // Keep provider info given from mist `web3` object
@@ -40,15 +39,26 @@ if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
 }
 web3.setProvider(provider);
 Conference.setProvider(provider);
-
 const contract = Conference.deployed();
 const eventEmitter = EventEmitter()
 
+function getBalance(address){
+  return new Promise(function(resolve,reject){
+    web3.eth.getBalance(address, function(err, result){
+      resolve(result)
+    })
+  });
+}
+
 // Functions to interact with contract
 function getDetail(callback){
+  let values;
   Promise.all(['name', 'deposit', 'payout', 'balance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants'].map(attributeName => {
     return contract[attributeName].call();
-  })).then(values => {
+  })).then(_values => {
+    values = _values;
+    return getBalance(contract.address)
+  }).then(balance => {
     var detail = {
       'name': values[0],
       'deposit': values[1],
@@ -59,7 +69,7 @@ function getDetail(callback){
       'owner': values[6],
       'ended': values[7],
       'limitOfParticipants': values[8],
-      'contractBalance': web3.fromWei(web3.eth.getBalance(contract.address), "ether").toNumber()
+      'contractBalance': web3.fromWei(balance, "ether").toNumber()
     }
 
     if(detail.ended){
@@ -94,15 +104,12 @@ function getParticipants(callback){
       })
     })).then(function(participants){
       return participants.map(participant => {
-        var balance =  web3.fromWei(web3.eth.getBalance(participant[1]), "ether").toNumber();
         var object =  {
           name: participant[0],
           address: participant[1],
           attended: participant[2],
-          payout: participant[3],
-          balance: balance
+          payout: participant[3]
         }
-        console.log('participant', object);
         return object
       })
     }).then(participant => { if(participant) callback(participant); })
