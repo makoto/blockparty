@@ -13,6 +13,7 @@ contract Bounty is PullPaymentCapable {
   mapping(address => address) public researchers;
   event TargetCreation(address createdAddress);
   event Error(string message);
+
   function contribute() {
     totalBounty = msg.value;
     if (claimed) throw;
@@ -35,7 +36,7 @@ contract Bounty is PullPaymentCapable {
   }
 
   modifier hasBug(Conference target) {
-    if (target.totalBalance() != target.balance){
+    if (target.totalBalance() > target.balance){
       _
     }else{
       Error('No security breach');
