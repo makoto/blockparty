@@ -53,7 +53,7 @@ function getBalance(address){
 // Functions to interact with contract
 function getDetail(callback){
   let values;
-  Promise.all(['name', 'deposit', 'payout', 'balance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants'].map(attributeName => {
+  Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants'].map(attributeName => {
     return contract[attributeName].call();
   })).then(_values => {
     values = _values;
@@ -63,7 +63,7 @@ function getDetail(callback){
       'name': values[0],
       'deposit': values[1],
       'payout': values[2],
-      'balance': values[3],
+      'totalBalance': values[3],
       'registered': values[4],
       'attended': values[5],
       'owner': values[6],

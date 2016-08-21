@@ -48,7 +48,8 @@
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "web3": "^0.16.0"
+    "web3": "^0.16.0",
+    "zeppelin-solidity": "0.0.6"
   },
   "devDependencies": {
     "style-loader": "^0.13.1",

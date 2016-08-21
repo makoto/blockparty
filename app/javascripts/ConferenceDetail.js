@@ -164,7 +164,7 @@ class ConferenceDetail extends React.Component {
         <Divider />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
           primaryText={
-            <p>Pot<span style={styles.list}>{this.toEther(this.state.balance)}</span></p>
+            <p>Pot<span style={styles.list}>{this.toEther(this.state.totalBalance)}</span></p>
           }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}

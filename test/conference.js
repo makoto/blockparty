@@ -1,5 +1,25 @@
 contract('Conference', function(accounts) {
 
+  it("should not send money directly", function(done){
+    function sendTransaction(fromAddress, toAddress, ether){
+      return new Promise(function(resolve,reject){
+         web3.eth.sendTransaction({
+           from:fromAddress,
+           to:toAddress,
+           value: web3.toWei(ether, "ether")
+         },function(err, result){
+           resolve(result)
+         })
+       });
+     }
+     var conference = Conference.deployed();
+     sendTransaction(accounts[0], conference.address, 1).
+     then(function(){
+       assert.equal(web3.eth.getBalance(conference.address).toNumber(), 0)
+       done();
+     }).catch(done);
+  })
+
   describe('on setLimitOfParticipants', function(){
     it('does not allow to register more than the limit', function(done){
       var transaction = Math.pow(10,18);
@@ -79,7 +99,7 @@ contract('Conference', function(accounts) {
 
     it('balance is zero', function(done){
       Conference.new().then(function(meta) {
-        return meta.balance.call()
+        return meta.totalBalance.call()
       }).then(function(value) {
         assert.equal(value, 0);
       }).then(done).catch(done);
@@ -115,7 +135,7 @@ contract('Conference', function(accounts) {
         beforeContractBalance = web3.eth.getBalance(meta.address);
         return meta.register.sendTransaction(twitterHandle, {value:transaction});
       }).then(function() {
-        return meta.balance.call();
+        return meta.totalBalance.call();
       })
       .then(function(value){
         assert.equal(value.toString() - beforeContractBalance, transaction);

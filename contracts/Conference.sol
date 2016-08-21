@@ -1,11 +1,13 @@
-contract Conference {
+import './zeppelin/Rejector.sol';
+import './zeppelin/Ownable.sol';
+
+contract Conference is Rejector, Ownable {
 	string public name;
-	uint256 public balance;
+	uint256 public totalBalance;
 	uint256 public deposit;
 	uint public limitOfParticipants;
 	uint public registered;
 	uint public attended;
-	address public owner;
 	bool public ended;
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
@@ -27,11 +29,10 @@ contract Conference {
 	function Conference() {
 		name = 'CodeUp';
 		deposit = 1000000000000000000;		// 1 ETH = 10**18 wai
-		balance = 0;
+		totalBalance = 0;
 		registered = 0;
 		attended = 0;
 		limitOfParticipants = 10;
-		owner = msg.sender;
 		ended = false;
 	}
 
@@ -71,18 +72,14 @@ contract Conference {
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, 0);
-		balance = balance + (deposit * 1);
+		totalBalance = totalBalance + (deposit * 1);
 	}
 
 	function setLimitOfParticipants(uint _limitOfParticipants) {
 		limitOfParticipants = _limitOfParticipants;
 	}
 
-	modifier onlyByOwner {
-		if (msg.sender == owner) _
-	}
-
-	function attend(address _addr) onlyByOwner{
+	function attend(address _addr) onlyOwner{
 		if (isRegistered(_addr) != true) throw;
 		if (isAttended(_addr)) throw;
 		Attend(_addr, msg.sender.balance);
@@ -99,10 +96,10 @@ contract Conference {
 	}
 
 	function payout() returns(uint256){
-		return balance / uint(attended);
+		return totalBalance / uint(attended);
 	}
 
-	function payback() onlyByOwner{
+	function payback() onlyOwner{
 		for(uint i=1;i<=registered;i++)
 		{
 			if(participants[participantsIndex[i]].attended){
@@ -114,21 +111,21 @@ contract Conference {
 				Payback(participantsIndex[i], payout(), participantsIndex[i].balance, false);
 			}
 		}
-		balance = 0;
+		totalBalance = 0;
 		ended = true;
 	}
 
-	function cancel() onlyByOwner onlyActive{
-		Cancel(owner, balance);
+	function cancel() onlyOwner onlyActive{
+		Cancel(owner, totalBalance);
 		for(uint i=1;i<=registered;i++)
 		{
-			if(balance > 0){
+			if(totalBalance > 0){
 				participantsIndex[i].send(deposit);
 			}
 			delete participants[participantsIndex[i]];
 			delete participantsIndex[i];
 		}
-		balance = 0;
+		totalBalance = 0;
 		registered = 0;
 		attended = 0;
 		ended = true;
