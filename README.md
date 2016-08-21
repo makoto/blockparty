@@ -24,22 +24,32 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 <h2>How to setup</h2>
 
 <h3>Option 1: access from Mist</h3>
+<p>This is the standard way of accessing Dapp</p>
 <ul>
   <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>testnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
-  <li>Step 2: Create at least 2 accounts on your wallet (so that you can simulate multiple users), and make sure you have some Ethers in both accounts. Here is the quick link on <a href='https://medium.com/@makoto_inoue/ether1-how-to-even-get-to-start-deploying-ethereum-d297cc68b5c7#.4no7evv94'> how to mine on testnet.</a> </li>
+  <li>Step 2: Create an account on your wallet, and make sure you have at least 1.1 Ether.</li>
   <li>Step 3: Refresh the page </li>
 </ul>
 
-<h3>Option 2: access from normal browser</h3>
+<h3>Option 2: access from browser and <a href='https://metamask.io/'>Metamask</a> Chrome extension</h3>
+<p>For those of you who have problem installing the Mist browser, or no time to download big blockchain, why don't you try out via this browser based extension</p>
+<ul>
+  <li>Step 1: Install <a href='https://metamask.io/'>Metamask</a> Chrome extension </li>
+  <li>Step 2: Create an account on your metamask, and make sure you have at least 1.1 Ether.</li>
+  <li>Step 3: Refresh the page </li>
+</ul>
+
+<h3>Option 3: access from normal browser</h3>
+<p>This has been the standard way to access Dapp prior to Ethereum Wallet (lower than v 0.7)</p>
 <ul>
   <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>testnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
-  <li>Step 2: Create at least 2 accounts on your wallet (so that you can simulate multiple users), and make sure you have some Ethers in both accounts. Here is the quick link on <a href='https://medium.com/@makoto_inoue/ether1-how-to-even-get-to-start-deploying-ethereum-d297cc68b5c7#.4no7evv94'> how to mine on testnet.</a> </li>
+  <li>Step 2: Create an account on your wallet, and make sure you have at least 1.1 Ether.</li>
   <li>Step 3: Stop Ethereum Wallet</li>
   <li>Step 4: Start geth(Go Etheruem, command line tool) with the following options. (See the <a href='https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum'>installation instructions</a> for each platform)</li>
   <li>Step 5: Refresh this page </li>
 </ul>
 <blockquote style={{backgroundColor:'black', color:'white', padding:'1em'}}>
-  geth --testnet --unlock 0,1 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain http://blockparty.io.v02.s3-website-us-west-2.amazonaws.com/
+  geth --testnet --unlock 0,1 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain $THIS_URL
 </blockquote>
 <p>
   NOTE: <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0</span> will unlock with one account. <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0 1</span> will unlock with two accounts.
@@ -47,10 +57,7 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 <h2>How to play?</h2>
 <ul>
-  <li>Step 1: Type your twitter account, pick one of your address, then press 'Register'. It will take 10 to 30 seconds to get verified and you will receive notification.</li>
-  <li>Step 2: Try registering with another account. Each time you register, you deposit 1 ETHER to the contract</li>
-  <li>Step 3: Select one of the registered account and then press 'Attend'. 'Payout' seciont tells you how much you may potentially get.</li>
-  <li>Step 4: Press 'Payback' button and see one of your accounts get the payout ammount.</li>
+  <li>Type your twitter account, pick one of your address, then press 'Register'. It will take 10 to 30 seconds to get verified and you will receive notification.</li>
 </ul>
 
 ## Hacking guide
@@ -76,7 +83,7 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 ### Running locally
 
 - Run `testrpc` in one console
-- Run `truffle deploy`
+- Run `truffle migrate`
 - Run `truffle serve`
 - Open `http://localhost:8080`
 

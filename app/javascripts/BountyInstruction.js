@@ -40,7 +40,7 @@ export default class BountyInstruction extends React.Component {
           contentStyle={{width:'90%', maxWidth:'none'}}
         >
           <div>
-            <p>Please help our site secure by participating our automatic bug bounty program.</p>
+            <p>Please help us to make our smart contract secure by participating our automatic bug bounty program.</p>
             <ul>
               <li>
                 DemoBounty Address:
