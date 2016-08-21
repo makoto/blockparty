@@ -1,3 +1,7 @@
+## v0.4
+
+- Add Bounty program
+- Support metamask
 
 ## v0.3
 
