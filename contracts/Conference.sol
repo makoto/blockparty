@@ -1,4 +1,6 @@
-contract Conference {
+import './zeppelin/Rejector.sol';
+
+contract Conference is Rejector {
 	string public name;
 	uint256 public totalBalance;
 	uint256 public deposit;

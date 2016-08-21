@@ -1,5 +1,26 @@
 // Test originally from https://github.com/PeterBorah/smart-contract-security-examples/blob/master/test/bounty.js
 contract('Bounty', function(accounts) {
+
+  it("should not send money directly", function(done){
+    function sendTransaction(fromAddress, toAddress, ether){
+      return new Promise(function(resolve,reject){
+         web3.eth.sendTransaction({
+           from:fromAddress,
+           to:toAddress,
+           value: web3.toWei(ether, "ether")
+         },function(err, result){
+           resolve(result)
+         })
+       });
+     }
+     var bounty = Bounty.deployed();
+     sendTransaction(accounts[0], bounty.address, 1).
+     then(function(){
+       assert.equal(web3.eth.getBalance(bounty.address).toNumber(), 0)
+       done();
+     }).catch(done);
+  })
+
   it("should not pay out the bounty if you don't find a bug", function(done) {
     var bounty = Bounty.deployed();
     var errorEvent = bounty.Error({});

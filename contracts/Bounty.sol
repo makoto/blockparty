@@ -1,5 +1,6 @@
 import './Conference.sol';
 import './zeppelin/PullPaymentCapable.sol';
+import './zeppelin/Rejector.sol';
 
 /*
  * Bounty
@@ -7,7 +8,7 @@ import './zeppelin/PullPaymentCapable.sol';
  * to be different from its totalBalance, which would mean that it doesn't
  * have sufficient ether for everyone to withdraw.
  */
-contract Bounty is PullPaymentCapable {
+contract Bounty is PullPaymentCapable, Rejector{
   uint public totalBounty;
   bool public claimed;
   mapping(address => address) public researchers;
