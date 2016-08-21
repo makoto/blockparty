@@ -7,6 +7,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
 import ConferenceDetail from './ConferenceDetail';
 import FormInput from './FormInput';
+import Bounty from '../../build/contracts/Bounty.sol.js';
+import DemoBounty from '../../build/contracts/DemoBounty.sol.js';
+import BountyInstruction from './BountyInstruction';
 import Notification from './Notification';
 import Instruction from './Instruction';
 import Participants from './Participants';
@@ -39,6 +42,11 @@ if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
 }
 web3.setProvider(provider);
 Conference.setProvider(provider);
+Bounty.setProvider(provider);
+DemoBounty.setProvider(provider);
+const bounty = Bounty.deployed();
+const demoBounty = DemoBounty.deployed();
+
 const contract = Conference.deployed();
 const eventEmitter = EventEmitter()
 
@@ -159,7 +167,6 @@ function getAccounts(callback){
     callback(accs);
   })
 }
-
 const App = (props) => (
   <div>
     <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -169,8 +176,14 @@ const App = (props) => (
             <span>Block Party<span style={{fontSize:'small', fontFamily:'sans-serif'}}> - NO BLOCK NO PARTY -</span></span>
           }
           iconElementLeft={<Avatar src="/images/nightclub-white.png" size={50} backgroundColor="rgb(96, 125, 139)" />}
-          iconElementRight={<FlatButton label="About" onClick={ () => {eventEmitter.emit('instruction')}} />}
+          iconElementRight={
+            <span>
+              <FlatButton style={{color:'white'}} label="About" onClick={ () => {eventEmitter.emit('instruction')}} />
+              <BountyInstruction demoBounty={demoBounty} bounty={bounty}/>
+            </span>
+          }
         />
+
         <Instruction eventEmitter={eventEmitter} />
         <Notification eventEmitter={eventEmitter} />
         <div style={styles.div}>
