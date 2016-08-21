@@ -1,14 +1,13 @@
 import './Conference.sol';
 import './zeppelin/PullPaymentCapable.sol';
-import './zeppelin/Rejector.sol';
 
 /*
- * Bounty
+ * DemoBounty
  * This bounty will pay out if you can cause a Conference's balance
- * to be lower from its totalBalance, which would mean that it doesn't
- * have sufficient ether for everyone to withdraw.
+ * to not to be same as its totalBalance, which can be done by
+ * dividing payout with undividable number (eg: 4/3 = 1.3333...)
  */
-contract Bounty is PullPaymentCapable, Rejector{
+contract DemoBounty is PullPaymentCapable, Rejector{
   uint public totalBounty;
   bool public claimed;
   mapping(address => address) public researchers;
@@ -37,7 +36,7 @@ contract Bounty is PullPaymentCapable, Rejector{
   }
 
   modifier hasBug(Conference target) {
-    if (target.totalBalance() > target.balance){
+    if (target.totalBalance() != target.balance){
       _
     }else{
       Error('No security breach');

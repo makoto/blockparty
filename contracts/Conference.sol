@@ -111,6 +111,10 @@ contract Conference is Rejector, Ownable {
 				Payback(participantsIndex[i], payout(), participantsIndex[i].balance, false);
 			}
 		}
+		/*
+		 *	Actual balance may have some left over if 4 payout is divided among 3 attendees
+		 *	eg: 4 / 3 = 1.333
+		 */
 		totalBalance = 0;
 		ended = true;
 	}
