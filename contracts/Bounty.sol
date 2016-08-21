@@ -38,7 +38,7 @@ contract Bounty is PullPaymentCapable {
     if (target.totalBalance() != target.balance){
       _
     }else{
-      Error('Security breach!!');
+      Error('No security breach');
     }
   }
 
