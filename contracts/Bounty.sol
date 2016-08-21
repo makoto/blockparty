@@ -5,7 +5,7 @@ import './zeppelin/Rejector.sol';
 /*
  * Bounty
  * This bounty will pay out if you can cause a Conference's balance
- * to be different from its totalBalance, which would mean that it doesn't
+ * to be lower from its totalBalance, which would mean that it doesn't
  * have sufficient ether for everyone to withdraw.
  */
 contract Bounty is PullPaymentCapable, Rejector{
