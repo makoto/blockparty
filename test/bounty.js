@@ -32,19 +32,7 @@ contract('Bounty', function(accounts) {
       catch(done);
   });
 
-  it("should pay out the bounty if you find the deposit bug", function(done) {
-    function sendTransaction(fromAddress, toAddress, ether){
-      return new Promise(function(resolve,reject){
-        web3.eth.sendTransaction({
-          from:fromAddress,
-          to:toAddress,
-          value: web3.toWei(ether, "ether")
-        },function(err, result){
-          resolve(result)
-        })
-      });
-    }
-
+  it.skip("should pay out the bounty if you find the deposit bug", function(done) {
     var bounty = Bounty.deployed();
     var errorEvent = bounty.Error({});
     errorEvent.watch(function(err, result) {
@@ -58,10 +46,8 @@ contract('Bounty', function(accounts) {
       if (err) { throw err }
 
       var target = Conference.at(result.args.createdAddress);
-      // Security bug!! It should not allow users to throw randowm Ether at you.
-      sendTransaction(accounts[0], target.address, 10).then(function(){
-        return target.register('username', {value: web3.toWei('1', 'ether')})
-      }).
+      // Do something to cause security bug
+      target.register('username', {value: web3.toWei('1', 'ether')}).
         then(function() { return bounty.claim(target.address)}).
         then(function() { return bounty.claimed() }).
         then(function(result) {
