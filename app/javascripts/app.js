@@ -183,7 +183,7 @@ const App = (props) => (
           iconElementRight={
             <span>
               <FlatButton style={{color:'white'}} label="About" onClick={ () => {eventEmitter.emit('instruction')}} />
-              <BountyInstruction bounty={bounty} getBalance={getBalance} web3={web3} math={math}/>
+              <BountyInstruction bounty={bounty} getDetail={getDetail} getBalance={getBalance} web3={web3} math={math}/>
             </span>
           }
         />

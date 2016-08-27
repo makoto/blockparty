@@ -8,10 +8,14 @@ export default class BountyInstruction extends React.Component {
     super(props);
     this.state = {
       open: false,
+      ended: false,
       bountyBalance: 0,
       bountyClaimed: true,
       bountyTotalReseachers: 0
     };
+    props.getDetail(model => {
+      this.setState({ended: model.ended});
+    })
     props.getBalance(props.bounty.address).then(balance =>{
       this.setState({bountyBalance: balance.toNumber()});
     })
@@ -51,10 +55,13 @@ export default class BountyInstruction extends React.Component {
         onTouchTap={this.handleClose.bind(this)}
       />
     ];
-
+    let bountyLink;
+    if (!this.state.ended) {
+      bountyLink = <FlatButton style={{color:'white'}} label="Bounty" onClick={ () => {this.handleOpen()}} />
+    }
     return(
       <span>
-        <FlatButton style={{color:'white'}} label="Bounty" onClick={ () => {this.handleOpen()}} />
+        {bountyLink}
         <Dialog
           title="Bounty program"
           actions={actions}
