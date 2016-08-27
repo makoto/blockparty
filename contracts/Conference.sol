@@ -28,7 +28,7 @@ contract Conference is Rejector, Ownable {
 
 	function Conference() {
 		name = 'CodeUp';
-		deposit = 1000000000000000000;		// 1 ETH = 10**18 wai
+		deposit = 1 ether;
 		totalBalance = 0;
 		registered = 0;
 		attended = 0;
