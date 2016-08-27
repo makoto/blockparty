@@ -8,23 +8,10 @@ export default class BountyInstruction extends React.Component {
     super(props);
     this.state = {
       open: false,
-      demoBountyBalance: 0,
-      demoBountyClaimed: false,
-      demoBountyTotalReseachers: 0,
       bountyBalance: 0,
       bountyClaimed: true,
       bountyTotalReseachers: 0
     };
-    let component = this;
-    props.getBalance(props.demoBounty.address).then(balance =>{
-      this.setState({demoBountyBalance: balance.toNumber()});
-    }).call(this)
-    props.demoBounty.claimed.call().then(claimed =>{
-      this.setState({demoBountyClaimed: claimed});
-    })
-    props.demoBounty.totalReseachers.call().then(totalReseachers =>{
-      this.setState({demoBountyTotalReseachers: totalReseachers.toNumber()});
-    })
     props.getBalance(props.bounty.address).then(balance =>{
       this.setState({bountyBalance: balance.toNumber()});
     })
@@ -83,7 +70,6 @@ export default class BountyInstruction extends React.Component {
               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                 <TableRow>
                   <TableHeaderColumn ></TableHeaderColumn>
-                  <TableHeaderColumn >DemoBounty</TableHeaderColumn>
                   <TableHeaderColumn >Bounty</TableHeaderColumn>
                 </TableRow>
               </TableHeader>
@@ -91,13 +77,6 @@ export default class BountyInstruction extends React.Component {
               <TableRow>
                 <TableRowColumn>
                   Address
-                </TableRowColumn>
-                <TableRowColumn>
-                  <a
-                    target='_blank'
-                    href={ `https://testnet.etherscan.io/address/${this.props.demoBounty.address}` }>
-                    {this.props.demoBounty.address}
-                  </a>
                 </TableRowColumn>
                 <TableRowColumn>
                   <a
@@ -112,9 +91,6 @@ export default class BountyInstruction extends React.Component {
                   Bounty Pot
                 </TableRowColumn>
                 <TableRowColumn>
-                  {this.showEther(this.state.demoBountyBalance)} ETH
-                </TableRowColumn>
-                <TableRowColumn>
                   {this.showEther(this.state.bountyBalance)} ETH
                 </TableRowColumn>
               </TableRow>
@@ -122,9 +98,6 @@ export default class BountyInstruction extends React.Component {
               <TableRow>
                 <TableRowColumn>
                   Researchers participating
-                </TableRowColumn>
-                <TableRowColumn>
-                  {this.state.demoBountyTotalReseachers}
                 </TableRowColumn>
                 <TableRowColumn>
                   {this.state.bountyTotalReseachers}
@@ -135,9 +108,6 @@ export default class BountyInstruction extends React.Component {
               <TableRow>
                 <TableRowColumn>
                   Claimed
-                </TableRowColumn>
-                <TableRowColumn>
-                  {this.yesNo(this.state.demoBountyClaimed)}
                 </TableRowColumn>
                 <TableRowColumn>
                   {this.yesNo(this.state.bountyClaimed)}

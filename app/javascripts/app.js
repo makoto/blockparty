@@ -8,7 +8,6 @@ import FlatButton from 'material-ui/FlatButton';
 import ConferenceDetail from './ConferenceDetail';
 import FormInput from './FormInput';
 import Bounty from '../../build/contracts/Bounty.sol.js';
-import DemoBounty from '../../build/contracts/DemoBounty.sol.js';
 import BountyInstruction from './BountyInstruction';
 import Notification from './Notification';
 import Instruction from './Instruction';
@@ -43,9 +42,7 @@ if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
 web3.setProvider(provider);
 Conference.setProvider(provider);
 Bounty.setProvider(provider);
-DemoBounty.setProvider(provider);
 const bounty = Bounty.deployed();
-const demoBounty = DemoBounty.deployed();
 
 let contract;
 let contractAddress = document.baseURI.split('#')[1]
@@ -186,7 +183,7 @@ const App = (props) => (
           iconElementRight={
             <span>
               <FlatButton style={{color:'white'}} label="About" onClick={ () => {eventEmitter.emit('instruction')}} />
-              <BountyInstruction demoBounty={demoBounty} bounty={bounty} getBalance={getBalance} web3={web3} math={math}/>
+              <BountyInstruction bounty={bounty} getBalance={getBalance} web3={web3} math={math}/>
             </span>
           }
         />
