@@ -47,7 +47,14 @@ DemoBounty.setProvider(provider);
 const bounty = Bounty.deployed();
 const demoBounty = DemoBounty.deployed();
 
-const contract = Conference.deployed();
+let contract;
+let contractAddress = document.baseURI.split('#')[1]
+if (contractAddress && contractAddress.length == 42) {
+  contract = Conference.at(contractAddress);
+}else{
+  contract = Conference.deployed();
+}
+
 const eventEmitter = EventEmitter()
 
 function getBalance(address){
