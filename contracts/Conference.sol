@@ -1,7 +1,8 @@
 import './zeppelin/Rejector.sol';
 import './zeppelin/Ownable.sol';
+import './zeppelin/Killable.sol';
 
-contract Conference is Rejector, Ownable {
+contract Conference is Rejector, Ownable, Killable {
 	string public name;
 	uint256 public totalBalance;
 	uint256 public deposit;
