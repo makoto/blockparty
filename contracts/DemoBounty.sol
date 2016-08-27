@@ -1,5 +1,8 @@
 import './Conference.sol';
 import './zeppelin/PullPaymentCapable.sol';
+import './zeppelin/Rejector.sol';
+import './zeppelin/Killable.sol';
+import './zeppelin/Ownable.sol';
 
 /*
  * DemoBounty
@@ -7,21 +10,28 @@ import './zeppelin/PullPaymentCapable.sol';
  * to not to be same as its totalBalance, which can be done by
  * dividing payout with undividable number (eg: 4/3 = 1.3333...)
  */
-contract DemoBounty is PullPaymentCapable, Rejector{
+contract DemoBounty is PullPaymentCapable, Rejector, Ownable, Killable{
   uint public totalBounty;
+  uint public totalReseachers;
   bool public claimed;
   mapping(address => address) public researchers;
   event TargetCreation(address createdAddress);
   event Error(string message);
 
+  function DemoBounty(){
+    totalBounty = 0;
+    totalReseachers = 0;
+  }
+
   function contribute() {
-    totalBounty = msg.value;
+    totalBounty += msg.value;
     if (claimed) throw;
   }
 
   function createTarget() returns(Conference) {
     Conference target = new Conference();
     researchers[target] = msg.sender;
+    totalReseachers+=1;
     TargetCreation(target);
     return target;
   }
