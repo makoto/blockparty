@@ -10,8 +10,10 @@ export default class BountyInstruction extends React.Component {
       open: false,
       demoBountyBalance: 0,
       demoBountyClaimed: false,
+      demoBountyTotalReseachers: 0,
       bountyBalance: 0,
-      bountyClaimed: true
+      bountyClaimed: true,
+      bountyTotalReseachers: 0
     };
     let component = this;
     props.getBalance(props.demoBounty.address).then(balance =>{
@@ -20,11 +22,17 @@ export default class BountyInstruction extends React.Component {
     props.demoBounty.claimed.call().then(claimed =>{
       this.setState({demoBountyClaimed: claimed});
     })
+    props.demoBounty.totalReseachers.call().then(totalReseachers =>{
+      this.setState({demoBountyTotalReseachers: totalReseachers.toNumber()});
+    })
     props.getBalance(props.bounty.address).then(balance =>{
       this.setState({bountyBalance: balance.toNumber()});
     })
     props.bounty.claimed.call().then(claimed =>{
       this.setState({bountyClaimed: claimed});
+    })
+    props.bounty.totalReseachers.call().then(totalReseachers =>{
+      this.setState({bountyTotalReseachers: totalReseachers.toNumber()});
     })
   }
 
@@ -104,12 +112,26 @@ export default class BountyInstruction extends React.Component {
                   Bounty Pot
                 </TableRowColumn>
                 <TableRowColumn>
-                  {this.showEther(this.state.demoBountyBalance)}
+                  {this.showEther(this.state.demoBountyBalance)} ETH
                 </TableRowColumn>
                 <TableRowColumn>
-                  {this.showEther(this.state.bountyBalance)}
+                  {this.showEther(this.state.bountyBalance)} ETH
                 </TableRowColumn>
               </TableRow>
+
+              <TableRow>
+                <TableRowColumn>
+                  Researchers participating
+                </TableRowColumn>
+                <TableRowColumn>
+                  {this.state.demoBountyTotalReseachers}
+                </TableRowColumn>
+                <TableRowColumn>
+                  {this.state.bountyTotalReseachers}
+                </TableRowColumn>
+              </TableRow>
+
+
               <TableRow>
                 <TableRowColumn>
                   Claimed
