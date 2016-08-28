@@ -268,7 +268,7 @@ contract('Conference', function(accounts) {
   })
 
   describe('on payback', function(){
-    it('cannot be paid back if non owner calls', function(done){
+    it('cannot withdraw if non owner calls', function(done){
       var meta
       var transaction = web3.toWei(1, "ether");
       var gas = 1000000;
@@ -287,15 +287,50 @@ contract('Conference', function(accounts) {
         previousBalances[0] = web3.eth.getBalance(accounts[0]);
         return meta.payback.sendTransaction({from:nonOwner, gas:gas})
       }).then(function(){
+        return meta.withdraw.sendTransaction({from:accounts[0], gas:gas})
+      }).then(function(transaction){
+        var receipt = web3.eth.getTransactionReceipt(transaction)
         // money is still left on contract
         assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
         // did not get deposit back
-        assert.equal(previousBalances[0].toNumber(), web3.eth.getBalance(accounts[0]).toNumber())
+        assert.equal(previousBalances[0].toNumber(), web3.eth.getBalance(accounts[0]).toNumber() + receipt.gasUsed)
       })
       .then(done).catch(done);
     })
 
-    it('receives payout if you attend', function(done){
+    it('cannot withdraw if you did not attend', function(done){
+      var meta
+      var transaction = web3.toWei(1, "ether");
+      var gas = 1000000;
+      var previousBalances = [];
+      var twitterHandle = '@bighero6';
+      var notAttended = accounts[2];
+      var attended = accounts[1];
+      var owner = accounts[0];
+
+      Conference.new().then(function(_meta) {
+        meta = _meta;
+        return meta.register.sendTransaction(twitterHandle, {from:attended, value:transaction, gas:gas})
+      }).then(function(){
+        // contract gets 1 ether
+        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        return meta.attend.sendTransaction(attended, {gas:gas})
+      }).then(function(){
+        previousBalances[0] = web3.eth.getBalance(notAttended);
+        return meta.payback.sendTransaction({from:owner, gas:gas})
+      }).then(function(){
+        return meta.withdraw.sendTransaction({from:notAttended, gas:gas})
+      }).then(function(transaction){
+        var receipt = web3.eth.getTransactionReceipt(transaction)
+        // money is still left on contract
+        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        // did not get deposit back
+        assert.equal(previousBalances[0].toNumber(), web3.eth.getBalance(notAttended).toNumber() + receipt.gasUsed)
+      })
+      .then(done).catch(done);
+    })
+
+    it('can withdraw if you attend', function(done){
       var meta = Conference.deployed();
       var transaction = web3.toWei(1, "ether");
       var gas = 1000000;
@@ -324,33 +359,38 @@ contract('Conference', function(accounts) {
       }).then(function(){
         return meta.attend.sendTransaction(accounts[1], {gas:gas})
       }).then(function(){
+        return meta.payback.sendTransaction({from:accounts[0], gas:gas})
+      }).then(function(){
         previousBalances[0] = web3.eth.getBalance(accounts[0]);
         previousBalances[1] = web3.eth.getBalance(accounts[1]);
         previousBalances[2] = web3.eth.getBalance(accounts[2]);
-        // payback gets 3 ehter / 2 = 1.5 each
-        return meta.payback.sendTransaction({from:accounts[0], gas:gas})
-      }).then(function(){
-        // no money is left on contract
-        assert.equal(web3.eth.getBalance(meta.address), web3.toWei(0, "ether"))
-        // got some money
+        return meta.withdraw.sendTransaction({from:accounts[0]})
+      }).then(function(transaction){
         assert.equal(balanceDiff(0), 1.5)
+        return meta.withdraw.sendTransaction({from:accounts[1]})
+      }).then(function(transaction){
         assert.equal(balanceDiff(1), 1.5)
-        // lost some money
+        return meta.withdraw.sendTransaction({from:accounts[2]})
+      }).then(function(transaction){
         assert.equal(balanceDiff(2), 0)
+        // no money is left on contract
+        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(0, "ether"))
         return meta.participants.call(accounts[0]);
       }).then(function(participant){
         // Got some money
-        assert.equal(participant[3], web3.toWei(0.5, "ether"))
+        assert.equal(participant[3], web3.toWei(1.5, "ether"))
+        assert.equal(participant[4], true)
         return meta.participants.call(accounts[1]);
       }).then(function(participant){
         // Got some money
-        assert.equal(participant[3], web3.toWei(0.5, "ether"))
+        assert.equal(participant[3], web3.toWei(1.5, "ether"))
+        assert.equal(participant[4], true)
         return meta.participants.call(accounts[2]);
       }).then(function(participant){
-        // Lost some money
-        assert.equal(participant[3], web3.toWei(-1, "ether"))
-      })
-      .then(done).catch(done);
+        // Got no money
+        assert.equal(participant[3], 0)
+        assert.equal(participant[4], false)
+      }).then(done).catch(done);
     })
 
     it('cannot register any more', function(done){

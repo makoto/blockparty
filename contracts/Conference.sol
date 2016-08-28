@@ -19,7 +19,8 @@ contract Conference is Rejector, Ownable, Killable {
 		string participantName;
 		address addr;
 		bool attended;
-		int payout;
+		uint256 payout;
+		bool paid;
 	}
 
 	event Register(string participantName, address addr, uint256 balance, uint256 value);
@@ -72,7 +73,7 @@ contract Conference is Rejector, Ownable, Killable {
 		if (isRegistered(msg.sender)) throw;
 		registered++;
 		participantsIndex[registered] = msg.sender;
-		participants[msg.sender] = Participant(_participant, msg.sender, false, 0);
+		participants[msg.sender] = Participant(_participant, msg.sender, false, 0, false);
 		totalBalance = totalBalance + (deposit * 1);
 	}
 
@@ -96,27 +97,20 @@ contract Conference is Rejector, Ownable, Killable {
 		return isRegistered(_addr) && participants[_addr].attended;
 	}
 
+	function isPaid(address _addr) returns (bool){
+		return isRegistered(_addr) && participants[_addr].paid;
+	}
+
 	function payout() returns(uint256){
 		return totalBalance / uint(attended);
 	}
 
 	function payback() onlyOwner{
-		for(uint i=1;i<=registered;i++)
-		{
+		for(uint i=1;i<=registered;i++){
 			if(participants[participantsIndex[i]].attended){
-				Payback(participantsIndex[i], payout(), participantsIndex[i].balance,  true);
-				participants[participantsIndex[i]].payout = int(payout() - deposit);
-				participantsIndex[i].send(payout());
-			}else{
-				participants[participantsIndex[i]].payout = int(deposit - (deposit * 2));
-				Payback(participantsIndex[i], payout(), participantsIndex[i].balance, false);
+				participants[participantsIndex[i]].payout = payout();
 			}
 		}
-		/*
-		 *	Actual balance may have some left over if 4 payout is divided among 3 attendees
-		 *	eg: 4 / 3 = 1.333
-		 */
-		totalBalance = 0;
 		ended = true;
 	}
 
@@ -134,5 +128,22 @@ contract Conference is Rejector, Ownable, Killable {
 		registered = 0;
 		attended = 0;
 		ended = true;
+	}
+
+	modifier onlyPayable {
+		Participant participant = participants[msg.sender];
+		if (participant.payout > 0){
+			_
+		}
+	}
+
+	function withdraw() onlyPayable {
+		Participant participant = participants[msg.sender];
+		participant.paid = true;
+		totalBalance -= participant.payout;
+		if (!msg.sender.send(participant.payout)) {
+			participant.paid = false;
+			totalBalance += participant.payout;
+		}
 	}
 }
