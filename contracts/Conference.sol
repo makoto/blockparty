@@ -126,8 +126,6 @@ contract Conference is Rejector, Ownable, Killable {
 		for(uint i=1;i<=registered;i++){
 			participants[participantsIndex[i]].payout = deposit;
 		}
-		registered = 0;
-		attended = 0;
 		ended = true;
 		endedAt = now;
 	}

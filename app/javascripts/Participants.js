@@ -66,12 +66,20 @@ class Participants extends React.Component {
     return this.state.accounts.includes(this.state.detail.owner);
   }
 
+  isUser(participant){
+    return this.state.accounts.includes(participant.address);
+  }
+
   toNumber(value){
     if(value) return value.toNumber();
   }
 
   handleAction(actionName, participantAddress) {
     this.props.action(actionName, this.state.address.trim(), participantAddress)
+  }
+
+  handleWithdraw(actionName, participantAddress) {
+    this.props.action(actionName, participantAddress)
   }
 
   yesNo(participant){
@@ -91,12 +99,17 @@ class Participants extends React.Component {
     }
   }
 
-  displayBalance(amount){
+  displayBalance(participant){
+    var amount = web3.fromWei(this.toNumber(participant.payout))
     let color = 'black';
     let message = '';
     if (amount > 0){
       color = 'green';
-      message = 'Earned';
+      if(participant.paid){
+        message = 'Earned';
+      }else{
+        message = 'Won';
+      }
     }
     if (amount < 0){
       color = 'red' ;
@@ -106,6 +119,22 @@ class Participants extends React.Component {
       <span style={{color:color}}>
         {message} { this.props.math.round(amount, 3).toString() }
       </span>
+    )
+  }
+
+  displayWithdrawal(participant){
+    var button
+    if(this.isUser(participant) && participant.payout > 0 && !participant.paid){
+      button =  (
+        <RaisedButton
+          label="Withdraw" secondary={true}
+          onClick={this.handleWithdraw.bind(this, 'withdraw', participant.address)}
+        />
+      )
+    }
+
+    return(
+      button
     )
   }
 
@@ -131,14 +160,21 @@ class Participants extends React.Component {
       return this.state.participants.map((participant) => {
         return (
           <TableRow>
-            <TableRowColumn width={50}>
+            <TableRowColumn width={20}>
               {getTwitterIcon(participant.name)}
               <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
               (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
               </TableRowColumn>
             <TableRowColumn width={10} >{this.yesNo(participant)}</TableRowColumn>
-            <TableRowColumn width={10} >
-              { this.displayBalance(web3.fromWei(this.toNumber(participant.payout))) }
+            <TableRowColumn width={50} >
+              <span>
+                { this.displayBalance(participant) }
+              </span>
+            </TableRowColumn>
+            <TableRowColumn width={50} >
+              <span>
+                { this.displayWithdrawal(participant) }
+              </span>
             </TableRowColumn>
           </TableRow>
         )
@@ -155,9 +191,10 @@ class Participants extends React.Component {
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
-                <TableHeaderColumn width={50} >Name</TableHeaderColumn>
+                <TableHeaderColumn width={20} >Name</TableHeaderColumn>
                 <TableHeaderColumn width={10} >Attend?</TableHeaderColumn>
-                <TableHeaderColumn width={10} >Payout</TableHeaderColumn>
+                <TableHeaderColumn width={50} >Payout</TableHeaderColumn>
+                <TableHeaderColumn width={20} >Action</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody displayRowCheckbox={false}>

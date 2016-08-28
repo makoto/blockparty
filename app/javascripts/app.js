@@ -83,7 +83,6 @@ function getDetail(callback){
       'limitOfParticipants': values[8],
       'contractBalance': web3.fromWei(contractBalance, "ether").toNumber()
     }
-
     if(detail.ended){
       detail.canRegister = false
       detail.canAttend = false
@@ -120,7 +119,8 @@ function getParticipants(callback){
           name: participant[0],
           address: participant[1],
           attended: participant[2],
-          payout: participant[3]
+          payout: participant[3],
+          paid: participant[4]
         }
         return object
       })
@@ -136,7 +136,6 @@ function action(name, address, argument) {
   if (name == "register") {
     options.value = Math.pow(10,18)
   }
-
   contract[name](argument, options).then(function() {
     getDetail(function(model){
       eventEmitter.emit('change', model);
