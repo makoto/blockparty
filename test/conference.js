@@ -270,7 +270,7 @@ contract('Conference', function(accounts) {
   describe('on payback', function(){
     it('cannot withdraw if non owner calls', function(done){
       var meta
-      var transaction = web3.toWei(1, "ether");
+      var deposit = web3.toWei(1, "ether");
       var gas = 1000000;
       var previousBalances = [];
       var twitterHandle = '@bighero6';
@@ -279,7 +279,7 @@ contract('Conference', function(accounts) {
       var registered = accounts[2]
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:registered, value:transaction, gas:gas})
+        return meta.register.sendTransaction(twitterHandle, {from:registered, value:deposit, gas:gas})
       }).then(function(){
         // contract gets 1 ether
         assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
