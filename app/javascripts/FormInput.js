@@ -64,6 +64,10 @@ class FormInput extends React.Component {
     return this.state.detail.canCancel
   }
 
+  showClear(){
+    return this.state.detail.ended
+  }
+
   handleName(e) {
     this.setState({
       name: e.target.value,
@@ -75,12 +79,16 @@ class FormInput extends React.Component {
     if(this.isOwner()){
       adminButtons = <span>
         <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
-            label="Payback" style={styles}
-            onClick={this.handleAction.bind(this, 'payback')}
+          label="Payback" style={styles}
+          onClick={this.handleAction.bind(this, 'payback')}
         />
         <RaisedButton secondary={this.showCancel()} disabled={!this.showCancel()}
-            label="Cancel" style={styles}
-            onClick={this.handleAction.bind(this, 'cancel')}
+          label="Cancel" style={styles}
+          onClick={this.handleAction.bind(this, 'cancel')}
+        />
+        <RaisedButton secondary={this.showClear()} disabled={!this.showClear()}
+          label="Clear" style={styles}
+          onClick={this.handleAction.bind(this, 'clear')}
         />
       </span>
     }
