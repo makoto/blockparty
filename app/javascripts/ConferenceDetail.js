@@ -71,14 +71,6 @@ class ConferenceDetail extends React.Component {
     if(value) return value.toNumber();
   }
 
-  youGet(){
-    if(this.state.payout && this.state.payout.toNumber() > 0){
-      return (
-        <span> (including {this.props.math.round(this.props.web3.fromWei(this.state.payout - this.state.deposit, "ether"), 3)} bonus)</span>
-      )
-    }
-  }
-
   getNameContent(name, contractAddress){
     if(name){
       return (
@@ -166,11 +158,6 @@ class ConferenceDetail extends React.Component {
           primaryText={
             <p>Pot<span style={styles.list}>{this.toEther(this.state.totalBalance)}</span></p>
           }
-          />
-          <ListItem innerDivStyle={styles.innerDiv} leftIcon={getEtherIcon()} disabled={true}
-            primaryText={
-              <p>Payout<span style={styles.list}>{this.toEther(this.state.payout)}{this.youGet()}</span></p>
-            }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PeopleIcon />} disabled={true}
           primaryText={attendancyStatus}
