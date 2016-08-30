@@ -1,6 +1,6 @@
 <h2>What is this?</h2>
 
-[![Demo Video](./blockparty.gif)](https://www.youtube.com/embed/gM2qkv1sySY)
+[![Demo Video](./blockparty.gif)](https://youtu.be/YkFGPokK0eQ)
 
 <p>
   Have you ever encountered free party or meetup and realised that half the people registered did not actually turn up?

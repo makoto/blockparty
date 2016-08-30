@@ -45,8 +45,6 @@ export default class Instruction extends React.Component {
         contentStyle={{width:'90%', maxWidth:'none'}}
       >
         <div>
-          <div class="video-container"><iframe  style={{textAlign:'center'}} width="560" height="315" src="https://www.youtube.com/embed/gM2qkv1sySY" frameborder="0" allowfullscreen></iframe></div>
-
           <h2>What is this?</h2>
           <p>
             Have you ever encountered free party or meetup and realised that half the people registered did not actually turn up?
@@ -62,6 +60,10 @@ export default class Instruction extends React.Component {
           <div style={{textAlign:'center'}}>
             <img style={{width:'50%', margin:'25px'}} src="images/diagram.png"></img>
           </div>
+
+          <h2>Demo</h2>
+
+          <div style={{textAlign:'center'}} class="video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/YkFGPokK0eQ" frameborder="0" allowfullscreen></iframe></div>
 
           <h2>How to setup</h2>
 
