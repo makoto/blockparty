@@ -2,7 +2,7 @@ import './zeppelin/Rejector.sol';
 import './zeppelin/Ownable.sol';
 import './zeppelin/Killable.sol';
 
-contract Conference is Rejector, Ownable, Killable {
+contract Conference is Rejector, Killable {
 	string public name;
 	uint256 public totalBalance;
 	uint256 public deposit;
@@ -10,6 +10,9 @@ contract Conference is Rejector, Ownable, Killable {
 	uint public registered;
 	uint public attended;
 	bool public ended;
+	uint public endedAt;
+	uint public coolingPeriod;
+
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
 	bool paid;
@@ -19,15 +22,15 @@ contract Conference is Rejector, Ownable, Killable {
 		string participantName;
 		address addr;
 		bool attended;
-		int payout;
+		uint256 payout;
+		bool paid;
 	}
 
 	event Register(string participantName, address addr, uint256 balance, uint256 value);
 	event Attend(address addr, uint256 balance);
 	event Payback(address addr, uint256 _payout, uint256 balance, bool paid);
-	event Cancel(address addr, uint256 balance);
 
-	function Conference() {
+	function Conference(uint _coolingPeriod) {
 		name = 'CodeUp';
 		deposit = 1 ether;
 		totalBalance = 0;
@@ -35,6 +38,11 @@ contract Conference is Rejector, Ownable, Killable {
 		attended = 0;
 		limitOfParticipants = 10;
 		ended = false;
+		if (_coolingPeriod != 0) {
+			coolingPeriod = _coolingPeriod;
+		} else {
+			coolingPeriod = 1 weeks;
+		}
 	}
 
 	modifier sentDepositOrReturn {
@@ -72,7 +80,7 @@ contract Conference is Rejector, Ownable, Killable {
 		if (isRegistered(msg.sender)) throw;
 		registered++;
 		participantsIndex[registered] = msg.sender;
-		participants[msg.sender] = Participant(_participant, msg.sender, false, 0);
+		participants[msg.sender] = Participant(_participant, msg.sender, false, 0, false);
 		totalBalance = totalBalance + (deposit * 1);
 	}
 
@@ -96,43 +104,70 @@ contract Conference is Rejector, Ownable, Killable {
 		return isRegistered(_addr) && participants[_addr].attended;
 	}
 
+	function isPaid(address _addr) returns (bool){
+		return isRegistered(_addr) && participants[_addr].paid;
+	}
+
 	function payout() returns(uint256){
 		return totalBalance / uint(attended);
 	}
 
 	function payback() onlyOwner{
-		for(uint i=1;i<=registered;i++)
-		{
+		for(uint i=1;i<=registered;i++){
 			if(participants[participantsIndex[i]].attended){
-				Payback(participantsIndex[i], payout(), participantsIndex[i].balance,  true);
-				participants[participantsIndex[i]].payout = int(payout() - deposit);
-				participantsIndex[i].send(payout());
-			}else{
-				participants[participantsIndex[i]].payout = int(deposit - (deposit * 2));
-				Payback(participantsIndex[i], payout(), participantsIndex[i].balance, false);
+				participants[participantsIndex[i]].payout = payout();
 			}
 		}
-		/*
-		 *	Actual balance may have some left over if 4 payout is divided among 3 attendees
-		 *	eg: 4 / 3 = 1.333
-		 */
-		totalBalance = 0;
 		ended = true;
+		endedAt = now;
 	}
 
 	function cancel() onlyOwner onlyActive{
-		Cancel(owner, totalBalance);
-		for(uint i=1;i<=registered;i++)
-		{
-			if(totalBalance > 0){
-				participantsIndex[i].send(deposit);
-			}
-			delete participants[participantsIndex[i]];
-			delete participantsIndex[i];
+		for(uint i=1;i<=registered;i++){
+			participants[participantsIndex[i]].payout = deposit;
 		}
-		totalBalance = 0;
-		registered = 0;
-		attended = 0;
 		ended = true;
+		endedAt = now;
+	}
+
+	modifier onlyPayable {
+		Participant participant = participants[msg.sender];
+		if (participant.payout > 0){
+			_
+		}
+	}
+
+	modifier notPaid {
+		Participant participant = participants[msg.sender];
+		if (participant.paid == false){
+			_
+		}
+	}
+
+	function withdraw() onlyPayable notPaid {
+		Participant participant = participants[msg.sender];
+		if (msg.sender.send(participant.payout)) {
+			participant.paid = true;
+			totalBalance -= participant.payout;
+		}
+	}
+
+	modifier isEnded {
+		if (ended){
+			_
+		}
+	}
+
+	modifier onlyAfter(uint _time) {
+		if (now > _time){
+			_
+		}
+	}
+
+	/* return the remaining of balance if there are any unclaimed after cooling period */
+	function clear() onlyOwner isEnded onlyAfter(endedAt + coolingPeriod) {
+		if(owner.send(totalBalance)){
+			totalBalance = 0;
+		}
 	}
 }

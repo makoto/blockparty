@@ -29,7 +29,7 @@ contract Bounty is PullPaymentCapable, Rejector, Ownable, Killable{
   }
 
   function createTarget() returns(Conference) {
-    Conference target = new Conference();
+    Conference target = new Conference(1 weeks);
     researchers[target] = msg.sender;
     totalReseachers+=1;
     TargetCreation(target);
