@@ -146,11 +146,9 @@ contract Conference is Rejector, Killable {
 
 	function withdraw() onlyPayable notPaid {
 		Participant participant = participants[msg.sender];
-		participant.paid = true;
-		totalBalance -= participant.payout;
-		if (!msg.sender.send(participant.payout)) {
-			participant.paid = false;
-			totalBalance += participant.payout;
+		if (msg.sender.send(participant.payout)) {
+			participant.paid = true;
+			totalBalance -= participant.payout;
 		}
 	}
 

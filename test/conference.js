@@ -268,6 +268,7 @@ contract('Conference', function(accounts) {
   })
 
   describe('on payback', function(){
+    // This test is very flakey. Fails when run all together but passes when run alone.
     it('cannot withdraw if non owner calls', function(done){
       var meta
       var deposit = web3.toWei(1, "ether");
