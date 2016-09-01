@@ -116,7 +116,7 @@ export default class Instruction extends React.Component {
           <h3>What happens if the event is canceled?</h3>
           <p>
             In case the event is canceled, all registered people can withdraw their deposit.
-            Make sure that you register with correct twitter account so that the host can otify you.
+            Make sure that you register with correct twitter account so that the host can notify you.
           </p>
           <h3>What if there is a bug in the contract!</h3>
           <p>
@@ -131,7 +131,7 @@ export default class Instruction extends React.Component {
 
           <h2>Terms and conditions</h2>
           <p>
-            By accessing this website, you agree to our terms and conditions of use. We accept no responsibility whether in contract, tort or otherwise for any loss or damage arising out of or in connection with your use of our software and recommend that you ensure your devices are protected by using appropriate virus protection. 
+            By accessing this website, you agree to our terms and conditions of use. We accept no responsibility whether in contract, tort or otherwise for any loss or damage arising out of or in connection with your use of our software and recommend that you ensure your devices are protected by using appropriate virus protection.
           </p>
         </div>
       </Dialog>

@@ -70,7 +70,7 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 <h3>What happens if the event is canceled?</h3>
 <p>
   In case the event is canceled, all registered people can withdraw their deposit.
-  Make sure that you register with correct twitter account so that the host can otify you.
+  Make sure that you register with correct twitter account so that the host can notify you.
 </p>
 <h3>What if there is a bug in the contract!</h3>
 <p>
