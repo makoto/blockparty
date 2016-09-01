@@ -100,9 +100,39 @@ export default class Instruction extends React.Component {
           </p>
 
           <h2>How to play?</h2>
-          <ul>
-            <li>Type your twitter account, pick one of your address, then press 'Register'. It will take 10 to 30 seconds to get verified and you will receive notification.</li>
-          </ul>
+          <p>
+            Type your twitter account, pick one of your address, then press 'Register'. It will take 10 to 30 seconds to get verified and you will receive notification.
+            Once registered, join the party! Your party host (the contract owner) will mark you as attend.
+            Once the host clicks `payout`, then you are entitled to `withdraw` your payout.
+          </p>
+
+          <h2>FAQ</h2>
+          <h3>Can I cancel my registration?</h3>
+          <p>No</p>
+          <h3>What happens if I do not withdraw my payout?</h3>
+          <p>
+            If you do not withdraw your payout within one week after the event is end, the host (contract owner) will clear the balance from the contract and the remaining blance goes back to the host, so do not keep them hanging
+          </p>
+          <h3>What happens if the event is canceled?</h3>
+          <p>
+            In case the event is canceled, all registered people can withdraw their deposit.
+            Make sure that you register with correct twitter account so that the host can otify you.
+          </p>
+          <h3>What if there is a bug in the contract!</h3>
+          <p>
+            If the bug is found before the contract is compromised, the host can kill the contract and all the deposit goes back to the host so he/she can manually return the deposit.
+            If the contract is compromised and the deposit is stolen, or his/her private key is lost/stolen, I am afraid that the host cannot compensate for you. Please assess the risk before you participate the event.
+          </p>
+          </p>
+          <h3>Can I host my own event using BlockParty?</h3>
+          <p>
+            Please contact the <a href="http://twitter.com/makoto_inoue">author of this project</a> if you are interested.
+          </p>
+
+          <h2>Terms and conditions</h2>
+          <p>
+            By accessing this website, you agree to our terms and conditions of use. We accept no responsibility whether in contract, tort or otherwise for any loss or damage arising out of or in connection with your use of our software and recommend that you ensure your devices are protected by using appropriate virus protection. 
+          </p>
         </div>
       </Dialog>
     );
