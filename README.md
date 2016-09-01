@@ -121,7 +121,6 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 #### Essential
 
-- Add disclaimer doc
 - Upload the deployed source code to `etherscan.io`
 
 #### Nice to have
