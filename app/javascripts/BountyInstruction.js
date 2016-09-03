@@ -2,6 +2,7 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import math from 'mathjs';
 
 export default class BountyInstruction extends React.Component {
   constructor(props) {
@@ -28,7 +29,7 @@ export default class BountyInstruction extends React.Component {
   }
 
   showEther(amount){
-    return this.props.math.round(parseFloat(this.props.web3.fromWei(amount, "ether")),3)
+    return math.round(parseFloat(this.props.web3.fromWei(amount, "ether")),3)
   }
 
   yesNo(boolean){

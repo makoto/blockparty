@@ -7,6 +7,7 @@ import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
+import math from 'mathjs';
 
 const getTwitterIcon = (name) =>(
   <Avatar style={{verticalAlign:'middle'}} src={`https://avatars.io/twitter/${name}`} size={26} />
@@ -117,7 +118,7 @@ class Participants extends React.Component {
     }
     return(
       <span style={{color:color}}>
-        {message} { this.props.math.round(amount, 3).toString() }
+        {message} { math.round(amount, 3).toString() }
       </span>
     )
   }

@@ -17,7 +17,6 @@ import AppBar from 'material-ui/AppBar';
 import {List, ListItem} from 'material-ui/List';
 import EventEmitter from 'event-emitter';
 import Paper from 'material-ui/Paper';
-import math from 'mathjs';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 const styles = {
@@ -182,7 +181,7 @@ const App = (props) => (
           iconElementRight={
             <span>
               <FlatButton style={{color:'white'}} label="About" onClick={ () => {eventEmitter.emit('instruction')}} />
-              <BountyInstruction bounty={bounty} getDetail={getDetail} getBalance={getBalance} web3={web3} math={math}/>
+              <BountyInstruction bounty={bounty} getDetail={getDetail} getBalance={getBalance} web3={web3} />
             </span>
           }
         />
@@ -190,8 +189,8 @@ const App = (props) => (
         <Instruction eventEmitter={eventEmitter} />
         <Notification eventEmitter={eventEmitter} />
         <div style={styles.div}>
-          <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} math={math} contract={contract} web3={web3} />
-          <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} getAccounts={getAccounts} action = {action} web3={web3} math={math} />
+          <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} contract={contract} web3={web3} />
+          <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} getAccounts={getAccounts} action = {action} web3={web3}  />
         </div>
         <FormInput eventEmitter={eventEmitter} getAccounts = {getAccounts} getDetail = {getDetail} action = {action} />
       </div>
@@ -210,7 +209,6 @@ window.onload = function() {
       action = {action}
       getParticipants = {getParticipants}
       web3 = {web3}
-      math = {math}
       contract={contract}
     />,
     document.getElementById('app')
