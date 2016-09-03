@@ -19,15 +19,6 @@ import EventEmitter from 'event-emitter';
 import Paper from 'material-ui/Paper';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-const styles = {
-  div:{
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row wrap',
-    width: '100%'
-  }
-};
-
 let provider;
 // mist loading proposal https://gist.github.com/frozeman/fbc7465d0b0e6c1c4c23
 if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
@@ -188,7 +179,12 @@ const App = (props) => (
 
         <Instruction eventEmitter={eventEmitter} />
         <Notification eventEmitter={eventEmitter} />
-        <div style={styles.div}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexDirection: 'row wrap',
+          width: '100%'
+        }}>
           <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} contract={contract} web3={web3} />
           <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} getAccounts={getAccounts} action = {action} web3={web3}  />
         </div>
