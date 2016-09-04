@@ -126,7 +126,6 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 - Show who event owner is
 - Replace `throw` with returning ether (better practice for handling exceptions)
-- Add readonly views (so that people can see people who attended via mobile phone)
 
 ### Backlog
 

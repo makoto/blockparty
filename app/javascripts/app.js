@@ -1,4 +1,4 @@
-// import {} from "../stylesheets/app.css";
+import {} from "../stylesheets/app.css";
 import 'react-notifications/lib/notifications.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -223,12 +223,7 @@ window.onload = function() {
 
             <Instruction eventEmitter={eventEmitter} />
             <Notification eventEmitter={eventEmitter} />
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              flexDirection: 'row wrap',
-              width: '100%'
-            }}>
+            <div className='container' class='foo'>
               <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} contract={contract} web3={web3} />
               <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} getAccounts={getAccounts} action = {action} web3={web3}  />
             </div>
