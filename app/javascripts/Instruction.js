@@ -93,7 +93,7 @@ export default class Instruction extends React.Component {
             <li>Step 5: Refresh this page </li>
           </ul>
           <blockquote style={{backgroundColor:'black', color:'white', padding:'1em'}}>
-            geth --testnet --unlock 0,1 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain $THIS_URL
+            geth --testnet --unlock 0 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain '*'
           </blockquote>
           <p>
             NOTE: <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0</span> will unlock with one account. <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0 1</span> will unlock with two accounts.
@@ -123,7 +123,7 @@ export default class Instruction extends React.Component {
             If the bug is found before the contract is compromised, the host can kill the contract and all the deposit goes back to the host so he/she can manually return the deposit.
             If the contract is compromised and the deposit is stolen, or his/her private key is lost/stolen, I am afraid that the host cannot compensate for you. Please assess the risk before you participate the event.
           </p>
-          </p>
+
           <h3>Can I host my own event using BlockParty?</h3>
           <p>
             Please contact the <a href="http://twitter.com/makoto_inoue">author of this project</a> if you are interested.
