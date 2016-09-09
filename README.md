@@ -49,7 +49,7 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
   <li>Step 5: Refresh this page </li>
 </ul>
 <blockquote style={{backgroundColor:'black', color:'white', padding:'1em'}}>
-  geth --testnet --unlock 0,1 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain $THIS_URL
+  geth --testnet --unlock 0 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain '*'
 </blockquote>
 <p>
   NOTE: <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0</span> will unlock with one account. <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0 1</span> will unlock with two accounts.
@@ -126,7 +126,6 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 - Show who event owner is
 - Replace `throw` with returning ether (better practice for handling exceptions)
-- Add readonly views (so that people can see people who attended via mobile phone)
 
 ### Backlog
 

@@ -1,63 +1,13 @@
-body {
-  margin-left: 25%;
-  margin-right: 25%;
-  margin-top: 10%;
-  font-family: "Open Sans", sans-serif;
+.container {
+  color: red;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
 }
 
-label {
-  display: inline-block;
-  width: 100px;
-}
-
-input {
-  width: 500px;
-  padding: 5px;
-  font-size: 16px;
-}
-
-button {
-  font-size: 16px;
-  padding: 5px;
-}
-
-h1, h2 {
-  display: inline-block;
-  vertical-align: middle;
-  margin-top: 0px;
-  margin-bottom: 10px;
-}
-
-h2 {
-  color: #AAA;
-  font-size: 32px;
-}
-
-h3 {
-  font-weight: normal;
-  color: #AAA;
-  font-size: 24px;
-}
-
-.black {
-  color: black;
-}
-
-#balance {
-  color: black;
-}
-.video-container {
-	position:relative;
-	padding-bottom:56.25%;
-	padding-top:30px;
-	height:0;
-	overflow:hidden;
-}
-
-.video-container iframe, .video-container object, .video-container embed {
-	position:absolute;
-	top:0;
-	left:0;
-	width:100%;
-	height:100%;
+@media screen and (min-width:500px){
+  .container {
+    flex-direction: row;
+  }
 }

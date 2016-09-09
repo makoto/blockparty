@@ -49,7 +49,7 @@ contract Conference is Rejector, Killable {
 		if (msg.value == deposit) {
 			_
 		}else{
-			msg.sender.send(msg.value);
+			if(msg.sender.send(msg.value)){/* not much you can do */}
 		}
 	}
 
@@ -63,7 +63,7 @@ contract Conference is Rejector, Killable {
 		if (ended == false) {
 			_
 		}else{
-			msg.sender.send(msg.value);
+			if(msg.sender.send(msg.value)){/*not much you can do*/}
 		}
 	}
 
@@ -71,7 +71,7 @@ contract Conference is Rejector, Killable {
 		if (registered < limitOfParticipants ) {
 			_
 		}else{
-			msg.sender.send(msg.value);
+			if(msg.sender.send(msg.value)){/* not much you can do */}
 		}
 	}
 

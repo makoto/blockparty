@@ -118,7 +118,7 @@ class Participants extends React.Component {
     }
     return(
       <span style={{color:color}}>
-        {message} { math.round(amount, 3).toString() }
+        { math.round(amount, 3).toString() } {message}
       </span>
     )
   }
@@ -161,18 +161,18 @@ class Participants extends React.Component {
       return this.state.participants.map((participant) => {
         return (
           <TableRow>
-            <TableRowColumn width={20}>
+            <TableRowColumn width={50}>
               {getTwitterIcon(participant.name)}
               <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
               (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
               </TableRowColumn>
             <TableRowColumn width={10} >{this.yesNo(participant)}</TableRowColumn>
-            <TableRowColumn width={50} >
+            <TableRowColumn width={20} >
               <span>
                 { this.displayBalance(participant) }
               </span>
             </TableRowColumn>
-            <TableRowColumn width={50} >
+            <TableRowColumn width={20} >
               <span>
                 { this.displayWithdrawal(participant) }
               </span>
@@ -192,9 +192,9 @@ class Participants extends React.Component {
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
-                <TableHeaderColumn width={20} >Name</TableHeaderColumn>
+                <TableHeaderColumn width={50} >Name</TableHeaderColumn>
                 <TableHeaderColumn width={10} >Attend?</TableHeaderColumn>
-                <TableHeaderColumn width={50} >Payout</TableHeaderColumn>
+                <TableHeaderColumn width={20} >Payout</TableHeaderColumn>
                 <TableHeaderColumn width={20} >Action</TableHeaderColumn>
               </TableRow>
             </TableHeader>
