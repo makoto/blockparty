@@ -6,6 +6,7 @@ import PeopleOutlineIcon from 'material-ui/svg-icons/social/people-outline';
 import PeopleIcon from 'material-ui/svg-icons/social/people';
 import EventIcon from 'material-ui/svg-icons/action/event';
 import PlaceIcon from 'material-ui/svg-icons/maps/place';
+import DirectionIcon from 'material-ui/svg-icons/maps/directions';
 import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
 import math from 'mathjs';
@@ -112,7 +113,7 @@ class ConferenceDetail extends React.Component {
       var date = `${curr_date}-${curr_month}-${curr_year}`
 
       return (
-        <span style={styles.list}>{date}</span>
+        <span style={styles.list}>{'Sep 18th (Sun) 7pm(UTC+8)'}</span>
       )
     }else{
       return (
@@ -159,7 +160,18 @@ class ConferenceDetail extends React.Component {
             primaryText={
               <p>Location
                 <span style={styles.list}>
-                  <a target='_blank' href='https://goo.gl/maps/HUHAKwvt2bo'>Simply Business (1 Finsbury Square, London EC2A 1AE)</a>
+                  <a target='_blank' href='https://goo.gl/maps/Uty16SUcxd42'> The lobby at Hyatt On the bund (199 Huangpu Road, Shanghai)</a>
+                </span>
+              </p>
+            }
+          />
+          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<DirectionIcon />} disabled={true}
+            primaryText={
+              <p>Description
+                <span style={styles.list}>
+                  After meeting at the lobby, we will head to
+                  <a target='_blank' href='http://chope.net.cn/shanghai-restaurants/restaurant/lostheaven-yadl'> Lost Heaven</a>(17 Yan An Dong Lu,
+Huangpu District). The table of 10 is booked under Makoto
                 </span>
               </p>
             }

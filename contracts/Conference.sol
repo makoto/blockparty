@@ -31,7 +31,7 @@ contract Conference is Rejector, Killable {
 	event Payback(address addr, uint256 _payout, uint256 balance, bool paid);
 
 	function Conference(uint _coolingPeriod) {
-		name = 'CodeUp';
+		name = 'DevCon2 Pre conference dinner';
 		deposit = 1 ether;
 		totalBalance = 0;
 		registered = 0;
