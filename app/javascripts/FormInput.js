@@ -75,7 +75,7 @@ class FormInput extends React.Component {
   }
 
   render() {
-    let adminButtons, registerButton;
+    let adminButtons, registerButton, warningText;
     if(this.isOwner()){
       adminButtons = <span>
         <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
@@ -106,6 +106,7 @@ class FormInput extends React.Component {
           label="Register" style={styles}
           onClick={this.handleAction.bind(this, 'register')}
         />
+        warningText = <div style={{textAlign:'center', color:'red'}}>Please be aware that you <strong>cannot</strong> cancel once regiesterd. Please read FAQ section at ABOUT page on top right corner for more detail about this service.</div>
       }
     }else{
       registerButton = <span>No account is set</span>
@@ -135,10 +136,10 @@ class FormInput extends React.Component {
               })
             }
           </SelectField>
-
           {registerButton}
           {adminButtons}
         </form>
+        {warningText}
       </Paper>
     );
   }
