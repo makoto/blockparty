@@ -49,8 +49,6 @@ export default class Instruction extends React.Component {
           <p>
             Have you ever encountered free party or meetup and realised that half the people registered did not actually turn up?
             BlockParty solves this problem by providing a simple incentive for people to register only if they mean it.
-            <br/>
-            This is a PoC(Proof of concept) site on <em style={{fontWeight:'bold'}}>testnet</em> where you can simulate how it all works.
           </p>
           <h2>How does this work?</h2>
           <p>
@@ -70,7 +68,7 @@ export default class Instruction extends React.Component {
           <h3>Option 1: access from Mist</h3>
           <p>This is the standard way of accessing Dapp</p>
           <ul>
-            <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>testnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
+            <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>mainnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
             <li>Step 2: Create an account on your wallet, and make sure you have at least 1.1 Ether.</li>
             <li>Step 3: Refresh the page </li>
           </ul>
@@ -86,14 +84,14 @@ export default class Instruction extends React.Component {
           <h3>Option 3: access from normal browser</h3>
           <p>This has been the standard way to access Dapp prior to Ethereum Wallet (lower than v 0.7)</p>
           <ul>
-            <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>testnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
+            <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>mainnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
             <li>Step 2: Create an account on your wallet, and make sure you have at least 1.1 Ether.</li>
             <li>Step 3: Stop Ethereum Wallet</li>
             <li>Step 4: Start geth(Go Etheruem, command line tool) with the following options. (See the <a href='https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum'>installation instructions</a> for each platform)</li>
             <li>Step 5: Refresh this page </li>
           </ul>
           <blockquote style={{backgroundColor:'black', color:'white', padding:'1em'}}>
-            geth --testnet --unlock 0 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain '*'
+            geth --unlock 0 --rpc  --rpcapi "eth,net,web3" --rpccorsdomain '*'
           </blockquote>
           <p>
             NOTE: <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0</span> will unlock with one account. <span style={{backgroundColor:'black', color:'white', padding:'0.3em'}} > --unlock 0 1</span> will unlock with two accounts.
@@ -127,6 +125,11 @@ export default class Instruction extends React.Component {
           <h3>Can I host my own event using BlockParty?</h3>
           <p>
             Please contact the <a href="http://twitter.com/makoto_inoue">author of this project</a> if you are interested.
+          </p>
+
+          <h3>Do you take any commission?</h3>
+          <p>
+            No, but if you like this project, it would be great if you can donate to my <a href="https://simplybusiness.everydayhero.com/uk/makoto">5 days Sahara trekking challenge page</a> mentioning "BlockParty". This will help Whizz-Kidz, disabled children's charity, which I am currently fund raising.
           </p>
 
           <h2>Terms and conditions</h2>
