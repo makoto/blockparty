@@ -21,6 +21,8 @@
 - [The demo site](http://blockparty.io.v02.s3-website-us-west-2.amazonaws.com/)
 Real sites allows for participants to only `Register` and pay deposit to the site. Since this is a demo site, it allows you to `Register`, `Attend`, then press `Payback` button to simulate how it all works. Pressing `Reset` will reset the status so that you can play again.
 
+- The last event on Mainnet is on http://bit.ly/blckprty.
+
 <h2>How to setup</h2>
 
 <h3>Option 1: access from Mist</h3>
