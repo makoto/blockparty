@@ -123,31 +123,19 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 ## TODO
 
-### Mainnet release candidate features
+### Essentials
 
-#### Essential
+See [Issues](https://github.com/makoto/blockparty/issues)
 
-- Upload the deployed source code to `etherscan.io`
-
-#### Nice to have
+### Wishlists
 
 - Show who event owner is
-- Replace `throw` with returning ether (better practice for handling exceptions)
-
-### Backlog
-
-#### Refactoring
-
+- Upload the deployed source code to `etherscan.io`
 - Add redux
 - Add testing for frontend
-
-#### New features
-
-- Let participant to claim the payback rather than event owners to send payback
 - Change payback ratio (eg: first registered, more reward)
 - Let user to register by sending Ether (so that they could potentially register not via wallet but via exchange, etc)
 - Automatic check in
 - Waitlist
 - Transfer my spot
 - Refresh info when someone else register/attend
-- Support metamask
