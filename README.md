@@ -109,6 +109,8 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 - Run `npm`
 
+NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
+
 ### Running test
 
 - Run `testrpc` in one console
