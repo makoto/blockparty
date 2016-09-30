@@ -1,23 +1,27 @@
-import {} from "../stylesheets/app.css";
+import "../stylesheets/app.css";
 import 'react-notifications/lib/notifications.css';
 import React from 'react';
+import EventEmitter from 'event-emitter';
 import ReactDOM from 'react-dom';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
+import Bounty from '../../build/contracts/Bounty.sol.js';
+
+import ConferenceDetail from './components/ConferenceDetail';
+import FormInput from './components/FormInput';
+import BountyInstruction from './components/BountyInstruction';
+import Notification from './components/Notification';
+import Instruction from './components/Instruction';
+import Participants from './components/Participants';
+
+import Avatar from 'material-ui/Avatar';
+import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
-import ConferenceDetail from './ConferenceDetail';
-import FormInput from './FormInput';
-import Bounty from '../../build/contracts/Bounty.sol.js';
-import BountyInstruction from './BountyInstruction';
-import Notification from './Notification';
-import Instruction from './Instruction';
-import Participants from './Participants';
-import Avatar from 'material-ui/Avatar';
-import AppBar from 'material-ui/AppBar';
 import {List, ListItem} from 'material-ui/List';
-import EventEmitter from 'event-emitter';
 import Paper from 'material-ui/Paper';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+
 
 function setup(){
   return new Promise(function(resolve,reject){
