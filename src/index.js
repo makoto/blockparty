@@ -187,7 +187,7 @@ window.onload = function() {
         callback([])
         return false;
       }
-      console.log('this is not read only')
+      console.log('this is not read only!')
       web3.eth.getAccounts(function(err, accs) {
         if (err != null) {
           eventEmitter.emit('instruction')
@@ -214,7 +214,7 @@ window.onload = function() {
               title={
                 <span>Block Party<span style={{fontSize:'small', fontFamily:'sans-serif'}}> - NO BLOCK NO PARTY -</span></span>
               }
-              iconElementLeft={<Avatar src="/images/nightclub-white.png" size={50} backgroundColor="rgb(96, 125, 139)" />}
+              iconElementLeft={<Avatar src={require('./images/nightclub-white.png')} size={50} backgroundColor="rgb(96, 125, 139)" />}
               iconElementRight={
                 <span>
                   {readOnlyButton}

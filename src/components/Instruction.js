@@ -56,7 +56,7 @@ export default class Instruction extends React.Component {
             You go to party and may end up getting more money.
           </p>
           <div style={{textAlign:'center'}}>
-            <img style={{width:'50%', margin:'25px'}} src="images/diagram.png"></img>
+            <img style={{width:'50%', margin:'25px'}} src={require('../images/diagram.png')}></img>
           </div>
 
           <h2>Demo</h2>

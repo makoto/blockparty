@@ -2,7 +2,6 @@
   "name": "blockparty",
   "version": "1.0.0",
   "description": "",
-  "main": "app/javascripts/app.js",
   "directories": {
     "doc": "doc",
     "test": "test"
