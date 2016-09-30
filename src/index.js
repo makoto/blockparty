@@ -1,11 +1,12 @@
-import "../stylesheets/app.css";
+import "./stylesheets/app.css";
 import 'react-notifications/lib/notifications.css';
 import React from 'react';
 import EventEmitter from 'event-emitter';
 import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import Web3 from 'web3';
 
-import Bounty from '../../build/contracts/Bounty.sol.js';
+import Bounty from '../build/contracts/Bounty.sol.js';
 
 import ConferenceDetail from './components/ConferenceDetail';
 import FormInput from './components/FormInput';
@@ -19,8 +20,6 @@ import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
-import {List, ListItem} from 'material-ui/List';
-import Paper from 'material-ui/Paper';
 
 
 function setup(){
@@ -31,11 +30,11 @@ function setup(){
     // mist loading proposal https://gist.github.com/frozeman/fbc7465d0b0e6c1c4c23
     if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
       provider = web3.currentProvider; // Keep provider info given from mist `web3` object
-      web3 = new Web3;                 // Re-instantiate `web3` using `Web3` from Dapp
+      web3 = new Web3();                 // Re-instantiate `web3` using `Web3` from Dapp
       resolve({web3, provider, read_only})
     }else{
       provider = new Web3.providers.HttpProvider(url);
-      let web3 = new Web3;             // Define and instantiate `web3` if accessed from web browser
+      let web3 = new Web3();             // Define and instantiate `web3` if accessed from web browser
       $.get(url, function(res){
         console.log('Success', res)
         // the endpoint is active
@@ -205,7 +204,7 @@ window.onload = function() {
 
     let readOnlyButton;
     if (read_only) {
-      readOnlyButton = (<FlatButton style={{backgroundColor:'red', disabled:{true}, color:'white'}} label="READONLY MODE" />)
+      readOnlyButton = (<FlatButton style={{backgroundColor:'red', disabled:true, color:'white'}} label="READONLY MODE" />)
     }
     const App = (props) => (
       <div>
@@ -229,9 +228,9 @@ window.onload = function() {
             <Notification eventEmitter={eventEmitter} />
             <div className='container' class='foo'>
               <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} contract={contract} web3={web3} />
-              <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} getAccounts={getAccounts} action = {action} web3={web3}  />
+              <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} getAccounts={getAccounts} action={action} web3={web3}  />
             </div>
-            <FormInput read_only={read_only} eventEmitter={eventEmitter} getAccounts = {getAccounts} getDetail = {getDetail} action = {action} />
+            <FormInput read_only={read_only} eventEmitter={eventEmitter} getAccounts={getAccounts} getDetail={getDetail} action={action} />
           </div>
         </MuiThemeProvider>
       </div>
@@ -240,12 +239,12 @@ window.onload = function() {
     injectTapEventPlugin();
     ReactDOM.render(
       <App
-        getAccounts = {getAccounts}
-        getDetail = {getDetail}
-        eventEmitter = {eventEmitter}
-        action = {action}
-        getParticipants = {getParticipants}
-        web3 = {web3}
+        getAccounts={getAccounts}
+        getDetail={getDetail}
+        eventEmitter={eventEmitter}
+        action={action}
+        getParticipants={getParticipants}
+        web3={web3}
         contract={contract}
       />,
       document.getElementById('app')
