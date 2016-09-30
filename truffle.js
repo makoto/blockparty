@@ -1,5 +1,5 @@
 module.exports = {
-  build: "webpack",
+  build: "./node_modules/.bin/webpack",
   // networks: {
   //   "live": {
   //     network_id: 1 // Ethereum public network
