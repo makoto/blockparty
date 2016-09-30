@@ -134,5 +134,3 @@ export default class BountyInstruction extends React.Component {
     )
   }
 }
-
-export default BountyInstruction;
