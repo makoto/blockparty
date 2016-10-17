@@ -120,8 +120,15 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 
 - Run `testrpc` in one console
 - Run `truffle migrate`
-- Run `truffle serve`
-- Open `http://localhost:8080`
+- Run `npm start`
+- Open `http://localhost:3000`
+
+### Running locally on test/main network
+
+- Run `testrpc` in one console
+- Run `truffle migrate`
+- Run `npm run start:testnet` or `npm run start:mainnet`
+- Open `http://localhost:3000`
 
 ## TODO
 
