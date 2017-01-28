@@ -56,7 +56,7 @@ class ConferenceDetail extends React.Component {
       if(typeof(this.state.name) == 'undefined'){
         this.props.eventEmitter.emit('instruction');
       }
-    }.bind(this), 1000)
+    }.bind(this), 1500)
 
     // Listen to watcher event.
     this.props.eventEmitter.on('change', model => {
