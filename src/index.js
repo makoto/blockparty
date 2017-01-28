@@ -82,7 +82,27 @@ window.onload = function() {
     const eventEmitter = EventEmitter()
 
     web3.version.getNetwork(function(err, result){
-      eventEmitter.emit('network', {network_id:result});
+      var obj;
+      switch (result.network_id) {
+        case 1:
+          obj = {
+            name: 'MAINNET',
+            etherscan_url: 'https://etherscan.io'
+          }
+          break;
+        case 3:
+          obj = {
+            name: 'TESTNET',
+            etherscan_url: 'https://testnet.etherscan.io'
+          }
+          break;
+        default:
+          obj = {
+            name: 'PRIVATE NET',
+            etherscan_url: null
+          }
+      }
+      eventEmitter.emit('network', obj);
     })
 
     function getBalance(address){

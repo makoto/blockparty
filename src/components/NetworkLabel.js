@@ -18,22 +18,12 @@ export default class Instruction extends React.Component {
 
     if(!props.read_only){
       this.props.eventEmitter.on('network', obj => {
-        if (obj.network_id == 1) {
-          this.setState({
-            color: 'green',
-            text: 'MAINNET'
-          });
-        }else if (obj.network_id == 3) {
-          this.setState({
-            color: 'orange',
-            text: 'TESTNET'
-          });
-        } else {
-          this.setState({
-            color: 'green',
-            text: 'PRIVATE NET'
-          });
-        }
+        var color ='orange';
+        if (obj.name == 'MAINNET') color = 'green';
+        this.setState({
+          color: color,
+          text: obj.name
+        });
       })
     }
   }
