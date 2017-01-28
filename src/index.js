@@ -14,6 +14,7 @@ import BountyInstruction from './components/BountyInstruction';
 import Notification from './components/Notification';
 import Instruction from './components/Instruction';
 import Participants from './components/Participants';
+import NetworkLabel from './components/NetworkLabel';
 
 import Avatar from 'material-ui/Avatar';
 import AppBar from 'material-ui/AppBar';
@@ -79,6 +80,10 @@ window.onload = function() {
     window.contract = contract
     window.web3 = web3
     const eventEmitter = EventEmitter()
+
+    web3.version.getNetwork(function(err, result){
+      eventEmitter.emit('network', {network_id:result});
+    })
 
     function getBalance(address){
       return new Promise(function(resolve,reject){
@@ -202,10 +207,8 @@ window.onload = function() {
       })
     }
 
-    let readOnlyButton;
-    if (read_only) {
-      readOnlyButton = (<FlatButton style={{backgroundColor:'red', disabled:true, color:'white'}} label="READONLY MODE" />)
-    }
+    let networkLabel = <NetworkLabel eventEmitter={eventEmitter} read_only={read_only} />;
+
     const App = (props) => (
       <div>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -217,7 +220,7 @@ window.onload = function() {
               iconElementLeft={<Avatar src={require('./images/nightclub-white.png')} size={50} backgroundColor="rgb(96, 125, 139)" />}
               iconElementRight={
                 <span>
-                  {readOnlyButton}
+                  {networkLabel}
                   <FlatButton style={{color:'white'}} label="About" onClick={ () => {eventEmitter.emit('instruction')}} />
                   <BountyInstruction bounty={bounty} getDetail={getDetail} getBalance={getBalance} web3={web3} />
                 </span>
