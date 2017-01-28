@@ -27,7 +27,8 @@ class Participants extends React.Component {
       accounts:[],
       address: null,
       participants:[],
-      detail:{}
+      detail:{},
+      etherscan_url:null
     };
     this.props.getAccounts(accounts => {
       this.setState({
@@ -39,6 +40,11 @@ class Participants extends React.Component {
       this.setState({
         detail:detail
       })
+    })
+    this.props.eventEmitter.on('network', network => {
+      this.setState({
+        etherscan_url: network.etherscan_url
+      });
     })
   }
 
@@ -159,12 +165,22 @@ class Participants extends React.Component {
     )
     if(this.state.participants.length > 0){
       return this.state.participants.map((participant) => {
+        var participantAddress;
+        if (this.state.etherscan_url) {
+          participantAddress = (
+            (<a target='_blank' href={ `${this.state.etherscan_url}/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
+          )
+        }else{
+          participantAddress = (
+            `${participant.address.slice(0,5)}...`
+          )
+        }
         return (
           <TableRow>
             <TableRowColumn width={50}>
               {getTwitterIcon(participant.name)}
               <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
-              (<a target='_blank' href={ `https://testnet.etherscan.io/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
+                ({participantAddress})
               </TableRowColumn>
             <TableRowColumn width={10} >{this.yesNo(participant)}</TableRowColumn>
             <TableRowColumn width={20} >

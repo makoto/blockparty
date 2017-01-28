@@ -33,13 +33,20 @@ const styles = {
 class ConferenceDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      etherscan_url:null
+    };
   }
 
   componentDidMount(){
     // Initialize
     this.props.getDetail(model =>{
       this.setState(model);
+    })
+    this.props.eventEmitter.on('network', network => {
+      this.setState({
+        etherscan_url: network.etherscan_url
+      });
     })
 
     // If the app failed to get detail from contract (meaning either connecting
@@ -74,15 +81,23 @@ class ConferenceDetail extends React.Component {
 
   getNameContent(name, contractAddress){
     if(name){
-      return (
-        <span style={styles.list}>
-          {name} (<a target='_blank' href={ `https://testnet.etherscan.io/address/${contractAddress}` }>{contractAddress.slice(0,5)}...</a>)
-        </span>
-      )
+      if (this.state.etherscan_url) {
+        return (
+          <span style={styles.list}>
+            {name} (<a target='_blank' href={ `${this.state.etherscan_url}/address/${contractAddress}` }>{contractAddress.slice(0,5)}...</a>)
+          </span>
+        )
+      }else{
+        return (
+          <span style={styles.list}>
+            {name} ({contractAddress.slice(0,5)}...)
+          </span>
+        )
+      }
     }else{
       return (
         <span style={styles.list}>
-          The contract <a target='_blank' href={ `https://testnet.etherscan.io/address/${contractAddress}` }>{contractAddress.slice(0,10)}...</a> not available
+          The contract {contractAddress.slice(0,10)}... not available
         </span>
       )
     }

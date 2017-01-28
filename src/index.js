@@ -242,7 +242,7 @@ window.onload = function() {
                 <span>
                   {networkLabel}
                   <FlatButton style={{color:'white'}} label="About" onClick={ () => {eventEmitter.emit('instruction')}} />
-                  <BountyInstruction bounty={bounty} getDetail={getDetail} getBalance={getBalance} web3={web3} />
+                  <BountyInstruction eventEmitter={eventEmitter} bounty={bounty} getDetail={getDetail} getBalance={getBalance} web3={web3} />
                 </span>
               }
             />
