@@ -12,7 +12,8 @@ export default class BountyInstruction extends React.Component {
       ended: false,
       bountyBalance: 0,
       bountyClaimed: true,
-      bountyTotalReseachers: 0
+      bountyTotalReseachers: 0,
+      etherscan_url: null
     };
     props.getDetail(model => {
       this.setState({ended: model.ended});
@@ -20,6 +21,12 @@ export default class BountyInstruction extends React.Component {
     props.getBalance(props.bounty.address).then(balance =>{
       this.setState({bountyBalance: balance.toNumber()});
     })
+    props.eventEmitter.on('network', network => {
+      this.setState({
+        etherscan_url: network.etherscan_url
+      });
+    })
+
     props.bounty.claimed.call().then(claimed =>{
       this.setState({bountyClaimed: claimed});
     })
@@ -46,6 +53,21 @@ export default class BountyInstruction extends React.Component {
 
   handleClose(){
     this.setState({open: false});
+  }
+
+  getContractURL(address){
+    if (this.state.etherscan_url) {
+      var contractUrl = (
+        <a
+          target='_blank'
+          href={ `${this.state.etherscan_url}/address/${address}` }>
+          {address}
+        </a>
+      );
+      return contractUrl;
+    }else{
+      return address;
+    }
   }
 
   render() {
@@ -87,11 +109,7 @@ export default class BountyInstruction extends React.Component {
                   Address
                 </TableRowColumn>
                 <TableRowColumn>
-                  <a
-                    target='_blank'
-                    href={ `https://testnet.etherscan.io/address/${this.props.bounty.address}` }>
-                    {this.props.bounty.address}
-                  </a>
+                  {this.getContractURL(this.props.bounty.address)}
                 </TableRowColumn>
               </TableRow>
               <TableRow>

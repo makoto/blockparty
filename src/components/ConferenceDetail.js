@@ -6,6 +6,7 @@ import PeopleOutlineIcon from 'material-ui/svg-icons/social/people-outline';
 import PeopleIcon from 'material-ui/svg-icons/social/people';
 import EventIcon from 'material-ui/svg-icons/action/event';
 import PlaceIcon from 'material-ui/svg-icons/maps/place';
+import DirectionIcon from 'material-ui/svg-icons/maps/directions';
 import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
 import math from 'mathjs';
@@ -33,13 +34,20 @@ const styles = {
 class ConferenceDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      etherscan_url:null
+    };
   }
 
   componentDidMount(){
     // Initialize
     this.props.getDetail(model =>{
       this.setState(model);
+    })
+    this.props.eventEmitter.on('network', network => {
+      this.setState({
+        etherscan_url: network.etherscan_url
+      });
     })
 
     // If the app failed to get detail from contract (meaning either connecting
@@ -49,7 +57,7 @@ class ConferenceDetail extends React.Component {
       if(typeof(this.state.name) == 'undefined'){
         this.props.eventEmitter.emit('instruction');
       }
-    }.bind(this), 1000)
+    }.bind(this), 1500)
 
     // Listen to watcher event.
     this.props.eventEmitter.on('change', model => {
@@ -74,15 +82,23 @@ class ConferenceDetail extends React.Component {
 
   getNameContent(name, contractAddress){
     if(name){
-      return (
-        <span style={styles.list}>
-          {name} (<a target='_blank' href={ `https://testnet.etherscan.io/address/${contractAddress}` }>{contractAddress.slice(0,5)}...</a>)
-        </span>
-      )
+      if (this.state.etherscan_url) {
+        return (
+          <span style={styles.list}>
+            {name} (<a target='_blank' href={ `${this.state.etherscan_url}/address/${contractAddress}` }>{contractAddress.slice(0,5)}...</a>)
+          </span>
+        )
+      }else{
+        return (
+          <span style={styles.list}>
+            {name} ({contractAddress.slice(0,5)}...)
+          </span>
+        )
+      }
     }else{
       return (
         <span style={styles.list}>
-          The contract <a target='_blank' href={ `https://testnet.etherscan.io/address/${contractAddress}` }>{contractAddress.slice(0,10)}...</a> not available
+          The contract {contractAddress.slice(0,10)}... not available
         </span>
       )
     }
@@ -97,7 +113,7 @@ class ConferenceDetail extends React.Component {
       var date = `${curr_date}-${curr_month}-${curr_year}`
 
       return (
-        <span style={styles.list}>{date}</span>
+        <span style={styles.list}>{name}</span>
       )
     }else{
       return (
@@ -137,14 +153,23 @@ class ConferenceDetail extends React.Component {
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<EventIcon />} disabled={true}
             primaryText={
-              <p>Date{this.getDateContent(this.state.name)}</p>
+              <p>Date{this.getDateContent(this.state.date)}</p>
             }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PlaceIcon />} disabled={true}
             primaryText={
               <p>Location
                 <span style={styles.list}>
-                  <a target='_blank' href='https://goo.gl/maps/HUHAKwvt2bo'>Simply Business (1 Finsbury Square, London EC2A 1AE)</a>
+                  <a target='_blank' href={this.state.map_url}>{this.state.location_text}</a>
+                </span>
+              </p>
+            }
+          />
+          <ListItem innerDivStyle={styles.innerDiv} leftIcon={<DirectionIcon />} disabled={true}
+            primaryText={
+              <p>Description
+                <span style={styles.list}>
+                  { this.state.description_text }
                 </span>
               </p>
             }

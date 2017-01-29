@@ -14,13 +14,14 @@ import BountyInstruction from './components/BountyInstruction';
 import Notification from './components/Notification';
 import Instruction from './components/Instruction';
 import Participants from './components/Participants';
+import NetworkLabel from './components/NetworkLabel';
+import Data from './components/Data';
 
 import Avatar from 'material-ui/Avatar';
 import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
-
 
 function setup(){
   return new Promise(function(resolve,reject){
@@ -62,23 +63,52 @@ function setup(){
 }
 
 window.onload = function() {
-  console.log('loaded')
   setup().then(({provider, web3, read_only}) => {
     web3.setProvider(provider);
     Conference.setProvider(provider);
     Bounty.setProvider(provider);
     const bounty = Bounty.deployed();
 
-    let contract;
+    var contract = Conference.deployed();
+    Data[0].address = contract.address;
+    let metadata;
     let contractAddress = document.baseURI.split('#')[1]
     if (contractAddress && contractAddress.length == 42) {
       contract = Conference.at(contractAddress);
+      metadata = Data.filter(function(d){
+        return d.address == contractAddress
+      })[0];
     }else{
-      contract = Conference.deployed();
+      metadata = Data[0];
     }
+    console.log('Data', Data);
     window.contract = contract
     window.web3 = web3
     const eventEmitter = EventEmitter()
+
+    web3.version.getNetwork(function(err, network_id){
+      var obj;
+      switch (network_id) {
+        case '1':
+          obj = {
+            name: 'MAINNET',
+            etherscan_url: 'https://etherscan.io'
+          }
+          break;
+        case '3':
+          obj = {
+            name: 'TESTNET',
+            etherscan_url: 'https://testnet.etherscan.io'
+          }
+          break;
+        default:
+          obj = {
+            name: 'PRIVATE NET',
+            etherscan_url: null
+          }
+      }
+      eventEmitter.emit('network', obj);
+    })
 
     function getBalance(address){
       return new Promise(function(resolve,reject){
@@ -107,7 +137,11 @@ window.onload = function() {
           'owner': values[6],
           'ended': values[7],
           'limitOfParticipants': values[8],
-          'contractBalance': web3.fromWei(contractBalance, "ether").toNumber()
+          'contractBalance': web3.fromWei(contractBalance, "ether").toNumber(),
+          'date': metadata.date,
+          'map_url': metadata.map_url,
+          'location_text': metadata.location_text,
+          'description_text': metadata.description_text
         }
         if(detail.ended){
           detail.canRegister = false
@@ -202,10 +236,8 @@ window.onload = function() {
       })
     }
 
-    let readOnlyButton;
-    if (read_only) {
-      readOnlyButton = (<FlatButton style={{backgroundColor:'red', disabled:true, color:'white'}} label="READONLY MODE" />)
-    }
+    let networkLabel = <NetworkLabel eventEmitter={eventEmitter} read_only={read_only} />;
+
     const App = (props) => (
       <div>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -217,9 +249,9 @@ window.onload = function() {
               iconElementLeft={<Avatar src={require('./images/nightclub-white.png')} size={50} backgroundColor="rgb(96, 125, 139)" />}
               iconElementRight={
                 <span>
-                  {readOnlyButton}
+                  {networkLabel}
                   <FlatButton style={{color:'white'}} label="About" onClick={ () => {eventEmitter.emit('instruction')}} />
-                  <BountyInstruction bounty={bounty} getDetail={getDetail} getBalance={getBalance} web3={web3} />
+                  <BountyInstruction eventEmitter={eventEmitter} bounty={bounty} getDetail={getDetail} getBalance={getBalance} web3={web3} />
                 </span>
               }
             />
