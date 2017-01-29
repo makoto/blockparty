@@ -211,7 +211,7 @@ contract('Conference', function(accounts) {
         meta = _meta;
         return meta.register.sendTransaction(twitterHandle, {from:accounts[1], value:transaction});
       }).then(function() {
-        return meta.attend.sendTransaction(accounts[1], {from:owner})
+        return meta.attend.sendTransaction([accounts[1]], {from:owner})
       }).
       then(function(){
         return meta.isAttended.call(accounts[1])
@@ -235,7 +235,7 @@ contract('Conference', function(accounts) {
         meta = _meta;
         return meta.register.sendTransaction(twitterHandle, {value:transaction});
       }).then(function() {
-        return meta.attend.sendTransaction(accounts[1], {from:accounts[1]})
+        return meta.attend.sendTransaction([accounts[1]], {from:accounts[1]})
       }).then(function(){
         return meta.isAttended.call(accounts[1])
       }).then(function(value){
@@ -284,7 +284,7 @@ contract('Conference', function(accounts) {
       }).then(function(){
         // contract gets 1 ether
         assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
-        return meta.attend.sendTransaction(registered, {gas:gas})
+        return meta.attend.sendTransaction([registered], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:nonOwner, gas:gas})
       }).then(function(){
@@ -314,7 +314,7 @@ contract('Conference', function(accounts) {
       }).then(function(){
         // contract gets 1 ether
         assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
-        return meta.attend.sendTransaction(attended, {gas:gas})
+        return meta.attend.sendTransaction([attended], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:owner, gas:gas})
       }).then(function(){
@@ -355,9 +355,9 @@ contract('Conference', function(accounts) {
         assert.equal( web3.eth.getBalance(meta.address), web3.toWei(3, "ether"))
         // only account 0 and 1 attend
       }).then(function(){
-        return meta.attend.sendTransaction(accounts[0], {gas:gas})
+        return meta.attend.sendTransaction([accounts[0]], {gas:gas})
       }).then(function(){
-        return meta.attend.sendTransaction(accounts[1], {gas:gas})
+        return meta.attend.sendTransaction([accounts[1]], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:accounts[0], gas:gas})
       }).then(function(){
@@ -407,7 +407,7 @@ contract('Conference', function(accounts) {
       }).then(function(){
         // contract gets 1 ether
         assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
-        return meta.attend.sendTransaction(accounts[0], {gas:gas})
+        return meta.attend.sendTransaction([accounts[0]], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:owner, gas:gas})
       }).then(function(){
@@ -482,9 +482,7 @@ contract('Conference', function(accounts) {
         assert.equal( web3.eth.getBalance(meta.address), web3.toWei(3, "ether"))
         // only account 0 and 1 attend
       }).then(function(){
-        return meta.attend.sendTransaction(accounts[0], {gas:gas})
-      }).then(function(){
-        return meta.attend.sendTransaction(accounts[1], {gas:gas})
+        return meta.attend.sendTransaction([accounts[0], accounts[1]], {gas:gas})
       }).then(function(){
         previousBalances[0] = web3.eth.getBalance(accounts[0]);
         previousBalances[1] = web3.eth.getBalance(accounts[1]);
@@ -550,7 +548,7 @@ contract('Conference', function(accounts) {
       }).then(function(){
         // contract gets 1 ether
         assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
-        return meta.attend.sendTransaction(accounts[0], {gas:gas})
+        return meta.attend.sendTransaction([accounts[0]], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:owner, gas:gas})
       }).then(function(){

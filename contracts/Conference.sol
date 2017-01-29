@@ -164,12 +164,15 @@ contract Conference is Rejector, Killable {
 		limitOfParticipants = _limitOfParticipants;
 	}
 
-	function attend(address _addr) public onlyOwner{
-		if (isRegistered(_addr) != true) throw;
-		if (isAttended(_addr)) throw;
-		Attend(_addr, msg.sender.balance);
-		participants[_addr].attended = true;
-		attended++;
+	function attend(address[] _addresses) public onlyOwner{
+		for(uint i=0;i<_addresses.length;i++){
+			var _addr = _addresses[i];
+			if (isRegistered(_addr) != true) throw;
+			if (isAttended(_addr)) throw;
+			Attend(_addr, msg.sender.balance);
+			participants[_addr].attended = true;
+			attended++;
+		}
 	}
 
 	/* Private functions */
