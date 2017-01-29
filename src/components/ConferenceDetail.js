@@ -113,7 +113,7 @@ class ConferenceDetail extends React.Component {
       var date = `${curr_date}-${curr_month}-${curr_year}`
 
       return (
-        <span style={styles.list}>{'Sep 18th (Sun) 7pm(UTC+8)'}</span>
+        <span style={styles.list}>{name}</span>
       )
     }else{
       return (
@@ -153,14 +153,14 @@ class ConferenceDetail extends React.Component {
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<EventIcon />} disabled={true}
             primaryText={
-              <p>Date{this.getDateContent(this.state.name)}</p>
+              <p>Date{this.getDateContent(this.state.date)}</p>
             }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<PlaceIcon />} disabled={true}
             primaryText={
               <p>Location
                 <span style={styles.list}>
-                  <a target='_blank' href='https://goo.gl/maps/Uty16SUcxd42'> The lobby at Hyatt On the bund (199 Huangpu Road, Shanghai)</a>
+                  <a target='_blank' href={this.state.map_url}>{this.state.location_text}</a>
                 </span>
               </p>
             }
@@ -169,9 +169,7 @@ class ConferenceDetail extends React.Component {
             primaryText={
               <p>Description
                 <span style={styles.list}>
-                  After meeting at the lobby, we will head to
-                  <a target='_blank' href='http://chope.net.cn/shanghai-restaurants/restaurant/lostheaven-yadl'> Lost Heaven</a>(17 Yan An Dong Lu,
-Huangpu District). The table of 10 is booked under Makoto
+                  { this.state.description_text }
                 </span>
               </p>
             }

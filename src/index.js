@@ -15,13 +15,13 @@ import Notification from './components/Notification';
 import Instruction from './components/Instruction';
 import Participants from './components/Participants';
 import NetworkLabel from './components/NetworkLabel';
+import Data from './components/Data';
 
 import Avatar from 'material-ui/Avatar';
 import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
-
 
 function setup(){
   return new Promise(function(resolve,reject){
@@ -63,20 +63,25 @@ function setup(){
 }
 
 window.onload = function() {
-  console.log('loaded')
   setup().then(({provider, web3, read_only}) => {
     web3.setProvider(provider);
     Conference.setProvider(provider);
     Bounty.setProvider(provider);
     const bounty = Bounty.deployed();
 
-    let contract;
+    var contract = Conference.deployed();
+    Data[0].address = contract.address;
+    let metadata;
     let contractAddress = document.baseURI.split('#')[1]
     if (contractAddress && contractAddress.length == 42) {
       contract = Conference.at(contractAddress);
+      metadata = Data.filter(function(d){
+        return d.address == contractAddress
+      })[0];
     }else{
-      contract = Conference.deployed();
+      metadata = Data[0];
     }
+    console.log('Data', Data);
     window.contract = contract
     window.web3 = web3
     const eventEmitter = EventEmitter()
@@ -132,7 +137,11 @@ window.onload = function() {
           'owner': values[6],
           'ended': values[7],
           'limitOfParticipants': values[8],
-          'contractBalance': web3.fromWei(contractBalance, "ether").toNumber()
+          'contractBalance': web3.fromWei(contractBalance, "ether").toNumber(),
+          'date': metadata.date,
+          'map_url': metadata.map_url,
+          'location_text': metadata.location_text,
+          'description_text': metadata.description_text
         }
         if(detail.ended){
           detail.canRegister = false
