@@ -113,15 +113,15 @@ contract Conference is Rejector, Killable {
 		totalBalance = totalBalance + (deposit * 1);
 	}
 
-	function isRegistered(address _addr) public returns (bool){
+	function isRegistered(address _addr) constant returns (bool){
 		return participants[_addr].addr != 0x0;
 	}
 
-	function isAttended(address _addr) public returns (bool){
+	function isAttended(address _addr) constant returns (bool){
 		return isRegistered(_addr) && participants[_addr].attended;
 	}
 
-	function isPaid(address _addr) public returns (bool){
+	function isPaid(address _addr) constant returns (bool){
 		return isRegistered(_addr) && participants[_addr].paid;
 	}
 
