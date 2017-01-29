@@ -73,7 +73,7 @@ contract('Conference', function(accounts) {
   })
 
   describe('on creation', function(){
-    it.only('has name', function(done){
+    it('has name', function(done){
       Conference.new().then(function(meta) {
         return meta.name.call()
       }).then(function(name) {
