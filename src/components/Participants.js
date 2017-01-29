@@ -7,6 +7,7 @@ import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
+import Checkbox from 'material-ui/Checkbox';
 import math from 'mathjs';
 
 const getTwitterIcon = (name) =>(
@@ -27,6 +28,7 @@ class Participants extends React.Component {
       accounts:[],
       address: null,
       participants:[],
+      attendees:[],
       detail:{},
       etherscan_url:null
     };
@@ -46,6 +48,14 @@ class Participants extends React.Component {
         etherscan_url: network.etherscan_url
       });
     })
+    this.props.eventEmitter.on('attendees', attendees => {
+      // Resets after clicking 'attend' button.
+      if(attendees.length != this.state.attendees.length){
+        this.setState({
+          attendees:[]
+        })
+      }
+    });
   }
 
   componentDidMount(){
@@ -81,12 +91,21 @@ class Participants extends React.Component {
     if(value) return value.toNumber();
   }
 
-  handleAction(actionName, participantAddress) {
-    this.props.action(actionName, this.state.address.trim(), participantAddress)
-  }
-
   handleWithdraw(actionName, participantAddress) {
     this.props.action(actionName, participantAddress)
+  }
+
+  handleAttendees(participantAddress, event, isInputChecked){
+    // console.log('isInputChecked', isInputChecked);
+    if (isInputChecked) {
+      this.state.attendees.push(participantAddress)
+    }else{
+      this.state.attendees = this.state.attendees.filter(function(a){
+        return a != participantAddress;
+      })
+    }
+    this.props.eventEmitter.emit('attendees', this.state.attendees);
+    return true;
   }
 
   yesNo(participant){
@@ -95,9 +114,8 @@ class Participants extends React.Component {
     }else{
       if(this.isOwner() && !this.state.detail.ended){
         return (
-          <RaisedButton
-            label="Attend" secondary={true}
-            onClick={this.handleAction.bind(this, 'attend', participant.address)}
+          <Checkbox
+            onCheck={this.handleAttendees.bind(this, participant.address)}
           />
         )
       }else{
