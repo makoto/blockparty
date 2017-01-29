@@ -81,16 +81,16 @@ window.onload = function() {
     window.web3 = web3
     const eventEmitter = EventEmitter()
 
-    web3.version.getNetwork(function(err, result){
+    web3.version.getNetwork(function(err, network_id){
       var obj;
-      switch (result.network_id) {
-        case 1:
+      switch (network_id) {
+        case '1':
           obj = {
             name: 'MAINNET',
             etherscan_url: 'https://etherscan.io'
           }
           break;
-        case 3:
+        case '3':
           obj = {
             name: 'TESTNET',
             etherscan_url: 'https://testnet.etherscan.io'
