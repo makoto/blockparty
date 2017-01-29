@@ -84,7 +84,7 @@ contract Conference is Rejector, Killable {
 		totalBalance = totalBalance + (deposit * 1);
 	}
 
-	function setLimitOfParticipants(uint _limitOfParticipants) {
+	function setLimitOfParticipants(uint _limitOfParticipants) onlyOwner{
 		limitOfParticipants = _limitOfParticipants;
 	}
 
