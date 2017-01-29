@@ -15,6 +15,7 @@ class FormInput extends React.Component {
       address:null,
       name:null,
       accounts:[],
+      attendees:[],
       detail:{}
     };
 
@@ -29,6 +30,13 @@ class FormInput extends React.Component {
         detail:detail
       })
     })
+    this.props.eventEmitter.on('attendees', attendees => {
+      console.log('ATTENDEES', attendees)
+      this.setState({
+        attendees:attendees
+      })
+    });
+
     this.props.eventEmitter.on('change', detail => {
       console.log('DETAIL', detail)
       this.setState({detail:detail});
@@ -36,10 +44,18 @@ class FormInput extends React.Component {
   }
 
   handleAction(actionName) {
+    var arg;
+    if (actionName == 'attend') {
+      arg = this.state.attendees
+    }else{
+      arg = this.state.name
+    }
+    this.props.action(actionName, this.state.address.trim(), arg)
     this.setState({
       name: null,
+      attendees:[]
     });
-    this.props.action(actionName, this.state.address.trim(), this.state.name)
+    this.props.eventEmitter.emit('attendees', []);
   }
 
   handleSelect(event,index,value){
@@ -54,6 +70,10 @@ class FormInput extends React.Component {
 
   showRegister(){
     return this.state.detail.canRegister
+  }
+
+  showAttend(){
+    return this.state.detail.canAttend
   }
 
   showPayback(){
@@ -78,6 +98,10 @@ class FormInput extends React.Component {
     let adminButtons, registerButton, warningText;
     if(this.isOwner()){
       adminButtons = <span>
+        <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
+          label="Attend" style={styles}
+          onClick={this.handleAction.bind(this, 'attend')}
+        />
         <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
           label="Payback" style={styles}
           onClick={this.handleAction.bind(this, 'payback')}

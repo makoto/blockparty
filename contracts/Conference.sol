@@ -113,6 +113,15 @@ contract Conference is Rejector, Killable {
 		totalBalance = totalBalance + (deposit * 1);
 	}
 
+	function withdraw() public onlyPayable notPaid {
+		Participant participant = participants[msg.sender];
+		if (msg.sender.send(participant.payout)) {
+			participant.paid = true;
+			totalBalance -= participant.payout;
+		}
+	}
+
+	/* Constants */
 	function isRegistered(address _addr) constant returns (bool){
 		return participants[_addr].addr != 0x0;
 	}
@@ -125,12 +134,8 @@ contract Conference is Rejector, Killable {
 		return isRegistered(_addr) && participants[_addr].paid;
 	}
 
-	function withdraw() public onlyPayable notPaid {
-		Participant participant = participants[msg.sender];
-		if (msg.sender.send(participant.payout)) {
-			participant.paid = true;
-			totalBalance -= participant.payout;
-		}
+	function payout() constant returns(uint256){
+		return totalBalance / uint(attended);
 	}
 
 	/* Admin only functions */
@@ -164,16 +169,14 @@ contract Conference is Rejector, Killable {
 		limitOfParticipants = _limitOfParticipants;
 	}
 
-	function attend(address _addr) public onlyOwner{
-		if (isRegistered(_addr) != true) throw;
-		if (isAttended(_addr)) throw;
-		Attend(_addr, msg.sender.balance);
-		participants[_addr].attended = true;
-		attended++;
-	}
-
-	/* Private functions */
-	function payout() private returns(uint256){
-		return totalBalance / uint(attended);
+	function attend(address[] _addresses) public onlyOwner{
+		for(uint i=0;i<_addresses.length;i++){
+			var _addr = _addresses[i];
+			if (isRegistered(_addr) != true) throw;
+			if (isAttended(_addr)) throw;
+			Attend(_addr, msg.sender.balance);
+			participants[_addr].attended = true;
+			attended++;
+		}
 	}
 }
