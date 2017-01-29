@@ -30,21 +30,7 @@ contract Conference is Rejector, Killable {
 	event Attend(address addr, uint256 balance);
 	event Payback(address addr, uint256 _payout, uint256 balance, bool paid);
 
-	function Conference(uint _coolingPeriod) {
-		name = 'Edcon Post conference lunch';
-		deposit = 1 ether;
-		totalBalance = 0;
-		registered = 0;
-		attended = 0;
-		limitOfParticipants = 10;
-		ended = false;
-		if (_coolingPeriod != 0) {
-			coolingPeriod = _coolingPeriod;
-		} else {
-			coolingPeriod = 1 weeks;
-		}
-	}
-
+	/* Modifiers */
 	modifier sentDepositOrReturn {
 		if (msg.value == deposit) {
 			_
@@ -75,7 +61,50 @@ contract Conference is Rejector, Killable {
 		}
 	}
 
-	function register(string _participant) sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn{
+	modifier isEnded {
+		if (ended){
+			_
+		}
+	}
+
+	modifier onlyAfter(uint _time) {
+		if (now > _time){
+			_
+		}
+	}
+
+	modifier onlyPayable {
+		Participant participant = participants[msg.sender];
+		if (participant.payout > 0){
+			_
+		}
+	}
+
+	modifier notPaid {
+		Participant participant = participants[msg.sender];
+		if (participant.paid == false){
+			_
+		}
+	}
+
+	/* Public functions */
+
+	function Conference(uint _coolingPeriod) {
+		name = 'Edcon Post conference lunch';
+		deposit = 1 ether;
+		totalBalance = 0;
+		registered = 0;
+		attended = 0;
+		limitOfParticipants = 10;
+		ended = false;
+		if (_coolingPeriod != 0) {
+			coolingPeriod = _coolingPeriod;
+		} else {
+			coolingPeriod = 1 weeks;
+		}
+	}
+
+	function register(string _participant) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn{
 		Register(_participant, msg.sender, msg.sender.balance, msg.value);
 		if (isRegistered(msg.sender)) throw;
 		registered++;
@@ -84,33 +113,27 @@ contract Conference is Rejector, Killable {
 		totalBalance = totalBalance + (deposit * 1);
 	}
 
-	function setLimitOfParticipants(uint _limitOfParticipants) onlyOwner{
-		limitOfParticipants = _limitOfParticipants;
-	}
-
-	function attend(address _addr) onlyOwner{
-		if (isRegistered(_addr) != true) throw;
-		if (isAttended(_addr)) throw;
-		Attend(_addr, msg.sender.balance);
-		participants[_addr].attended = true;
-		attended++;
-	}
-
-	function isRegistered(address _addr) returns (bool){
+	function isRegistered(address _addr) public returns (bool){
 		return participants[_addr].addr != 0x0;
 	}
 
-	function isAttended(address _addr) returns (bool){
+	function isAttended(address _addr) public returns (bool){
 		return isRegistered(_addr) && participants[_addr].attended;
 	}
 
-	function isPaid(address _addr) returns (bool){
+	function isPaid(address _addr) public returns (bool){
 		return isRegistered(_addr) && participants[_addr].paid;
 	}
 
-	function payout() returns(uint256){
-		return totalBalance / uint(attended);
+	function withdraw() public onlyPayable notPaid {
+		Participant participant = participants[msg.sender];
+		if (msg.sender.send(participant.payout)) {
+			participant.paid = true;
+			totalBalance -= participant.payout;
+		}
 	}
+
+	/* Admin only functions */
 
 	function payback() onlyOwner{
 		for(uint i=1;i<=registered;i++){
@@ -130,44 +153,27 @@ contract Conference is Rejector, Killable {
 		endedAt = now;
 	}
 
-	modifier onlyPayable {
-		Participant participant = participants[msg.sender];
-		if (participant.payout > 0){
-			_
-		}
-	}
-
-	modifier notPaid {
-		Participant participant = participants[msg.sender];
-		if (participant.paid == false){
-			_
-		}
-	}
-
-	function withdraw() onlyPayable notPaid {
-		Participant participant = participants[msg.sender];
-		if (msg.sender.send(participant.payout)) {
-			participant.paid = true;
-			totalBalance -= participant.payout;
-		}
-	}
-
-	modifier isEnded {
-		if (ended){
-			_
-		}
-	}
-
-	modifier onlyAfter(uint _time) {
-		if (now > _time){
-			_
-		}
-	}
-
 	/* return the remaining of balance if there are any unclaimed after cooling period */
-	function clear() onlyOwner isEnded onlyAfter(endedAt + coolingPeriod) {
+	function clear() public onlyOwner isEnded onlyAfter(endedAt + coolingPeriod) {
 		if(owner.send(totalBalance)){
 			totalBalance = 0;
 		}
+	}
+
+	function setLimitOfParticipants(uint _limitOfParticipants) public onlyOwner{
+		limitOfParticipants = _limitOfParticipants;
+	}
+
+	function attend(address _addr) public onlyOwner{
+		if (isRegistered(_addr) != true) throw;
+		if (isAttended(_addr)) throw;
+		Attend(_addr, msg.sender.balance);
+		participants[_addr].attended = true;
+		attended++;
+	}
+
+	/* Private functions */
+	function payout() private returns(uint256){
+		return totalBalance / uint(attended);
 	}
 }
