@@ -1,5 +1,6 @@
-contract('Conference', function(accounts) {
+var Conference = artifacts.require("Conference.sol");
 
+contract('Conference', function(accounts) {
   it("should not send money directly", function(done){
     function sendTransaction(fromAddress, toAddress, ether){
       return new Promise(function(resolve,reject){
