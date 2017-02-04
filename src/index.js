@@ -164,28 +164,34 @@ window.onload = function() {
     }
 
     function getParticipants(callback){
-      contract.registered.call().then(value => {
-        let participantsArray = []
-        for (var i = 1; i <= value.toNumber(); i++) {
-          participantsArray.push(i);
-        }
-        Promise.all(participantsArray.map(index => {
-          return contract.participantsIndex.call(index).then(address => {
-            return contract.participants.call(address);
-          })
-        })).then(function(participants){
-          return participants.map(participant => {
-            var object =  {
-              name: participant[0],
-              address: participant[1],
-              attended: participant[2],
-              payout: participant[3],
-              paid: participant[4]
-            }
-            return object
-          })
-        }).then(participant => { if(participant) callback(participant); })
-      })
+      var instance;
+      contract
+        .then(function(_instance){
+          instance = _instance;
+          return instance.registered.call();
+        })
+        .then(value => {
+          let participantsArray = []
+          for (var i = 1; i <= value.toNumber(); i++) {
+            participantsArray.push(i);
+          }
+          Promise.all(participantsArray.map(index => {
+            return instance.participantsIndex.call(index).then(address => {
+              return instance.participants.call(address);
+            })
+          })).then(function(participants){
+            return participants.map(participant => {
+              var object =  {
+                name: participant[0],
+                address: participant[1],
+                attended: participant[2],
+                payout: participant[3],
+                paid: participant[4]
+              }
+              return object
+            })
+          }).then(participant => { if(participant) callback(participant); })
+        })
     }
     var gas = 1000000;
     window.gas = gas
@@ -196,7 +202,10 @@ window.onload = function() {
       if (name == "register") {
         options.value = Math.pow(10,18)
       }
-      contract[name](argument, options).then(function() {
+      contract.then(function(instance){
+        return instance[name](argument, options);
+      })
+      .then(function() {
         getDetail(function(model){
           eventEmitter.emit('change', model);
           eventEmitter.emit('notification', {status:'success', message:'Successfully Updated'});
