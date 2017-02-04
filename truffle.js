@@ -1,18 +1,20 @@
 module.exports = {
   build: "npm start",
-  // networks: {
-  //   "live": {
-  //     network_id: 1 // Ethereum public network
-  //   },
-  //   "morden": {
-  //     network_id: 2   // Official Ethereum test network
-  //   },
-  //   "development": {
-  //     network_id: "default"
-  //   }
-  // },
-  rpc: {
-    host: "localhost",
-    port: 8545
+  networks: {
+    development: {
+      host: "localhost",
+      port: 8545,
+      network_id: "*"
+    },
+    testnet: {
+      host: "localhost",
+      port: 8545,
+      network_id: 3
+    },
+    mainnet: {
+      host: "localhost",
+      port: 8545,
+      network_id: 1
+    }
   }
 };
