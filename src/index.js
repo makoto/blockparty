@@ -6,11 +6,8 @@ import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Web3 from 'web3';
 
-import Bounty from '../build/contracts/Bounty.sol.js';
-
 import ConferenceDetail from './components/ConferenceDetail';
 import FormInput from './components/FormInput';
-import BountyInstruction from './components/BountyInstruction';
 import Notification from './components/Notification';
 import Instruction from './components/Instruction';
 import Participants from './components/Participants';
@@ -251,7 +248,6 @@ window.onload = function() {
                 <span>
                   {networkLabel}
                   <FlatButton style={{color:'white'}} label="About" onClick={ () => {eventEmitter.emit('instruction')}} />
-                  <BountyInstruction eventEmitter={eventEmitter} bounty={bounty} getDetail={getDetail} getBalance={getBalance} web3={web3} />
                 </span>
               }
             />
