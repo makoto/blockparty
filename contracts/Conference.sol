@@ -136,7 +136,8 @@ contract Conference is Rejector, Killable {
 	}
 
 	function payout() constant returns(uint256){
-		return totalBalance / uint(attended);
+		if (attended == 0) return 0;
+		return uint(totalBalance) / uint(attended);
 	}
 
 	/* Admin only functions */
