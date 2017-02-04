@@ -5,6 +5,8 @@ import EventEmitter from 'event-emitter';
 import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Web3 from 'web3';
+import TruffleContract from 'truffle-contract'
+import artifacts from '../build/contracts/Conference.json'
 
 import ConferenceDetail from './components/ConferenceDetail';
 import FormInput from './components/FormInput';
@@ -61,22 +63,23 @@ function setup(){
 
 window.onload = function() {
   setup().then(({provider, web3, read_only}) => {
+    var Conference  = TruffleContract(artifacts);
     web3.setProvider(provider);
     Conference.setProvider(provider);
-
-    var contract = Conference.deployed();
-    Data[0].address = contract.address;
+    Conference.setNetwork(web3.version.network);
+    Data[0].address = Conference.address;
     let metadata;
     let contractAddress = document.baseURI.split('#')[1]
     if (contractAddress && contractAddress.length == 42) {
-      contract = Conference.at(contractAddress);
       metadata = Data.filter(function(d){
         return d.address == contractAddress
       })[0];
     }else{
+      contractAddress = Conference.address;
+
       metadata = Data[0];
     }
-    console.log('Data', Data);
+    var contract = Conference.at(contractAddress);
     window.contract = contract
     window.web3 = web3
     const eventEmitter = EventEmitter()
@@ -115,46 +118,48 @@ window.onload = function() {
 
     // Functions to interact with contract
     function getDetail(callback){
-      let values;
-      Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants'].map(attributeName => {
-        return contract[attributeName].call();
-      })).then(_values => {
-        values = _values;
-        return getBalance(contract.address)
-      }).then(contractBalance => {
-        var detail = {
-          'name': values[0],
-          'deposit': values[1],
-          'payout': values[2],
-          'totalBalance': values[3],
-          'registered': values[4],
-          'attended': values[5],
-          'owner': values[6],
-          'ended': values[7],
-          'limitOfParticipants': values[8],
-          'contractBalance': web3.fromWei(contractBalance, "ether").toNumber(),
-          'date': metadata.date,
-          'map_url': metadata.map_url,
-          'location_text': metadata.location_text,
-          'description_text': metadata.description_text
-        }
-        if(detail.ended){
-          detail.canRegister = false
-          detail.canAttend = false
-          detail.canPayback = false
-          detail.canCancel = false
-        }else{
-          if(detail.registered.toNumber() > 0 ){
-            detail.canAttend = true
+      var values;
+      contract.then(function(instance){
+        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants'].map(attributeName => {
+          return instance[attributeName].call();
+        })).then(_values => {
+          values = _values;
+          return getBalance(instance.address)
+        }).then(contractBalance => {
+          var detail = {
+            'name': values[0],
+            'deposit': values[1],
+            'payout': values[2],
+            'totalBalance': values[3],
+            'registered': values[4],
+            'attended': values[5],
+            'owner': values[6],
+            'ended': values[7],
+            'limitOfParticipants': values[8],
+            'contractBalance': web3.fromWei(contractBalance, "ether").toNumber(),
+            'date': metadata.date,
+            'map_url': metadata.map_url,
+            'location_text': metadata.location_text,
+            'description_text': metadata.description_text
           }
+          if(detail.ended){
+            detail.canRegister = false
+            detail.canAttend = false
+            detail.canPayback = false
+            detail.canCancel = false
+          }else{
+            if(detail.registered.toNumber() > 0 ){
+              detail.canAttend = true
+            }
 
-          if(detail.registered.toNumber() > 0 && detail.attended.toNumber() > 0 && detail.payout.toNumber() > 0){
-            detail.canPayback = true
+            if(detail.registered.toNumber() > 0 && detail.attended.toNumber() > 0 && detail.payout.toNumber() > 0){
+              detail.canPayback = true
+            }
+            detail.canRegister = true
+            detail.canCancel = true
           }
-          detail.canRegister = true
-          detail.canCancel = true
-        }
-        callback(detail);
+          callback(detail);
+        })
       })
     }
 
