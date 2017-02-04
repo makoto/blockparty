@@ -63,8 +63,6 @@ window.onload = function() {
   setup().then(({provider, web3, read_only}) => {
     web3.setProvider(provider);
     Conference.setProvider(provider);
-    Bounty.setProvider(provider);
-    const bounty = Bounty.deployed();
 
     var contract = Conference.deployed();
     Data[0].address = contract.address;
