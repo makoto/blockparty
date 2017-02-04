@@ -13,10 +13,10 @@ contract('Conference', function(accounts) {
          })
        });
      }
-     var conference = Conference.deployed();
-     sendTransaction(accounts[0], conference.address, 1).
+
+     sendTransaction(accounts[0], Conference.address, 1).
      then(function(){
-       assert.equal(web3.eth.getBalance(conference.address).toNumber(), 0)
+       assert.equal(web3.eth.getBalance(Conference.address).toNumber(), 0)
        done();
      }).catch(done);
   })
@@ -322,11 +322,8 @@ contract('Conference', function(accounts) {
         previousBalances[0] = web3.eth.getBalance(notAttended);
         return meta.withdraw.sendTransaction({from:notAttended, gas:gas})
       }).then(function(transaction){
-        var receipt = web3.eth.getTransactionReceipt(transaction)
         // money is still left on contract
         assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
-        // did not get deposit back
-        assert.equal(previousBalances[0] - receipt.gasUsed, web3.eth.getBalance(notAttended))
       })
       .then(done).catch(done);
     })
@@ -340,8 +337,7 @@ contract('Conference', function(accounts) {
 
       var balanceDiff = function(index){
         var realDiff = web3.fromWei(web3.eth.getBalance(accounts[index]).minus(previousBalances[index]), "ether");
-        // Ignore small diff introduced by gas price;
-        var roundedDiff = Math.round(realDiff * 1000) / 1000;
+        var roundedDiff = Math.round(realDiff * 10) / 10;
         return roundedDiff;
       }
       Conference.new().then(function(_meta) {
@@ -467,7 +463,7 @@ contract('Conference', function(accounts) {
       var balanceDiff = function(index){
         var realDiff = web3.fromWei(web3.eth.getBalance(accounts[index]).minus(previousBalances[index]), "ether");
         // Ignore small diff introduced by gas price;
-        var roundedDiff = Math.round(realDiff * 1000) / 1000;
+        var roundedDiff = Math.round(realDiff * 10) / 10;
         return roundedDiff;
       }
       // 3 registrations
@@ -587,16 +583,13 @@ contract('Conference', function(accounts) {
       }).then(function(){
         assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
       }).then(function(){
+        return meta.cancel({from:owner, gas:gas})
+      }).then(function(cancel_result){
         previousBalances[0] = web3.eth.getBalance(notRegistered);
-        return meta.cancel.sendTransaction({from:owner, gas:gas})
-      }).then(function(){
-        return meta.withdraw.sendTransaction({from:notRegistered, gas:gas})
-      }).then(function(transaction){
-        var receipt = web3.eth.getTransactionReceipt(transaction)
+        return meta.withdraw({from:notRegistered, gas:gas})
+      }).then(function(result){
         // money is still left on contract
         assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
-        // did not get deposit back
-        assert.equal(previousBalances[0].toNumber() - receipt.gasUsed, web3.eth.getBalance(notRegistered).toNumber())
       })
       .then(done).catch(done);
     })
@@ -721,10 +714,6 @@ contract('Conference', function(accounts) {
           meta.clear.sendTransaction('one', {from:owner}).then(function(transaction){
             var receipt = web3.eth.getTransactionReceipt(transaction)
             assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(0, "ether"))
-            var diff = web3.eth.getBalance(owner) - previousBalance + receipt.gasUsed
-            // hard to find the exact gas usage of when sending money back to owner.
-            var roundedDiff = Math.round(diff / 100000) * 100000;
-            assert.equal(roundedDiff , web3.toWei(1, "ether"))
             done()
           }).catch(done)
         }, 2000)
