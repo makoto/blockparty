@@ -1,3 +1,4 @@
+pragma solidity ^0.4.2;
 import './zeppelin/Rejector.sol';
 import './zeppelin/Ownable.sol';
 import './zeppelin/Killable.sol';
@@ -33,7 +34,7 @@ contract Conference is Rejector, Killable {
 	/* Modifiers */
 	modifier sentDepositOrReturn {
 		if (msg.value == deposit) {
-			_
+			_;
 		}else{
 			if(msg.sender.send(msg.value)){/* not much you can do */}
 		}
@@ -41,13 +42,13 @@ contract Conference is Rejector, Killable {
 
 	modifier onlyActive {
 		if (ended == false) {
-			_
+			_;
 		}
 	}
 
 	modifier onlyActiveOrReturn {
 		if (ended == false) {
-			_
+			_;
 		}else{
 			if(msg.sender.send(msg.value)){/*not much you can do*/}
 		}
@@ -55,7 +56,7 @@ contract Conference is Rejector, Killable {
 
 	modifier withinLimitOrReturn {
 		if (registered < limitOfParticipants ) {
-			_
+			_;
 		}else{
 			if(msg.sender.send(msg.value)){/* not much you can do */}
 		}
@@ -63,27 +64,27 @@ contract Conference is Rejector, Killable {
 
 	modifier isEnded {
 		if (ended){
-			_
+			_;
 		}
 	}
 
 	modifier onlyAfter(uint _time) {
 		if (now > _time){
-			_
+			_;
 		}
 	}
 
 	modifier onlyPayable {
 		Participant participant = participants[msg.sender];
 		if (participant.payout > 0){
-			_
+			_;
 		}
 	}
 
 	modifier notPaid {
 		Participant participant = participants[msg.sender];
 		if (participant.paid == false){
-			_
+			_;
 		}
 	}
 
@@ -104,7 +105,7 @@ contract Conference is Rejector, Killable {
 		}
 	}
 
-	function register(string _participant) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn{
+	function register(string _participant) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn payable{
 		Register(_participant, msg.sender, msg.sender.balance, msg.value);
 		if (isRegistered(msg.sender)) throw;
 		registered++;

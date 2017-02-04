@@ -1,3 +1,4 @@
+pragma solidity ^0.4.2;
 /*
  * Ownable
  * Base contract with an owner
@@ -11,6 +12,6 @@ contract Ownable {
 
   modifier onlyOwner() {
     if (msg.sender == owner)
-      _
+      _;
   }
 }
