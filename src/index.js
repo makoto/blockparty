@@ -31,7 +31,10 @@ function setup(){
     if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
       provider = web3.currentProvider; // Keep provider info given from mist `web3` object
       web3 = new Web3();                 // Re-instantiate `web3` using `Web3` from Dapp
-      resolve({web3, provider, read_only})
+      web3.setProvider(provider);
+      web3.version.getNetwork(function(err, network_id){
+        resolve({web3, provider, read_only, network_id})
+      })
     }else{
       provider = new Web3.providers.HttpProvider(url);
       let web3 = new Web3();             // Define and instantiate `web3` if accessed from web browser
@@ -55,18 +58,20 @@ function setup(){
         provider = new Web3.providers.HttpProvider(url);
         let web3 = new Web3;             // Define and instantiate `web3` if accessed from web browser
         console.log('Web3 is set', web3, provider)
-        resolve({web3, provider, read_only})
+        web3.setProvider(provider);
+        web3.version.getNetwork(function(err, network_id){
+          resolve({web3, provider, read_only, network_id})
+        })
       })
     }
   });
 }
 
 window.onload = function() {
-  setup().then(({provider, web3, read_only}) => {
+  setup().then(({provider, web3, read_only, network_id}) => {
     var Conference  = TruffleContract(artifacts);
-    web3.setProvider(provider);
     Conference.setProvider(provider);
-    Conference.setNetwork(web3.version.network);
+    Conference.setNetwork(network_id);
     Data[0].address = Conference.address;
     let metadata;
     let contractAddress = document.baseURI.split('#')[1]
