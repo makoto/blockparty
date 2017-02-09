@@ -6,10 +6,10 @@ let Data = [
   {
     name: 'Edcon Post conference lunch',
     address: null,
-    date:'Feb 19th (Sun) 12:00(UTC+1)',
-    map_url: null,
-    location_text: 'Paris',
-    description_text: 'Exact venue TBD'
+    date:'Feb 19th (Sun) 12:30(UTC+1)',
+    map_url: 'https://www.google.co.uk/maps/place/Mama+Shelter+Paris/@48.8597157,2.4006691,17z/data=!4m5!3m4!1s0x47e66d8670ddcb91:0xb81d5c1e065c8167!8m2!3d48.8597122!4d2.4028631',
+    location_text: 'Mama Shelter Paris (109 Rue de banolet 75020 Paris)',
+    description_text: "<a target='_blank' href='http://www.mamashelter.com/en/paris/restaurants/restaurant'>Mama Shelter Paris</a> is a restaurant of the hotel all the Edcon speakers stay. Their brunch buffet(42€) is a bit pricy but very high quality and quantity, according to @jdetychey"
   },
   {
     name: 'DevCon2 Pre conference dinner',
