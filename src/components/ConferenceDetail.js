@@ -168,9 +168,9 @@ class ConferenceDetail extends React.Component {
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<DirectionIcon />} disabled={true}
             primaryText={
               <p>Description
-                <span style={styles.list}>
-                  { this.state.description_text }
-                </span>
+                <span style={styles.list}
+                  dangerouslySetInnerHTML={ {__html:this.state.description_text} }
+                />
               </p>
             }
           />
