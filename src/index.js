@@ -89,29 +89,27 @@ window.onload = function() {
     window.web3 = web3
     const eventEmitter = EventEmitter()
 
-    web3.version.getNetwork(function(err, network_id){
-      var obj;
-      switch (network_id) {
-        case '1':
-          obj = {
-            name: 'MAINNET',
-            etherscan_url: 'https://etherscan.io'
-          }
-          break;
-        case '3':
-          obj = {
-            name: 'TESTNET',
-            etherscan_url: 'https://testnet.etherscan.io'
-          }
-          break;
-        default:
-          obj = {
-            name: 'PRIVATE NET',
-            etherscan_url: null
-          }
-      }
-      eventEmitter.emit('network', obj);
-    })
+    var network_obj;
+    switch (network_id) {
+      case '1':
+        network_obj = {
+          name: 'MAINNET',
+          etherscan_url: 'https://etherscan.io'
+        }
+        break;
+      case '3':
+        network_obj = {
+          name: 'TESTNET',
+          etherscan_url: 'https://testnet.etherscan.io'
+        }
+        break;
+      default:
+        network_obj = {
+          name: 'PRIVATE NET',
+          etherscan_url: null
+        }
+
+    }
 
     function getBalance(address){
       return new Promise(function(resolve,reject){
@@ -294,5 +292,7 @@ window.onload = function() {
       />,
       document.getElementById('app')
     );
+
+    eventEmitter.emit('network', network_obj);
   })
 }
