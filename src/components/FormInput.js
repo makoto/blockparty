@@ -19,12 +19,14 @@ class FormInput extends React.Component {
       detail:{}
     };
 
-    this.props.getAccounts(accounts => {
+    this.props.eventEmitter.on('accounts_received', accounts => {
       this.setState({
         address:accounts[0],
         accounts:accounts
       })
-    })
+    });
+    this.props.getAccounts();
+
     this.props.getDetail(detail => {
       this.setState({
         detail:detail

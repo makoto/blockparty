@@ -32,12 +32,12 @@ class Participants extends React.Component {
       detail:{},
       etherscan_url:null
     };
-    this.props.getAccounts(accounts => {
+    this.props.eventEmitter.on('accounts_received', accounts => {
       this.setState({
         address:accounts[0],
         accounts:accounts
       })
-    })
+    });
     this.props.getDetail(detail => {
       this.setState({
         detail:detail

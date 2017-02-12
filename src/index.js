@@ -228,10 +228,9 @@ window.onload = function() {
       });
     }
 
-    function getAccounts(callback){
+    function getAccounts(){
       if(read_only){
-        callback([])
-        return false;
+        eventEmitter.emit('accounts_received', [])
       }
       console.log('this is not read only!')
       web3.eth.getAccounts(function(err, accs) {
@@ -244,10 +243,9 @@ window.onload = function() {
           eventEmitter.emit('notification', {status:'error', message:message});
           return;
         }
-        callback(accs);
+        eventEmitter.emit('accounts_received', accs)
       })
     }
-
     let networkLabel = <NetworkLabel eventEmitter={eventEmitter} read_only={read_only} />;
 
     const App = (props) => (
@@ -292,7 +290,9 @@ window.onload = function() {
       />,
       document.getElementById('app')
     );
-
+    // Looks like calling the function immediately returns
+    // bignumber.js:1177 Uncaught BigNumber Error: new BigNumber() not a base 16 number:
+    setTimeout(getAccounts, 0)
     eventEmitter.emit('network', network_obj);
   })
 }
