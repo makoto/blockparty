@@ -119,7 +119,7 @@ class Participants extends React.Component {
           />
         )
       }else{
-        return 'No';
+        return '';
       }
     }
   }
@@ -227,7 +227,7 @@ class Participants extends React.Component {
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn width={50} >Name</TableHeaderColumn>
-                <TableHeaderColumn width={10} >Attend?</TableHeaderColumn>
+                <TableHeaderColumn width={10} >Attended</TableHeaderColumn>
                 <TableHeaderColumn width={20} >Payout</TableHeaderColumn>
                 <TableHeaderColumn width={20} >Action</TableHeaderColumn>
               </TableRow>
