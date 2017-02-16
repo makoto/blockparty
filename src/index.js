@@ -295,8 +295,8 @@ window.onload = function() {
 
     // Looks like calling the function immediately returns
     // bignumber.js:1177 Uncaught BigNumber Error: new BigNumber() not a base 16 number:
-    setTimeout(getAccounts, 0)
-    setTimeout(getDetail, 0)
+    setTimeout(getAccounts, 100)
+    setTimeout(getDetail, 100)
     eventEmitter.emit('network', network_obj);
   })
 }
