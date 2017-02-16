@@ -229,12 +229,14 @@ window.onload = function() {
 
     function getAccounts(){
       if(read_only){
-        eventEmitter.emit('accounts_received', [])
+        eventEmitter.emit('accounts_received', []);
+        eventEmitter.emit('instruction');
+        return false;
       }
       console.log('this is not read only!')
       web3.eth.getAccounts(function(err, accs) {
         if (err != null) {
-          eventEmitter.emit('instruction')
+          eventEmitter.emit('instruction');
           return;
         }
         if (accs.length == 0) {
