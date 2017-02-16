@@ -120,7 +120,7 @@ window.onload = function() {
     }
 
     // Functions to interact with contract
-    function getDetail(callback){
+    function getDetail(){
       var values;
       contract.then(function(instance){
         Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants'].map(attributeName => {
@@ -161,7 +161,7 @@ window.onload = function() {
             detail.canRegister = true
             detail.canCancel = true
           }
-          callback(detail);
+          eventEmitter.emit('detail', detail);
         })
       })
     }
@@ -209,10 +209,9 @@ window.onload = function() {
         return instance[name](argument, options);
       })
       .then(function() {
-        getDetail(function(model){
-          eventEmitter.emit('change', model);
-          eventEmitter.emit('notification', {status:'success', message:'Successfully Updated'});
-        });
+        eventEmitter.emit('notification', {status:'success', message:'Successfully Updated'});
+        eventEmitter.emit('change');
+        getDetail();
       }).catch(function(e) {
         eventEmitter.emit('notification', {status:'error', message:'Error has occored'});
       });
@@ -290,9 +289,12 @@ window.onload = function() {
       />,
       document.getElementById('app')
     );
+    window.getAccounts = window.getAccounts;
+
     // Looks like calling the function immediately returns
     // bignumber.js:1177 Uncaught BigNumber Error: new BigNumber() not a base 16 number:
     setTimeout(getAccounts, 0)
+    setTimeout(getDetail, 0)
     eventEmitter.emit('network', network_obj);
   })
 }

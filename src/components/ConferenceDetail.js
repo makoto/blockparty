@@ -41,9 +41,10 @@ class ConferenceDetail extends React.Component {
 
   componentDidMount(){
     // Initialize
-    this.props.getDetail(model =>{
-      this.setState(model);
+    this.props.eventEmitter.on('detail', detail => {
+      this.setState(detail);
     })
+
     this.props.eventEmitter.on('network', network => {
       this.setState({
         etherscan_url: network.etherscan_url
@@ -57,12 +58,9 @@ class ConferenceDetail extends React.Component {
       if(typeof(this.state.name) == 'undefined'){
         this.props.eventEmitter.emit('instruction');
       }
-    }.bind(this), 1500)
+    }.bind(this), 5000)
 
     // Listen to watcher event.
-    this.props.eventEmitter.on('change', model => {
-      this.setState(model);
-    });
     this.serverRequest = $.get('https://www.cryptocompare.com/api/data/price?fsym=ETH&tsyms=GBP', function (result) {
       this.setState({
         rate: result.Data[0].Price

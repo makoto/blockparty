@@ -32,17 +32,30 @@ class Participants extends React.Component {
       detail:{},
       etherscan_url:null
     };
+  }
+
+  componentDidMount(){
+    // Initialize
+    this.props.getParticipants(participants =>{
+      this.setState({participants});
+    });
+
+    this.props.eventEmitter.on('change', _ => {
+      console.log('CHANGE', _);
+      this.props.getParticipants(participants =>{
+        this.setState({participants});
+      });
+    });
     this.props.eventEmitter.on('accounts_received', accounts => {
       this.setState({
         address:accounts[0],
         accounts:accounts
       })
     });
-    this.props.getDetail(detail => {
-      this.setState({
-        detail:detail
-      })
+    this.props.eventEmitter.on('detail', detail => {
+      this.setState({detail:detail});
     })
+
     this.props.eventEmitter.on('network', network => {
       this.setState({
         etherscan_url: network.etherscan_url
@@ -55,27 +68,6 @@ class Participants extends React.Component {
           attendees:[]
         })
       }
-    });
-  }
-
-  componentDidMount(){
-    // Initialize
-    this.props.getParticipants(participants =>{
-      this.setState({participants});
-    });
-
-    this.props.eventEmitter.on('change', model => {
-      this.props.getParticipants(participants =>{
-        this.setState({participants});
-      });
-    });
-    this.props.getDetail(detail => {
-      this.setState({
-        detail:detail
-      })
-    })
-    this.props.eventEmitter.on('change', detail => {
-      this.setState({detail:detail});
     });
   }
 

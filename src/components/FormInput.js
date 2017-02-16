@@ -18,30 +18,25 @@ class FormInput extends React.Component {
       attendees:[],
       detail:{}
     };
+  }
 
+  componentDidMount(){
     this.props.eventEmitter.on('accounts_received', accounts => {
       this.setState({
         address:accounts[0],
         accounts:accounts
       })
     });
-    this.props.getAccounts();
 
-    this.props.getDetail(detail => {
-      this.setState({
-        detail:detail
-      })
+    this.props.eventEmitter.on('detail', detail => {
+      this.setState({detail:detail});
     })
+
     this.props.eventEmitter.on('attendees', attendees => {
       console.log('ATTENDEES', attendees)
       this.setState({
         attendees:attendees
       })
-    });
-
-    this.props.eventEmitter.on('change', detail => {
-      console.log('DETAIL', detail)
-      this.setState({detail:detail});
     });
   }
 
