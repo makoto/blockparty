@@ -1,5 +1,6 @@
+require('babel-register')
+
 module.exports = {
-  build: "npm start",
   networks: {
     development: {
       host: "localhost",

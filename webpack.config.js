@@ -1,53 +1,53 @@
-var fs = require("fs");
-var path = require('path');
-var webpack = require("webpack");
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var environment = process.env.NODE_ENV || "development";
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-var provided = {
-  "Web3": "web3",
-  "Pudding": "ether-pudding",
-  "Promise": "bluebird"
-};
-
-// Get all the compiled contracts for our environment.
-var contracts_directory = "./build/contracts";
-fs.readdirSync("./build/contracts").forEach(function(file) {
-  if (path.basename(file).indexOf(".sol.js")) {
-    provided[path.basename(file, ".sol.js")] = path.resolve(contracts_directory + "/" + file);
-  }
-});
-providedPlugins = new webpack.ProvidePlugin(provided)
-console.log('**providedPlugins', providedPlugins)
 module.exports = {
-  entry: './app/javascripts/app.js',
+  entry: './src/index.js',
   output: {
-    path: "./build",
+    path: path.resolve(__dirname, 'build'),
     filename: 'app.js'
   },
-  devtool:'#source-map',
+  plugins: [
+    // Copy our app's index.html to the build folder.
+    new CopyWebpackPlugin([
+      { from: './public/index.html', to: "index.html" }
+    ])
+  ],
   module: {
     loaders: [
-      { test: /\.(js|jsx|es6)$/, exclude: /node_modules/, loader: "babel-loader"},
-      { test: /\.scss$/i, loader: ExtractTextPlugin.extract(["css", "sass"])},
-      { test: /\.css/, loader: "style-loader!css-loader" },
-      { test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/, loader: 'url-loader?limit=100000' },
-      { test: /\.json$/i, loader: "json"}
+      {
+         test: /\.css$/,
+         loader: [ 'style-loader', 'css-loader' ]
+      },
+      // "file" loader makes sure those assets get served by WebpackDevServer.
+      // When you `import` an asset, you get its (virtual) filename.
+      // In production, they would get copied to the `build` folder.
+      {
+        test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
+        loader: 'file-loader',
+        // query: {
+        //   name: 'static/media/[name].[hash:8].[ext]'
+        // }
+      },
+      // "url" loader works just like "file" loader but it also embeds
+      // assets smaller than specified size as data URLs to avoid requests.
+      {
+        test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
+        loader: 'url-loader',
+        // query: {
+        //   limit: 10000,
+        //   name: 'static/media/[name].[hash:8].[ext]'
+        // }
+      },
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015'],
+          plugins: ['transform-runtime']
+        }
+      }
     ]
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-        ENV: '"' + process.env.NODE_ENV + '"',
-        WEB3_PROVIDER_LOCATION: '"' + process.env.WEB3_PROVIDER_LOCATION + '"'
-    }),
-    providedPlugins,
-    new CopyWebpackPlugin([
-      { from: './app/index.html', to: "index.html" },
-      { from: './app/images', to: "images" },
-    ]),
-    new ExtractTextPlugin("app.css")
-  ],
-  resolve: { fallback: path.join(__dirname, "node_modules") },
-  resolveLoader: { fallback: path.join(__dirname, "node_modules") }
-};
+  }
+}

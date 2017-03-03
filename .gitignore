@@ -1,5 +1,6 @@
-node_modules/*
-build/*
+build
+npm-debug.log
+node_modules
+yarn-error.log
 .DS_Store
 archive/*
-npm-debug.log
