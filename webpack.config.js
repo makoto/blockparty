@@ -17,7 +17,6 @@ module.exports = {
     loaders: [
       {
          test: /\.css$/,
-         exclude: /(node_modules|bower_components)/,
          loader: [ 'style-loader', 'css-loader' ]
       },
       // "file" loader makes sure those assets get served by WebpackDevServer.
@@ -26,19 +25,19 @@ module.exports = {
       {
         test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
         loader: 'file-loader',
-        query: {
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
+        // query: {
+        //   name: 'static/media/[name].[hash:8].[ext]'
+        // }
       },
       // "url" loader works just like "file" loader but it also embeds
       // assets smaller than specified size as data URLs to avoid requests.
       {
         test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
         loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
+        // query: {
+        //   limit: 10000,
+        //   name: 'static/media/[name].[hash:8].[ext]'
+        // }
       },
       {
         test: /\.js$/,
