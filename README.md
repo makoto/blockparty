@@ -120,10 +120,18 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 
 - Run `testrpc` in one console
 - Run `truffle migrate`
-- Run `truffle serve`
+- Run `npm run dev`
 - Open `http://localhost:8080`
 
+### Building asset files to deploy
+
+- Run `npm run build`
+- Upload the content of files under `build` directory
+
 ## TODO
+
+- Add production config to minimise and optimise asset files
+- Remove start/build script unless required.
 
 ### Essentials
 
