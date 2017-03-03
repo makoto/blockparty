@@ -16,8 +16,12 @@ module.exports = {
   module: {
     loaders: [
       {
+         test: /\.json$/,
+         loader: 'json-loader'
+      },
+      {
          test: /\.css$/,
-         loader: [ 'style-loader', 'css-loader' ]
+         loaders: [ 'style-loader', 'css-loader' ]
       },
       // "file" loader makes sure those assets get served by WebpackDevServer.
       // When you `import` an asset, you get its (virtual) filename.
