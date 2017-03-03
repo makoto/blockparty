@@ -14,14 +14,12 @@ module.exports = {
     ])
   ],
   module: {
-    rules: [
-      {
-       test: /\.css$/,
-       use: [ 'style-loader', 'css-loader' ]
-      }
-    ],
     loaders: [
-      { test: /\.json$/, use: 'json-loader' },
+      {
+         test: /\.css$/,
+         exclude: /(node_modules|bower_components)/,
+         loader: [ 'style-loader', 'css-loader' ]
+      },
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
