@@ -128,14 +128,28 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 - Run `npm run build`
 - Upload the content of files under `build` directory
 
-## TODO
-
-- Add production config to minimise and optimise asset files
-- Remove start/build script unless required.
 
 ### Essentials
 
 See [Issues](https://github.com/makoto/blockparty/issues)
+
+### Milestones
+
+#### Hackathon ready (~ 2017 July)
+
+- Requires full name (for registration purpose) when registered.
+- Allow users to swap slots (until x day before) without no/low penalty
+- Sponsor slots (sponsors can register with ether but they have no right to get payout. This is to guarantee extra payout for promotion purpose).
+- Test that it scales up to 100 people
+
+#### Local meetups ready (~ 2017 September)
+
+- Add new event
+- Allow other people to become the owner of the event
+- Dispute period (participants can demand to cancel the event to avoid event owners cheating)
+- Test that it scales up to 200 people
+
+####
 
 ### Wishlists
 
