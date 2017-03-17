@@ -36,7 +36,7 @@ contract Conference is Rejector, Killable {
 		if (msg.value == deposit) {
 			_;
 		}else{
-			if(msg.sender.send(msg.value)){/* not much you can do */}
+			if(!msg.sender.send(msg.value)) throw;
 		}
 	}
 
@@ -50,7 +50,7 @@ contract Conference is Rejector, Killable {
 		if (ended == false) {
 			_;
 		}else{
-			if(msg.sender.send(msg.value)){/*not much you can do*/}
+			if(!msg.sender.send(msg.value)) throw;
 		}
 	}
 
@@ -58,7 +58,7 @@ contract Conference is Rejector, Killable {
 		if (registered < limitOfParticipants ) {
 			_;
 		}else{
-			if(msg.sender.send(msg.value)){/* not much you can do */}
+			if(!msg.sender.send(msg.value)) throw;
 		}
 	}
 
@@ -116,9 +116,10 @@ contract Conference is Rejector, Killable {
 
 	function withdraw() public onlyPayable notPaid {
 		Participant participant = participants[msg.sender];
-		if (msg.sender.send(participant.payout)) {
-			participant.paid = true;
-			totalBalance -= participant.payout;
+		participant.paid = true;
+		totalBalance -= participant.payout;
+		if (!msg.sender.send(participant.payout)) {
+			throw;
 		}
 	}
 
@@ -162,9 +163,9 @@ contract Conference is Rejector, Killable {
 
 	/* return the remaining of balance if there are any unclaimed after cooling period */
 	function clear() public onlyOwner isEnded onlyAfter(endedAt + coolingPeriod) {
-		if(owner.send(totalBalance)){
-			totalBalance = 0;
-		}
+		var leftOver = totalBalance;
+		totalBalance = 0;
+		if(!owner.send(leftOver)) throw;
 	}
 
 	function setLimitOfParticipants(uint _limitOfParticipants) public onlyOwner{
