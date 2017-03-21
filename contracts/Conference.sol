@@ -27,9 +27,12 @@ contract Conference is Rejector, Killable {
 		bool paid;
 	}
 
-	event Register(string participantName, address addr, uint256 balance, uint256 value);
-	event Attend(address addr, uint256 balance);
-	event Payback(address addr, uint256 _payout, uint256 balance, bool paid);
+	event RegisterEvent(address addr, string participantName);
+	event AttendEvent(address addr);
+	event PaybackEvent(address addr, uint256 _payout);
+	event WithdrawEvent(address addr, uint256 _payout);
+	event CancelEvent(address addr, uint256 _payout);
+	event ClearEvent(address addr, uint256 leftOver);
 
 	/* Modifiers */
 	modifier sentDepositOrReturn {
@@ -106,7 +109,7 @@ contract Conference is Rejector, Killable {
 	}
 
 	function register(string _participant) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn payable{
-		Register(_participant, msg.sender, msg.sender.balance, msg.value);
+		RegisterEvent(msg.sender, _participant);
 		if (isRegistered(msg.sender)) throw;
 		registered++;
 		participantsIndex[registered] = msg.sender;
@@ -115,6 +118,7 @@ contract Conference is Rejector, Killable {
 	}
 
 	function withdraw() public onlyPayable notPaid {
+		WithdrawEvent(msg.sender, participant.payout);
 		Participant participant = participants[msg.sender];
 		participant.paid = true;
 		totalBalance -= participant.payout;
@@ -147,6 +151,7 @@ contract Conference is Rejector, Killable {
 		for(uint i=1;i<=registered;i++){
 			if(participants[participantsIndex[i]].attended){
 				participants[participantsIndex[i]].payout = payout();
+				PaybackEvent(participantsIndex[i], payout());
 			}
 		}
 		ended = true;
@@ -156,6 +161,7 @@ contract Conference is Rejector, Killable {
 	function cancel() onlyOwner onlyActive{
 		for(uint i=1;i<=registered;i++){
 			participants[participantsIndex[i]].payout = deposit;
+			CancelEvent(participantsIndex[i], deposit);
 		}
 		ended = true;
 		endedAt = now;
@@ -165,6 +171,7 @@ contract Conference is Rejector, Killable {
 	function clear() public onlyOwner isEnded onlyAfter(endedAt + coolingPeriod) {
 		var leftOver = totalBalance;
 		totalBalance = 0;
+		ClearEvent(owner, leftOver);
 		if(!owner.send(leftOver)) throw;
 	}
 
@@ -177,7 +184,7 @@ contract Conference is Rejector, Killable {
 			var _addr = _addresses[i];
 			if (isRegistered(_addr) != true) throw;
 			if (isAttended(_addr)) throw;
-			Attend(_addr, msg.sender.balance);
+			AttendEvent(_addr);
 			participants[_addr].attended = true;
 			attended++;
 		}
