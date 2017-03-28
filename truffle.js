@@ -7,10 +7,16 @@ module.exports = {
       port: 8545,
       network_id: "*"
     },
-    testnet: {
+    ropsten: {
       host: "localhost",
       port: 8545,
       network_id: 3
+    },
+    kovan: {
+      host: 'localhost',
+      port: 8545,
+      // gas: 4700000,
+      network_id: 42
     },
     mainnet: {
       host: "localhost",
