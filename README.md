@@ -101,9 +101,9 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 - [geth](https://github.com/ethereum/go-ethereum/wiki/geth)
 - [nodejs](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/)
-- [webpack](https://webpack.github.io/) = Make sure you install globally with `npm install webpack -g`
-- [truffle](http://truffle.readthedocs.org) = version 2.0.4
-- [testrpc](https://github.com/ethereumjs/testrpc)
+- [webpack](https://webpack.github.io/)
+- [truffle](http://truffle.readthedocs.org) = version 3.2.1
+- [testrpc](https://github.com/ethereumjs/testrpc) = version 3.0.3
 
 ### Installation
 
