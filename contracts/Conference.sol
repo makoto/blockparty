@@ -94,7 +94,7 @@ contract Conference is Rejector, Killable {
 	/* Public functions */
 
 	function Conference(uint _coolingPeriod) {
-		name = 'Edcon Post conference lunch';
+		name = 'Test';
 		deposit = 1 ether;
 		totalBalance = 0;
 		registered = 0;
