@@ -1,24 +1,19 @@
 var Conference = artifacts.require("Conference.sol");
-
+var invalid_jump_error = /Error: VM Exception while processing transaction: invalid JUMP/;
 contract('Conference', function(accounts) {
   it("should not send money directly", function(done){
-    function sendTransaction(fromAddress, toAddress, ether){
-      return new Promise(function(resolve,reject){
-         web3.eth.sendTransaction({
-           from:fromAddress,
-           to:toAddress,
-           value: web3.toWei(ether, "ether")
-         },function(err, result){
-           resolve(result)
-         })
-       });
-     }
-
-     sendTransaction(accounts[0], Conference.address, 1).
-     then(function(){
-       assert.equal(web3.eth.getBalance(Conference.address).toNumber(), 0)
-       done();
-     }).catch(done);
+    var meta;
+    Conference.new().then(function(_meta) {
+      meta = _meta;
+      return meta.sendTransaction({
+        from:accounts[1], value:web3.toWei(1, "ether")
+      })
+    }).catch(function(error){
+      assert.match(error.toString(), invalid_jump_error);
+    })
+    .then(function() {
+      assert.equal(web3.eth.getBalance(meta.address).toNumber(), 0)
+    }).then(done).catch(done);
   })
 
   describe('on setLimitOfParticipants', function(){
