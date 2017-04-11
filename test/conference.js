@@ -55,15 +55,15 @@ contract('Conference', function(accounts) {
       }).then(function(registered) {
         assert.equal(registered, 2)
         var invalidTransaction = (transaction / 2);
-        beforeAccountBalance = web3.eth.getBalance(accounts[2]);
+        beforeAccountBalance = web3.eth.getBalance(accounts[2]).toNumber();
         // Over capacity as well as wrong deposit value.
         return meta.register.sendTransaction('anotherName', {from: accounts[2], value:invalidTransaction});
       }).then(function() {
         return meta.registered.call();
       }).then(function(registered) {
-        assert.equal(web3.eth.getBalance(meta.address), 2 * transaction);
+        assert.equal(web3.eth.getBalance(meta.address).toNumber(), 2 * transaction);
         // does not become exactly equal because it loses some gas.
-        assert.equal(beforeAccountBalance > web3.eth.getBalance(accounts[2]), true);
+        assert.equal(beforeAccountBalance > web3.eth.getBalance(accounts[2]).toNumber(), true);
       }).then(done).catch(done);
     })
   })
