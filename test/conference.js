@@ -1,4 +1,6 @@
-var Conference = artifacts.require("Conference.sol");
+require('babel-polyfill');
+let Conference = artifacts.require("Conference.sol");
+let InvitationRepository = artifacts.require("./InvitationRepository.sol");
 
 contract('Conference', function(accounts) {
   it("should not send money directly", function(done){
@@ -104,6 +106,27 @@ contract('Conference', function(accounts) {
       }).then(function(value) {
         assert.equal(value, 0);
       }).then(done).catch(done);
+    })
+  })
+
+  describe('register with invitation', function(){
+    it('allows registration only if invited', async function(){
+      let twitterHandle = '@bighero6';
+      let owner = accounts[0];
+      let non_owner = accounts[1];
+      let invitation = await InvitationRepository.new();
+      var transaction = Math.pow(10,18);
+      let invitation_code = web3.fromUtf8('1234567890');
+      let encrypted_code = await invitation.encrypt.call(invitation_code);
+      await invitation.add([encrypted_code], {from:owner});
+      let conference = await Conference.new(600, invitation.address);
+      await conference.registerWithInvitation(twitterHandle, invitation_code, {from:non_owner, value:transaction});
+      let result = await invitation.report.call(invitation_code);
+      assert.equal(result, non_owner);
+    })
+
+    it('does not allow registration if not invited', function(){
+
     })
   })
 
@@ -633,7 +656,7 @@ contract('Conference', function(accounts) {
     })
 
     it('cooling period can be set', function(done){
-      Conference.new(10).then(function(meta) {
+      Conference.new(10, 0).then(function(meta) {
         return meta.coolingPeriod.call();
       }).then(function(coolingPeriod){
         assert.equal(coolingPeriod.toNumber(), 10)
@@ -646,7 +669,7 @@ contract('Conference', function(accounts) {
       var transaction = Math.pow(10,18);
       let owner = accounts[0]
       let nonOwner = accounts[1]
-      Conference.new().then(function(_meta) {
+      Conference.new(10, 0).then(function(_meta) {
         meta = _meta
         return meta.register.sendTransaction('one', {value:transaction});
       }).then(function(){
@@ -699,7 +722,7 @@ contract('Conference', function(accounts) {
       let meta;
       var transaction = Math.pow(10,18);
       let owner = accounts[0]
-      Conference.new(1).then(function(_meta) {
+      Conference.new(1, 0).then(function(_meta) {
         meta = _meta
         return meta.register.sendTransaction('one', {value:transaction});
       }).then(function(){
