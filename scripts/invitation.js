@@ -15,7 +15,7 @@ module.exports = async function(callback) {
     var registered = await invitation.verify(invitation_code);
     if (registered) {
       var claimed = await invitation.report(invitation_code);
-      console.log('invitation_code', invitation_code, ' is already registered', claimed);
+      console.log('invitation_code', invitation_code, ' is already registered. Claimed by ', claimed);
     }else{
       var encrypted_code = await invitation.encrypt.call(invitation_code);
       console.log('Adding', invitation_code, ' as ', encrypted_code);
