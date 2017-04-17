@@ -116,13 +116,23 @@ contract('Conference', function(accounts) {
       let encrypted_code = await invitation.encrypt.call(invitation_code);
       await invitation.add([encrypted_code], {from:owner});
       let conference = await Conference.new(600, invitation.address);
-      await conference.registerWithInvitation(twitterHandle, invitation_code, {from:non_owner, value:transaction});
-      let result = await invitation.report.call(invitation_code);
-      assert.equal(result, non_owner);
+      await conference.registerWithInvitation(twitterHandle, invitation_code, {from:non_owner, value:transaction})
+      let result = await conference.registered.call()
+      assert.equal(result, 1);
+      let report_result = await invitation.report.call(invitation_code);
+      assert.equal(report_result, non_owner);
     })
 
-    it('does not allow registration if not invited', function(){
-
+    it('does not allow registration if not invited', async function(){
+      let twitterHandle = '@bighero6';
+      let owner = accounts[0];
+      let non_owner = accounts[1];
+      let invitation = await InvitationRepository.new();
+      var transaction = Math.pow(10,18);
+      let conference = await Conference.new(600, invitation.address);
+      await conference.registerWithInvitation(twitterHandle, 'invalid_code', {from:non_owner, value:transaction}).catch(function(){});
+      let result = await conference.registered.call()
+      assert.equal(result, 0);
     })
   })
 
