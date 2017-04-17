@@ -14,8 +14,8 @@ contract Conference is Rejector, Killable {
 	bool public ended;
 	uint public endedAt;
 	uint public coolingPeriod;
-	bool invitation;
-	InvitationRepository invitationRepository;
+	bool public invitation;
+	InvitationRepository public invitationRepository;
 
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
