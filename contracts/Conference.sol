@@ -1,4 +1,4 @@
-pragma solidity ^0.4.2;
+pragma solidity ^0.4.8;
 import './InvitationRepository.sol';
 import './zeppelin/Rejector.sol';
 import './zeppelin/Ownable.sol';
@@ -102,7 +102,7 @@ contract Conference is Rejector, Killable {
 	/* Public functions */
 
 	function Conference(uint _coolingPeriod, address _invitation_repository_address) {
-		name = 'Edcon Post conference lunch';
+		name = 'Test';
 		deposit = 1 ether;
 		totalBalance = 0;
 		registered = 0;

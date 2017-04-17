@@ -21,6 +21,7 @@ import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
+import $ from 'jquery';
 
 function setup(){
   return new Promise(function(resolve,reject){

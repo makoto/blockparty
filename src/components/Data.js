@@ -6,6 +6,14 @@ let Data = [
   {
     name: 'Edcon Post conference lunch',
     address: null,
+    date:'TBD',
+    map_url: '',
+    location_text: 'TBD',
+    description_text: "TBD"
+  },
+  {
+    name: 'Edcon Post conference lunch',
+    address: null,
     date:'Feb 19th (Sun) 12:30(UTC+1)',
     map_url: 'https://www.google.co.uk/maps/place/Mama+Shelter+Paris/@48.8597157,2.4006691,17z/data=!4m5!3m4!1s0x47e66d8670ddcb91:0xb81d5c1e065c8167!8m2!3d48.8597122!4d2.4028631',
     location_text: 'Mama Shelter Paris (109 Rue de Bagnolet, 75020 Paris)',

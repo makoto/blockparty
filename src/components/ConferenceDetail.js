@@ -10,9 +10,10 @@ import DirectionIcon from 'material-ui/svg-icons/maps/directions';
 import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
 import math from 'mathjs';
+import $ from 'jquery';
 
 const getEtherIcon = () =>(
-  <Avatar src="https://15254b2dcaab7f5478ab-24461f391e20b7336331d5789078af53.ssl.cf1.rackcdn.com/ethereum.vanillaforums.com/favicon_85d47ba50743e3c3.ico" size={26} backgroundColor="white" />
+  <Avatar src={require('../images/ethereum.ico')} size={26} backgroundColor="white" />
 )
 
 const styles = {
