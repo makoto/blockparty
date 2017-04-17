@@ -41,13 +41,20 @@ class FormInput extends React.Component {
   }
 
   handleAction(actionName) {
-    var arg;
-    if (actionName == 'attend') {
-      arg = this.state.attendees
-    }else{
-      arg = this.state.name
+    var args = [];
+    switch (actionName) {
+      case 'attend':
+        args.push(this.state.attendees);
+        break;
+      case 'register':
+        args.push(this.state.name);
+        break;
+      case 'registerWithInvitation':
+        args.push(this.state.name);
+        args.push(this.state.invitation_code);
+        break;
     }
-    this.props.action(actionName, this.state.address.trim(), arg)
+    this.props.action(actionName, this.state.address.trim(), args)
     this.setState({
       name: null,
       attendees:[]
@@ -91,6 +98,12 @@ class FormInput extends React.Component {
     });
   }
 
+  handleInvitationCode(e) {
+    this.setState({
+      invitation_code: e.target.value,
+    });
+  }
+
   render() {
     let adminButtons, registerButton, warningText;
     if(this.isOwner()){
@@ -123,9 +136,23 @@ class FormInput extends React.Component {
       }else if (availableSpots <= 0){
         registerButton = <span>No more spots left</span>
       }else{
+        console.log('this.state.detail.invitation', this.state.detail.invitation)
+        if (this.state.detail.invitation) {
+          var invitationField =  <TextField
+                      floatingLabelText="invitation code"
+                      floatingLabelFixed={true}
+                      value={this.state.invitation_code}
+                      onChange={this.handleInvitationCode.bind(this)}
+                      style={{margin:'0 5px'}}
+          />
+          var action = 'registerWithInvitation';
+        }else{
+          var action = 'register';
+        }
+        console.log('action', action, invitationField);
         registerButton = <RaisedButton secondary={this.showRegister()} disabled={!this.showRegister()}
           label="Register" style={styles}
-          onClick={this.handleAction.bind(this, 'register')}
+          onClick={this.handleAction.bind(this, action)}
         />
         warningText = <div style={{textAlign:'center', color:'red'}}>Please be aware that you <strong>cannot</strong> cancel once regiesterd. Please read FAQ section at ABOUT page on top right corner for more detail about this service.</div>
       }
@@ -136,6 +163,7 @@ class FormInput extends React.Component {
     return (
       <Paper zDepth={1}>
         <form>
+          {invitationField}
           <TextField
             hintText="@twitter_handle"
             floatingLabelText="Twitter handle"
