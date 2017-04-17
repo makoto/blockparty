@@ -122,13 +122,11 @@ contract Conference is Rejector, Killable {
 		}
 	}
 
-	function registerWithInvitation(string _participant, bytes32 _invitation_code)
-	public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn ifInvited(_invitation_code) payable{
+	function registerWithInvitation(string _participant, bytes32 _invitation_code) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn ifInvited(_invitation_code) payable{
 		register(_participant);
 	}
 
-	function register(string _participant)
-	public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn payable{
+	function register(string _participant) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn payable{
 		RegisterEvent(msg.sender, _participant);
 		if (isRegistered(msg.sender)) throw;
 		registered++;

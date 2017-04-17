@@ -57,7 +57,7 @@ contract('InvitationRepository', function(accounts) {
       let instance = await InvitationRepository.new()
       let encrypted_code = await instance.encrypt.call(invitation_code);
       await instance.add([encrypted_code], {from:owner})
-      await instance.claim(invitation_code, {from:invited_person}).catch(function(){});;
+      await instance.claim(invitation_code, {from:invited_person}).catch(function(){});
       let result = await instance.report.call(invitation_code);
       assert.notEqual(result, invited_person);
     });
