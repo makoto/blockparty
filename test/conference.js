@@ -53,17 +53,17 @@ contract('Conference', function(accounts) {
       }).then(function() {
         return meta.registered.call();
       }).then(function(registered) {
-        assert.equal(registered, 2)
+        assert.equal(registered.toNumber(), 2)
         var invalidTransaction = (transaction / 2);
-        beforeAccountBalance = web3.eth.getBalance(accounts[2]);
+        beforeAccountBalance = web3.eth.getBalance(accounts[2]).toNumber();
         // Over capacity as well as wrong deposit value.
         return meta.register.sendTransaction('anotherName', {from: accounts[2], value:invalidTransaction});
       }).then(function() {
         return meta.registered.call();
       }).then(function(registered) {
-        assert.equal(web3.eth.getBalance(meta.address), 2 * transaction);
+        assert.equal(web3.eth.getBalance(meta.address).toNumber(), 2 * transaction);
         // does not become exactly equal because it loses some gas.
-        assert.equal(beforeAccountBalance > web3.eth.getBalance(accounts[2]), true);
+        assert.equal(beforeAccountBalance > web3.eth.getBalance(accounts[2]).toNumber(), true);
       }).then(done).catch(done);
     })
   })
@@ -81,7 +81,7 @@ contract('Conference', function(accounts) {
       Conference.new().then(function(meta) {
         return meta.registered.call()
       }).then(function(value) {
-        assert.equal(value, 0);
+        assert.equal(value.toNumber(), 0);
       }).then(done).catch(done);
     })
 
@@ -89,7 +89,7 @@ contract('Conference', function(accounts) {
       Conference.new().then(function(meta) {
         return meta.attended.call()
       }).then(function(value) {
-        assert.equal(value, 0);
+        assert.equal(value.toNumber(), 0);
       }).then(done).catch(done);
     })
 
@@ -97,7 +97,7 @@ contract('Conference', function(accounts) {
       Conference.new().then(function(meta) {
         return meta.totalBalance.call()
       }).then(function(value) {
-        assert.equal(value, 0);
+        assert.equal(value.toNumber(), 0);
       }).then(done).catch(done);
     })
   })
@@ -115,7 +115,7 @@ contract('Conference', function(accounts) {
         return meta.registered.call();
       })
       .then(function(value){
-        assert.equal(value, 1);
+        assert.equal(value.toNumber(), 1);
       })
       .then(done).catch(done);
     })
@@ -128,13 +128,13 @@ contract('Conference', function(accounts) {
       var meta;
       Conference.new().then(function(_meta) {
         meta = _meta;
-        beforeContractBalance = web3.eth.getBalance(meta.address);
+        beforeContractBalance = web3.eth.getBalance(meta.address).toNumber();
         return meta.register.sendTransaction(twitterHandle, {value:transaction});
       }).then(function() {
         return meta.totalBalance.call();
       })
       .then(function(value){
-        assert.equal(value.toString() - beforeContractBalance, transaction);
+        assert.equal(value..toNumber() - beforeContractBalance, transaction);
       })
       .then(done).catch(done);
     })
@@ -217,7 +217,7 @@ contract('Conference', function(accounts) {
       }).then(function(){
         return meta.attended.call()
       }).then(function(value){
-        assert.equal(value, 1)
+        assert.equal(value.toNumber(), 1)
       })
       .then(done).catch(done);
     })
@@ -239,7 +239,7 @@ contract('Conference', function(accounts) {
       }).then(function(){
         return meta.attended.call()
       }).then(function(value){
-        assert.equal(value, 0)
+        assert.equal(value.toNumber(), 0)
         return meta.participants.call(accounts[1]);
       }).then(function(participant){
         assert.equal(participant[2], false)
@@ -279,7 +279,7 @@ contract('Conference', function(accounts) {
         return meta.register.sendTransaction(twitterHandle, {from:registered, value:deposit, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         return meta.attend.sendTransaction([registered], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:nonOwner, gas:gas})
@@ -289,7 +289,7 @@ contract('Conference', function(accounts) {
       }).then(function(transaction){
         var receipt = web3.eth.getTransactionReceipt(transaction)
         // money is still left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
       })
       .then(done).catch(done);
     })
@@ -309,7 +309,7 @@ contract('Conference', function(accounts) {
         return meta.register.sendTransaction(twitterHandle, {from:attended, value:transaction, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         return meta.attend.sendTransaction([attended], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:owner, gas:gas})
@@ -318,7 +318,7 @@ contract('Conference', function(accounts) {
         return meta.withdraw.sendTransaction({from:notAttended, gas:gas})
       }).then(function(transaction){
         // money is still left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
       })
       .then(done).catch(done);
     })
@@ -344,7 +344,7 @@ contract('Conference', function(accounts) {
         return meta.register.sendTransaction('@FLAKEY_99p', {from:accounts[2], value:transaction, gas:gas})
       }).then(function(){
         // contract gets 3 ethers
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(3, "ether"))
+        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(3, "ether"))
         // only account 0 and 1 attend
       }).then(function(){
         return meta.attend.sendTransaction([accounts[0]], {gas:gas})
@@ -366,21 +366,21 @@ contract('Conference', function(accounts) {
       }).then(function(transaction){
         assert.equal(balanceDiff(2), 0)
         // no money is left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(0, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(0, "ether"))
         return meta.participants.call(accounts[0]);
       }).then(function(participant){
         // Got some money
-        assert.equal(participant[3], web3.toWei(1.5, "ether"))
+        assert.equal(participant[3].toString(), web3.toWei(1.5, "ether"))
         assert.equal(participant[4], true)
         return meta.participants.call(accounts[1]);
       }).then(function(participant){
         // Got some money
-        assert.equal(participant[3], web3.toWei(1.5, "ether"))
+        assert.equal(participant[3].toString(), web3.toWei(1.5, "ether"))
         assert.equal(participant[4], true)
         return meta.participants.call(accounts[2]);
       }).then(function(participant){
         // Got no money
-        assert.equal(participant[3], 0)
+        assert.equal(participant[3].toString(), "0")
         assert.equal(participant[4], false)
       }).then(done).catch(done);
     })
@@ -398,7 +398,7 @@ contract('Conference', function(accounts) {
         return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         return meta.attend.sendTransaction([accounts[0]], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:owner, gas:gas})
@@ -434,14 +434,14 @@ contract('Conference', function(accounts) {
         return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         // only account 0 and 1 attend
       }).then(function(){
         previousBalances[0] = web3.eth.getBalance(accounts[0]);
         return meta.cancel.sendTransaction({from:nonOwner, gas:gas})
       }).then(function(){
         // money is still left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         // did not get deposit back
         assert.equal(previousBalances[0].toNumber(), web3.eth.getBalance(accounts[0]).toNumber())
       })
@@ -471,7 +471,7 @@ contract('Conference', function(accounts) {
         return meta.register.sendTransaction('@FLAKEY_99p', {from:accounts[2], value:transaction, gas:gas})
       }).then(function(){
         // contract gets 3 ethers
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(3, "ether"))
+        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(3, "ether"))
         // only account 0 and 1 attend
       }).then(function(){
         return meta.attend.sendTransaction([accounts[0], accounts[1]], {gas:gas})
@@ -488,7 +488,7 @@ contract('Conference', function(accounts) {
         return meta.withdraw.sendTransaction({from:accounts[2], gas:gas})
       }).then(function(){
         // no money is left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(0, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(0, "ether"))
         // got deposit back
         assert.equal(balanceDiff(0), 1)
         assert.equal(balanceDiff(1), 1)
@@ -539,7 +539,7 @@ contract('Conference', function(accounts) {
         return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         return meta.attend.sendTransaction([accounts[0]], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:owner, gas:gas})
@@ -576,7 +576,7 @@ contract('Conference', function(accounts) {
         meta = _meta;
         return meta.register.sendTransaction(twitterHandle, {from:registered, value:transaction, gas:gas})
       }).then(function(){
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
       }).then(function(){
         return meta.cancel({from:owner, gas:gas})
       }).then(function(cancel_result){
@@ -584,7 +584,7 @@ contract('Conference', function(accounts) {
         return meta.withdraw({from:notRegistered, gas:gas})
       }).then(function(result){
         // money is still left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
       })
       .then(done).catch(done);
     })
@@ -602,7 +602,7 @@ contract('Conference', function(accounts) {
       }).then(function(){
         return meta.register.sendTransaction(twitterHandle, {from:registered, value:transaction, gas:gas})
       }).then(function(){
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(2, "ether"))
+        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(2, "ether"))
       }).then(function(){
         return meta.cancel.sendTransaction({from:owner, gas:gas})
       }).then(function(){
@@ -611,7 +611,7 @@ contract('Conference', function(accounts) {
         return meta.withdraw.sendTransaction({from:registered, gas:gas})
       }).then(function(transaction){
         // only 1 ether is taken out
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
       })
       .then(done).catch(done);
     })
@@ -645,10 +645,10 @@ contract('Conference', function(accounts) {
         meta = _meta
         return meta.register.sendTransaction('one', {value:transaction});
       }).then(function(){
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         return meta.clear.sendTransaction('one', {from:nonOwner});
       }).then(function(){
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
       })
       .then(done).catch(done);
     })
@@ -661,10 +661,10 @@ contract('Conference', function(accounts) {
         meta = _meta
         return meta.register.sendTransaction('one', {value:transaction});
       }).then(function(){
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         return meta.clear.sendTransaction('one', {from:owner});
       }).then(function(){
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
       })
       .then(done).catch(done);
     })
@@ -682,10 +682,10 @@ contract('Conference', function(accounts) {
         return meta.ended.call()
       }).then(function(ended){
         assert.equal(ended, true)
-        assert.equal( web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         return meta.clear.sendTransaction('one', {from:owner});
       }).then(function(){
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
       })
       .then(done).catch(done);
     })
@@ -703,12 +703,12 @@ contract('Conference', function(accounts) {
         return meta.ended.call()
       }).then(function(ended){
         assert.equal(ended, true)
-        assert.equal(web3.eth.getBalance(meta.address), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
         var previousBalance = web3.eth.getBalance(owner);
         setTimeout(function(){
           meta.clear.sendTransaction('one', {from:owner}).then(function(transaction){
             var receipt = web3.eth.getTransactionReceipt(transaction)
-            assert.equal(web3.eth.getBalance(meta.address).toNumber(), web3.toWei(0, "ether"))
+            assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(0, "ether"))
             done()
           }).catch(done)
         }, 2000)
