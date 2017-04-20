@@ -134,7 +134,7 @@ contract('Conference', function(accounts) {
         return meta.totalBalance.call();
       })
       .then(function(value){
-        assert.equal(value..toNumber() - beforeContractBalance, transaction);
+        assert.equal(value.toNumber() - beforeContractBalance, transaction);
       })
       .then(done).catch(done);
     })
