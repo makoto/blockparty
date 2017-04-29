@@ -1,6 +1,7 @@
 require('babel-polyfill');
 let Conference = artifacts.require("Conference.sol");
 let InvitationRepository = artifacts.require("./InvitationRepository.sol");
+let ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
 let invalid_jump_error = /Error: VM Exception while processing transaction: invalid JUMP/;
 
 contract('Conference', function(accounts) {
@@ -115,7 +116,7 @@ contract('Conference', function(accounts) {
       let invitation_code = web3.fromUtf8('1234567890');
       let encrypted_code = await invitation.encrypt.call(invitation_code);
       await invitation.add([encrypted_code], {from:owner});
-      let conference = await Conference.new(600, invitation.address);
+      let conference = await Conference.new(600, invitation.address,0);
       await conference.registerWithInvitation(twitterHandle, invitation_code, {from:non_owner, value:transaction})
       let result = await conference.registered.call()
       assert.equal(result, 1);
@@ -129,7 +130,7 @@ contract('Conference', function(accounts) {
       let non_owner = accounts[1];
       let invitation = await InvitationRepository.new();
       var transaction = Math.pow(10,18);
-      let conference = await Conference.new(600, invitation.address);
+      let conference = await Conference.new(600, invitation.address, 0);
       await conference.registerWithInvitation(twitterHandle, 'invalid_code', {from:non_owner, value:transaction}).catch(function(){});
       let result = await conference.registered.call()
       assert.equal(result, 0);
@@ -297,6 +298,51 @@ contract('Conference', function(accounts) {
     })
   })
 
+  describe('self attend with code', function(){
+    it('allows participant to attend with code', async function(){
+      let twitterHandle = '@bighero6';
+      let owner = accounts[0];
+      let non_owner = accounts[1];
+      let confirmation = await ConfirmationRepository.new();
+      var transaction = Math.pow(10,18);
+      let confirmation_code = web3.fromUtf8('1234567890');
+      let encrypted_code = await confirmation.encrypt.call(confirmation_code);
+      await confirmation.add([encrypted_code], {from:owner});
+      let verified = await confirmation.verify.call(confirmation_code);
+      assert.equal(verified, true);
+      let conference = await Conference.new(600, 0, confirmation.address);
+      await conference.register(twitterHandle, {from:non_owner, value:transaction})
+      await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
+      let attended = await conference.attended.call()
+      assert.equal(attended, 1);
+      let reported = await confirmation.report.call(confirmation_code);
+      assert.equal(reported, non_owner);
+    })
+
+    it('does not allow participants to attend with same code', async function(){
+      let twitterHandle = '@bighero6';
+      let owner = accounts[0];
+      let non_owner = accounts[1];
+      let non_owner_2 = accounts[2];
+      let confirmation = await ConfirmationRepository.new();
+      var transaction = Math.pow(10,18);
+      let confirmation_code = web3.fromUtf8('1234567890');
+      let encrypted_code = await confirmation.encrypt.call(confirmation_code);
+      await confirmation.add([encrypted_code], {from:owner});
+      let verified = await confirmation.verify.call(confirmation_code);
+      assert.equal(verified, true);
+      let conference = await Conference.new(600, 0, confirmation.address);
+      await conference.register(twitterHandle, {from:non_owner, value:transaction})
+      await conference.register(twitterHandle, {from:non_owner_2, value:transaction})
+      await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
+      await conference.attendWithConfirmation(confirmation_code, {from:non_owner_2}).catch(function(){});
+      let attended = await conference.attended.call()
+      assert.equal(attended, 1);
+      let reported = await confirmation.report.call(confirmation_code);
+      assert.equal(reported, non_owner);
+    })
+  })
+
   describe('on payback', function(){
     // This test is very flakey. Fails when run all together but passes when run alone.
     it('cannot withdraw if non owner calls', function(done){
@@ -358,7 +404,7 @@ contract('Conference', function(accounts) {
     })
 
     it('can withdraw if you attend', function(done){
-      var meta = Conference.deployed();
+      var meta;
       var transaction = web3.toWei(1, "ether");
       var gas = 1000000;
       var previousBalances = [];
@@ -662,7 +708,7 @@ contract('Conference', function(accounts) {
     })
 
     it('cooling period can be set', function(done){
-      Conference.new(10, 0).then(function(meta) {
+      Conference.new(10, 0, 0).then(function(meta) {
         return meta.coolingPeriod.call();
       }).then(function(coolingPeriod){
         assert.equal(coolingPeriod.toNumber(), 10)
@@ -728,7 +774,7 @@ contract('Conference', function(accounts) {
       let meta;
       var transaction = Math.pow(10,18);
       let owner = accounts[0]
-      Conference.new(1, 0).then(function(_meta) {
+      Conference.new(1, 0, 0).then(function(_meta) {
         meta = _meta
         return meta.register.sendTransaction('one', {value:transaction});
       }).then(function(){

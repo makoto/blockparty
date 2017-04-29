@@ -1,5 +1,6 @@
 pragma solidity ^0.4.8;
 import './InvitationRepository.sol';
+import './ConfirmationRepository.sol';
 import './zeppelin/Rejector.sol';
 import './zeppelin/Ownable.sol';
 import './zeppelin/Killable.sol';
@@ -15,7 +16,9 @@ contract Conference is Rejector, Killable {
 	uint public endedAt;
 	uint public coolingPeriod;
 	bool public invitation;
+	bool public confirmation;
 	InvitationRepository public invitationRepository;
+	ConfirmationRepository public confirmationRepository;
 
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
@@ -99,9 +102,14 @@ contract Conference is Rejector, Killable {
 		_;
 	}
 
+	modifier ifConfirmed(bytes32 _code){
+		if(confirmation && !confirmationRepository.claim(_code, msg.sender)) throw;
+		_;
+	}
+
 	/* Public functions */
 
-	function Conference(uint _coolingPeriod, address _invitation_repository_address) {
+	function Conference(uint _coolingPeriod, address _invitation_repository_address, address _confirmation_repository_address) {
 		name = 'Test';
 		deposit = 1 ether;
 		totalBalance = 0;
@@ -110,6 +118,7 @@ contract Conference is Rejector, Killable {
 		limitOfParticipants = 10;
 		ended = false;
 		invitation = false;
+		confirmation = false;
 		if (_coolingPeriod != 0) {
 			coolingPeriod = _coolingPeriod;
 		} else {
@@ -119,6 +128,11 @@ contract Conference is Rejector, Killable {
 		if (_invitation_repository_address !=0) {
 			invitation = true;
 			invitationRepository = InvitationRepository(_invitation_repository_address);
+		}
+
+		if (_confirmation_repository_address !=0) {
+			confirmation = true;
+			confirmationRepository = ConfirmationRepository(_confirmation_repository_address);
 		}
 	}
 
@@ -133,6 +147,14 @@ contract Conference is Rejector, Killable {
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, 0, false);
 		totalBalance = totalBalance + (deposit * 1);
+	}
+
+	function attendWithConfirmation(bytes32 _confirmation) public ifConfirmed(_confirmation){
+		if (isRegistered(msg.sender) != true) throw;
+		if (isAttended(msg.sender)) throw;
+		AttendEvent(msg.sender);
+		participants[msg.sender].attended = true;
+		attended++;
 	}
 
 	function withdraw() public onlyPayable notPaid {
