@@ -129,6 +129,54 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 - Upload the content of files under `build` directory
 
 
+### Invitation code (experimental)
+
+By passing InvitationRepository contract address as the second parameter of Conference during migration, it can force to register with invitation code.
+
+```
+module.exports = function(deployer) {
+  deployer.deploy(InvitationRepository).then(function() {
+    return deployer.deploy(Conference, coolingPeriod, InvitationRepository.address);
+  });
+};
+```
+
+As an example, assume you have the folliwng two invitation codes at `input.txt`
+
+```
+$ cat input.txt
+1234567890
+0987654321
+```
+
+Running `invitation.js` will add the has of these invitation code into the InvitationRepository.
+
+```
+$truffle exec scripts/invitation.js  ../input.txt
+Adding 1234567890  as  0xf654274a8983066b9f810ed158b3fa883c9d26553429193e4aba65b44b76c835
+Adding 0987654321  as  0x295153b1a40cec2698cd2fb0d75c8137a5c43d67ed5e4b7abbd463bc2b0dfac7
+```
+
+If you run the same program again, it will detect.
+
+```
+$ truffle exec scripts/invitation.js  ../input.txt
+Using network 'development'.
+
+invitation_code 1234567890  is already registered. Claimed by 0x0000000000000000000000000000000000000000
+invitation_code 0987654321  is already registered. Claimed by 0x0000000000000000000000000000000000000000
+```
+
+Pass the original invitation codes to the participants. Once participants use the code to register, you can check who used the codes by running the script again.
+
+```
+$ truffle exec scripts/invitation.js  ../input.txt c
+Using network 'development'.
+
+invitation_code 1234567890  is already registered. Claimed by 0x12ff7cfb557a7d0404b694da8d6106e219306a93
+invitation_code 0987654321  is already registered. Claimed by 0xc7ce74c8c7f2e7c5e6d039c5a48fae053ad5c952
+```
+
 ### Essentials
 
 See [Issues](https://github.com/makoto/blockparty/issues)
@@ -137,19 +185,16 @@ See [Issues](https://github.com/makoto/blockparty/issues)
 
 #### Hackathon ready (~ 2017 July)
 
-- Requires full name (for registration purpose) when registered.
-- Allow users to swap slots (until x day before) without no/low penalty
-- Sponsor slots (sponsors can register with ether but they have no right to get payout. This is to guarantee extra payout for promotion purpose).
+- ~~Register with Invitation code~~
 - Test that it scales up to 100 people
 
 #### Local meetups ready (~ 2017 September)
 
+- Register with participant's real name
 - Add new event
 - Allow other people to become the owner of the event
 - Dispute period (participants can demand to cancel the event to avoid event owners cheating)
 - Test that it scales up to 200 people
-
-####
 
 ### Wishlists
 
@@ -163,3 +208,4 @@ See [Issues](https://github.com/makoto/blockparty/issues)
 - Waitlist
 - Transfer my spot
 - Refresh info when someone else register/attend
+- Sponsor slots (sponsors can register with ether but they have no right to get payout. This is to guarantee extra payout for promotion purpose).

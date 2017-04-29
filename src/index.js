@@ -124,7 +124,7 @@ window.onload = function() {
     function getDetail(){
       var values;
       contract.then(function(instance){
-        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants'].map(attributeName => {
+        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'invitation', 'invitationRepository'].map(attributeName => {
           return instance[attributeName].call();
         })).then(_values => {
           values = _values;
@@ -140,6 +140,8 @@ window.onload = function() {
             'owner': values[6],
             'ended': values[7],
             'limitOfParticipants': values[8],
+            'invitation': values[9],
+            'invitationRepository': values[10],
             'contractBalance': web3.fromWei(contractBalance, "ether").toNumber(),
             'date': metadata.date,
             'map_url': metadata.map_url,
@@ -162,6 +164,7 @@ window.onload = function() {
             detail.canRegister = true
             detail.canCancel = true
           }
+          console.log('detail', detail)
           eventEmitter.emit('detail', detail);
         })
       })
@@ -200,16 +203,20 @@ window.onload = function() {
     var gas = 1000000;
     window.gas = gas
     window.eventEmitter = eventEmitter;
-    function action(name, address, argument) {
+    function action(name, address, args) {
       var options = {from:address, gas:window.gas}
       eventEmitter.emit('notification', {status:'info', message:'Requested'});
-      if (name == "register") {
-        options.value = Math.pow(10,18)
+      if (!args) {
+        args = [];
       }
+      if (name == "register" || name == "registerWithInvitation") {
+        options.value = Math.pow(10,18);
+      }
+      args.push(options);
       contract.then(function(instance){
-        return instance[name](argument, options);
+        return instance[name].apply(this, args);
       })
-      .then(function() {
+      .then(function(trx) {
         eventEmitter.emit('notification', {status:'success', message:'Successfully Updated'});
         eventEmitter.emit('change');
         getDetail();

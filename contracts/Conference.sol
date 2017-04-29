@@ -1,4 +1,5 @@
 pragma solidity ^0.4.8;
+import './InvitationRepository.sol';
 import './zeppelin/Rejector.sol';
 import './zeppelin/Ownable.sol';
 import './zeppelin/Killable.sol';
@@ -13,6 +14,8 @@ contract Conference is Rejector, Killable {
 	bool public ended;
 	uint public endedAt;
 	uint public coolingPeriod;
+	bool public invitation;
+	InvitationRepository public invitationRepository;
 
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
@@ -91,9 +94,14 @@ contract Conference is Rejector, Killable {
 		}
 	}
 
+	modifier ifInvited(bytes32 invitation_code){
+		if(invitation && !invitationRepository.claim(invitation_code, msg.sender)) throw;
+		_;
+	}
+
 	/* Public functions */
 
-	function Conference(uint _coolingPeriod) {
+	function Conference(uint _coolingPeriod, address _invitation_repository_address) {
 		name = 'Test';
 		deposit = 1 ether;
 		totalBalance = 0;
@@ -101,11 +109,21 @@ contract Conference is Rejector, Killable {
 		attended = 0;
 		limitOfParticipants = 10;
 		ended = false;
+		invitation = false;
 		if (_coolingPeriod != 0) {
 			coolingPeriod = _coolingPeriod;
 		} else {
 			coolingPeriod = 1 weeks;
 		}
+
+		if (_invitation_repository_address !=0) {
+			invitation = true;
+			invitationRepository = InvitationRepository(_invitation_repository_address);
+		}
+	}
+
+	function registerWithInvitation(string _participant, bytes32 _invitation_code) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn ifInvited(_invitation_code) payable{
+		register(_participant);
 	}
 
 	function register(string _participant) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn payable{
