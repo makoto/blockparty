@@ -1,7 +1,10 @@
 var Conference = artifacts.require("./Conference.sol");
 var InvitationRepository = artifacts.require("./InvitationRepository.sol");
+var ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
+
 var coolingPeriod = 1 * 60 * 60 * 24 * 7;
 var invitationAddress = 0;
+var confirmationAddress = 0;
 // this is already required by truffle;
 var yargs = require('yargs');
 
@@ -9,7 +12,7 @@ var yargs = require('yargs');
 if (yargs.argv.config) {
   var config = JSON.parse(yargs.argv.config);
 }
-
+console.log('config', config);
 module.exports = async function(deployer) {
   if (deployer.network == 'test' || config.invitation) {
     await deployer.deploy(InvitationRepository);
@@ -19,5 +22,5 @@ module.exports = async function(deployer) {
     await deployer.deploy(ConfirmationRepository);
     confirmationAddress = ConfirmationRepository.address;
   }
-  return deployer.deploy(Conference, coolingPeriod, confirmationAddress);
+  return deployer.deploy(Conference, coolingPeriod, invitationAddress, confirmationAddress);
 };
