@@ -129,19 +129,15 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 - Upload the content of files under `build` directory
 
 
-### Invitation code (experimental)
+### Invitation/Confirmation repository code (experimental)
 
-By passing InvitationRepository contract address as the second parameter of Conference during migration, it can force to register with invitation code.
+By passing invitation/confirmation parameter of Conference during migration, it can force to register with invitation code or/and allow user to claim attendance with confirmation code.
 
 ```
-module.exports = function(deployer) {
-  deployer.deploy(InvitationRepository).then(function() {
-    return deployer.deploy(Conference, coolingPeriod, InvitationRepository.address);
-  });
-};
+truffle migrate --config '{"invitation":true, "confirmation":true}' --reset
 ```
 
-As an example, assume you have the folliwng two invitation codes at `input.txt`
+As an example, assume you have the following two codes at `input.txt`
 
 ```
 $ cat input.txt
