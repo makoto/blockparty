@@ -154,6 +154,7 @@ window.onload = function() {
             detail.canAttend = false
             detail.canPayback = false
             detail.canCancel = false
+            detail.canWithdraw = true
           }else{
             if(detail.registered.toNumber() > 0 ){
               detail.canAttend = true
@@ -164,6 +165,7 @@ window.onload = function() {
             }
             detail.canRegister = true
             detail.canCancel = true
+            detail.canWithdraw = false
           }
           console.log('detail', detail)
           eventEmitter.emit('detail', detail);

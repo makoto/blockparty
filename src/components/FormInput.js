@@ -116,6 +116,10 @@ class FormInput extends React.Component {
     return this.state.detail.canAttend
   }
 
+  showWithdraw(){
+    return this.state.detail.canWithdraw && this.participantStatus() == 'won';
+  }
+
   showAttendForAttendant(){
     return this.state.detail.confirmation && this.state.detail.canAttend && this.participantStatus() == 'registered';
   }
@@ -222,6 +226,11 @@ class FormInput extends React.Component {
       />
     }
 
+    var withdrawButton = <RaisedButton secondary={this.showWithdraw()} disabled={!this.showWithdraw()}
+      label="Withdraw" style={styles}
+      onClick={this.handleAction.bind(this, 'withdraw')}
+    />
+
     if (this.showRegister()) {
       var nameField = <TextField
         hintText="@twitter_handle"
@@ -254,6 +263,7 @@ class FormInput extends React.Component {
           </SelectField>
           {registerButton}
           {attendWithConfirmationButton}
+          {withdrawButton}
           {adminButtons}
         </form>
         {warningText}
