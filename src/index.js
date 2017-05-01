@@ -208,12 +208,11 @@ window.onload = function() {
           })
         })
     }
-    // var gas = 1000000;
-    // window.gas = gas
+    var gas = 1000000;
+    window.gas = gas
     window.eventEmitter = eventEmitter;
     function action(name, address, args) {
-      // var options = {from:address, gas:window.gas}
-      var options = {from:address}
+      var options = {from:address, gas:window.gas}
       eventEmitter.emit('notification', {status:'info', message:'Requested'});
       if (!args) {
         args = [];
