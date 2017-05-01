@@ -16,6 +16,7 @@ class FormInput extends React.Component {
       name:null,
       accounts:[],
       attendees:[],
+      participants:[],
       detail:{}
     };
   }
@@ -28,12 +29,17 @@ class FormInput extends React.Component {
       })
     });
 
+    this.props.eventEmitter.on('participants_updated', participants => {
+      this.setState({
+        participants:participants
+      })
+    });
+
     this.props.eventEmitter.on('detail', detail => {
       this.setState({detail:detail});
     })
 
     this.props.eventEmitter.on('attendees', attendees => {
-      console.log('ATTENDEES', attendees)
       this.setState({
         attendees:attendees
       })
@@ -45,6 +51,10 @@ class FormInput extends React.Component {
     switch (actionName) {
       case 'attend':
         args.push(this.state.attendees);
+        break;
+      case 'attendWithConfirmation':
+        args.push(this.state.name);
+        args.push(this.state.confirmation_code);
         break;
       case 'register':
         args.push(this.state.name);
@@ -68,16 +78,46 @@ class FormInput extends React.Component {
     });
   }
 
+  participantStatus(){
+    var p = this.selectParticipant(this.state.participants, this.state.address);
+    if (p) {
+      if (p.attended == false) {
+        return 'registered';
+      }else if(p.attended && p.payout == 0 && !p.paid){
+        return 'attended';
+      }else if (p.attended && p.payout >= 0 && !p.paid){
+        return 'won';
+      }else if (p.paid){
+        return 'withdrawn';
+      }else{
+        console.log('unrecognised', p)
+        return('unrecognised state');
+      }
+    }else{
+      return 'not registered';
+    }
+  }
+
+  selectParticipant(participants, address){
+    return participants.filter(function(p){
+       return p.address == address
+    })[0]
+  }
+
   isOwner(){
     return this.state.accounts.includes(this.state.detail.owner);
   }
 
   showRegister(){
-    return this.state.detail.canRegister
+    return this.state.detail.canRegister && this.participantStatus() == 'not registered';
   }
 
   showAttend(){
     return this.state.detail.canAttend
+  }
+
+  showAttendForAttendant(){
+    return this.state.detail.confirmation && this.state.detail.canAttend && this.participantStatus() == 'registered';
   }
 
   showPayback(){
@@ -104,12 +144,19 @@ class FormInput extends React.Component {
     });
   }
 
+  handleConfirmationCode(e) {
+    this.setState({
+      confirmation_code: e.target.value,
+    });
+  }
+
   render() {
     let adminButtons, registerButton, warningText;
     if(this.isOwner()){
-      adminButtons = <span>
+      adminButtons = <div>
+
         <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
-          label="Attend" style={styles}
+          label="Batch Attend" style={styles}
           onClick={this.handleAction.bind(this, 'attend')}
         />
         <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
@@ -124,7 +171,7 @@ class FormInput extends React.Component {
           label="Clear" style={styles}
           onClick={this.handleAction.bind(this, 'clear')}
         />
-      </span>
+      </div>
     }
 
     var availableSpots = this.state.detail.limitOfParticipants - this.state.detail.registered;
@@ -136,7 +183,6 @@ class FormInput extends React.Component {
       }else if (availableSpots <= 0){
         registerButton = <span>No more spots left</span>
       }else{
-        console.log('this.state.detail.invitation', this.state.detail.invitation)
         if (this.state.detail.invitation) {
           var invitationField =  <TextField
                       floatingLabelText="invitation code"
@@ -149,7 +195,6 @@ class FormInput extends React.Component {
         }else{
           var action = 'register';
         }
-        console.log('action', action, invitationField);
         registerButton = <RaisedButton secondary={this.showRegister()} disabled={!this.showRegister()}
           label="Register" style={styles}
           onClick={this.handleAction.bind(this, action)}
@@ -160,18 +205,40 @@ class FormInput extends React.Component {
       registerButton = <span>No account is set</span>
     }
 
+    if (this.state.detail.confirmation) {
+      if (this.showAttendForAttendant()) {
+        var confirmationField =  <TextField
+                    floatingLabelText="confirmation code"
+                    floatingLabelFixed={true}
+                    value={this.state.confirmation_code}
+                    onChange={this.handleConfirmationCode.bind(this)}
+                    style={{margin:'0 5px'}}
+        />
+      }
+      var action = 'let attendWithConfirmation';
+      var attendWithConfirmationButton = <RaisedButton secondary={this.showAttendForAttendant()} disabled={!this.showAttendForAttendant()}
+        label="Attend" style={styles}
+        onClick={this.handleAction.bind(this, action)}
+      />
+    }
+
+    if (this.showRegister()) {
+      var nameField = <TextField
+        hintText="@twitter_handle"
+        floatingLabelText="Twitter handle"
+        floatingLabelFixed={true}
+        value={this.state.name}
+        onChange={this.handleName.bind(this)}
+        style={{margin:'0 5px'}}
+      />
+    }
+
     return (
       <Paper zDepth={1}>
         <form>
+          {confirmationField}
           {invitationField}
-          <TextField
-            hintText="@twitter_handle"
-            floatingLabelText="Twitter handle"
-            floatingLabelFixed={true}
-            value={this.state.name}
-            onChange={this.handleName.bind(this)}
-            style={{margin:'0 5px'}}
-          />
+          {nameField}
           <SelectField
             value={this.state.address}
             onChange={this.handleSelect.bind(this)}
@@ -186,6 +253,7 @@ class FormInput extends React.Component {
             }
           </SelectField>
           {registerButton}
+          {attendWithConfirmationButton}
           {adminButtons}
         </form>
         {warningText}
