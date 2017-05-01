@@ -182,7 +182,7 @@ class FormInput extends React.Component {
       registerButton = <span>Connect via Mist/Metamask to be able to register.</span>
     }else if(this.state.accounts.length > 0){
       if(this.state.detail.ended){
-        registerButton = <span>This even is over </span>
+        registerButton = <span>This event is over </span>
       }else if (availableSpots <= 0){
         registerButton = <span>No more spots left</span>
       }else{
