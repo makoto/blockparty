@@ -4,7 +4,6 @@ let ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
 let repository;
 let arg = require('yargs').argv;
 
-console.log('args', arg);
 if (!(arg.i && arg.t)) {
   throw('usage: truffle exec scripts/repository.js -t invitation|confirmation -i codes.txt');
 }
@@ -21,11 +20,9 @@ module.exports = async function(callback) {
     default:
       throw('-t must be either invitation or confirmation');
   }
-  console.log(2)
   let codes = fs.readFileSync(file, 'utf8').trim().split('\n');
 
   for (var i = 0; i < codes.length; i++) {
-    console.log('code', codes[i])
     var code = codes[i];
     var registered = await repository.verify(code);
     if (registered) {
