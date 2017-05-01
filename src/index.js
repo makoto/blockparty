@@ -208,17 +208,18 @@ window.onload = function() {
           })
         })
     }
-    var gas = 1000000;
-    window.gas = gas
+    // var gas = 1000000;
+    // window.gas = gas
     window.eventEmitter = eventEmitter;
     function action(name, address, args) {
-      var options = {from:address, gas:window.gas}
+      // var options = {from:address, gas:window.gas}
+      var options = {from:address}
       eventEmitter.emit('notification', {status:'info', message:'Requested'});
       if (!args) {
         args = [];
       }
       if (name == "register" || name == "registerWithInvitation") {
-        options.value = Math.pow(10,18);
+        options.value = Math.pow(10,17);
       }
       args.push(options);
       contract.then(function(instance){

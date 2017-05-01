@@ -111,7 +111,7 @@ contract Conference is Rejector, Killable {
 
 	function Conference(uint _coolingPeriod, address _invitation_repository_address, address _confirmation_repository_address) {
 		name = 'Test';
-		deposit = 1 ether;
+		deposit = 0.1 ether;
 		totalBalance = 0;
 		registered = 0;
 		attended = 0;
