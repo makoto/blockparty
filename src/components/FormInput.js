@@ -53,7 +53,6 @@ class FormInput extends React.Component {
         args.push(this.state.attendees);
         break;
       case 'attendWithConfirmation':
-        args.push(this.state.name);
         args.push(this.state.confirmation_code);
         break;
       case 'register':
@@ -144,13 +143,13 @@ class FormInput extends React.Component {
 
   handleInvitationCode(e) {
     this.setState({
-      invitation_code: e.target.value,
+      invitation_code: e.target.value
     });
   }
 
   handleConfirmationCode(e) {
     this.setState({
-      confirmation_code: e.target.value,
+      confirmation_code: e.target.value
     });
   }
 
@@ -219,7 +218,7 @@ class FormInput extends React.Component {
                     style={{margin:'0 5px'}}
         />
       }
-      var action = 'let attendWithConfirmation';
+      var action = 'attendWithConfirmation';
       var attendWithConfirmationButton = <RaisedButton secondary={this.showAttendForAttendant()} disabled={!this.showAttendForAttendant()}
         label="Attend" style={styles}
         onClick={this.handleAction.bind(this, action)}
