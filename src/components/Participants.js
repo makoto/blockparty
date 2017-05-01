@@ -83,10 +83,6 @@ class Participants extends React.Component {
     if(value) return value.toNumber();
   }
 
-  handleWithdraw(actionName, participantAddress) {
-    this.props.action(actionName, participantAddress)
-  }
-
   handleAttendees(participantAddress, event, isInputChecked){
     // console.log('isInputChecked', isInputChecked);
     if (isInputChecked) {
@@ -139,22 +135,6 @@ class Participants extends React.Component {
     )
   }
 
-  displayWithdrawal(participant){
-    var button
-    if(this.isUser(participant) && participant.payout > 0 && !participant.paid){
-      button =  (
-        <RaisedButton
-          label="Withdraw" secondary={true}
-          onClick={this.handleWithdraw.bind(this, 'withdraw', participant.address)}
-        />
-      )
-    }
-
-    return(
-      button
-    )
-  }
-
   displayParticipants(){
     if(!this.state.detail.name) return(
       <TableRowColumn width={100} >
@@ -198,11 +178,6 @@ class Participants extends React.Component {
                 { this.displayBalance(participant) }
               </span>
             </TableRowColumn>
-            <TableRowColumn width={20} >
-              <span>
-                { this.displayWithdrawal(participant) }
-              </span>
-            </TableRowColumn>
           </TableRow>
         )
       })
@@ -221,7 +196,6 @@ class Participants extends React.Component {
                 <TableHeaderColumn width={50} >Name</TableHeaderColumn>
                 <TableHeaderColumn width={10} >Attended</TableHeaderColumn>
                 <TableHeaderColumn width={20} >Payout</TableHeaderColumn>
-                <TableHeaderColumn width={20} >Action</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody displayRowCheckbox={false}>
