@@ -12,30 +12,22 @@ var yargs = require('yargs');
 if (yargs.argv.config) {
   var config = JSON.parse(yargs.argv.config);
 }
-// This does not seem to write all contract address into build/contracts/*json
-// module.exports = async function(deployer) {
-//   if (deployer.network == 'test' || config.invitation) {
-//     await deployer.deploy(InvitationRepository);
-//     invitationAddress = InvitationRepository.address;
-//   }
-//   if (deployer.network == 'test' || config.confirmation) {
-//     await deployer.deploy(ConfirmationRepository);
-//     confirmationAddress = ConfirmationRepository.address;
-//   }
-//   console.log('Deployment configuration', coolingPeriod, invitationAddress, confirmationAddress);
-//   return deployer.deploy(Conference, coolingPeriod, invitationAddress, confirmationAddress);
-// };
 
 module.exports = function(deployer) {
-  deployer.deploy(InvitationRepository).then(function() {
-    if (deployer.network == 'test' || config.invitation) {
-      invitationAddress = InvitationRepository.address;
-    }
-    return deployer.deploy(ConfirmationRepository);
-  }).then(function(){
-    if (deployer.network == 'test' || config.confirmation) {
-      confirmationAddress = ConfirmationRepository.address;
-    }
-    return deployer.deploy(Conference, coolingPeriod, invitationAddress, confirmationAddress);
-  });
+  deployer
+    .then(() => {
+      if (deployer.network == 'test' || config.invitation) {
+        return deployer.deploy(InvitationRepository)
+          .then(instance => invitationAddress = InvitationRepository.address);
+      }
+    })
+    .then(() => {
+      if (deployer.network == 'test' || config.confirmation) {
+        return deployer.deploy(ConfirmationRepository)
+          .then(instance => confirmationAddress = ConfirmationRepository.address);
+      }
+    })
+    .then(() => {
+      return deployer.deploy(Conference, coolingPeriod, invitationAddress, confirmationAddress);
+    })
 };
