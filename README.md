@@ -114,7 +114,7 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 ### Running test
 
 - Run `testrpc` in one console
-- Run `truffle test`
+- Run `truffle test --network test`
 
 ### Running locally
 
