@@ -1,6 +1,7 @@
 require('babel-polyfill');
 let Conference = artifacts.require("Conference.sol");
 let InvitationRepository = artifacts.require("./InvitationRepository.sol");
+let ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
 let invalid_jump_error = /Error: VM Exception while processing transaction: invalid JUMP/;
 
 contract('Conference', function(accounts) {
@@ -21,7 +22,7 @@ contract('Conference', function(accounts) {
 
   describe('on setLimitOfParticipants', function(){
     it('does not allow to register more than the limit', function(done){
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
@@ -42,7 +43,7 @@ contract('Conference', function(accounts) {
     })
 
     it('returns only your deposit for multiple invalidations', function(done){
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       var twitterHandle = '@bighero6';
       var meta;
       var beforeAccountBalance;
@@ -111,11 +112,11 @@ contract('Conference', function(accounts) {
       let owner = accounts[0];
       let non_owner = accounts[1];
       let invitation = await InvitationRepository.new();
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       let invitation_code = web3.fromUtf8('1234567890');
       let encrypted_code = await invitation.encrypt.call(invitation_code);
       await invitation.add([encrypted_code], {from:owner});
-      let conference = await Conference.new(600, invitation.address);
+      let conference = await Conference.new(600, invitation.address,0);
       await conference.registerWithInvitation(twitterHandle, invitation_code, {from:non_owner, value:transaction})
       let result = await conference.registered.call()
       assert.equal(result, 1);
@@ -128,8 +129,8 @@ contract('Conference', function(accounts) {
       let owner = accounts[0];
       let non_owner = accounts[1];
       let invitation = await InvitationRepository.new();
-      var transaction = Math.pow(10,18);
-      let conference = await Conference.new(600, invitation.address);
+      var transaction = Math.pow(10,17);
+      let conference = await Conference.new(600, invitation.address, 0);
       await conference.registerWithInvitation(twitterHandle, 'invalid_code', {from:non_owner, value:transaction}).catch(function(){});
       let result = await conference.registered.call()
       assert.equal(result, 0);
@@ -139,7 +140,7 @@ contract('Conference', function(accounts) {
   describe('on registration', function(){
     it('increments registered', function(done){
       var account = accounts[0]
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
@@ -157,7 +158,7 @@ contract('Conference', function(accounts) {
     it('increases balance', function(done){
       var account = accounts[0]
       var beforeContractBalance;
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
@@ -175,7 +176,7 @@ contract('Conference', function(accounts) {
 
     it('isRegistered for the registered account is true', function(done){
       var account = accounts[0]
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
@@ -191,7 +192,7 @@ contract('Conference', function(accounts) {
     })
 
     it('isRegistered for the different account is not true', function(done){
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
@@ -233,7 +234,7 @@ contract('Conference', function(accounts) {
 
   describe('on attend', function(){
     it('isAttended is true if owner calls attend function', function(done){
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       var twitterHandle = '@bighero6';
       var owner = accounts[0]
       var meta;
@@ -257,7 +258,7 @@ contract('Conference', function(accounts) {
     })
 
     it('isAttended is false if non owner calls attend function', function(done){
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       var twitterHandle = '@bighero6';
       var meta;
       var owner = accounts[0]
@@ -282,7 +283,7 @@ contract('Conference', function(accounts) {
     })
 
     it('isAttended is false if attended function for the account is not called', function(done){
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
@@ -294,6 +295,51 @@ contract('Conference', function(accounts) {
         assert.equal(value, false)
       })
       .then(done).catch(done);
+    })
+  })
+
+  describe('self attend with code', function(){
+    it('allows participant to attend with code', async function(){
+      let twitterHandle = '@bighero6';
+      let owner = accounts[0];
+      let non_owner = accounts[1];
+      let confirmation = await ConfirmationRepository.new();
+      var transaction = Math.pow(10,17);
+      let confirmation_code = web3.fromUtf8('1234567890');
+      let encrypted_code = await confirmation.encrypt.call(confirmation_code);
+      await confirmation.add([encrypted_code], {from:owner});
+      let verified = await confirmation.verify.call(confirmation_code);
+      assert.equal(verified, true);
+      let conference = await Conference.new(600, 0, confirmation.address);
+      await conference.register(twitterHandle, {from:non_owner, value:transaction})
+      await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
+      let attended = await conference.attended.call()
+      assert.equal(attended, 1);
+      let reported = await confirmation.report.call(confirmation_code);
+      assert.equal(reported, non_owner);
+    })
+
+    it('does not allow participants to attend with same code', async function(){
+      let twitterHandle = '@bighero6';
+      let owner = accounts[0];
+      let non_owner = accounts[1];
+      let non_owner_2 = accounts[2];
+      let confirmation = await ConfirmationRepository.new();
+      var transaction = Math.pow(10,17);
+      let confirmation_code = web3.fromUtf8('1234567890');
+      let encrypted_code = await confirmation.encrypt.call(confirmation_code);
+      await confirmation.add([encrypted_code], {from:owner});
+      let verified = await confirmation.verify.call(confirmation_code);
+      assert.equal(verified, true);
+      let conference = await Conference.new(600, 0, confirmation.address);
+      await conference.register(twitterHandle, {from:non_owner, value:transaction})
+      await conference.register(twitterHandle, {from:non_owner_2, value:transaction})
+      await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
+      await conference.attendWithConfirmation(confirmation_code, {from:non_owner_2}).catch(function(){});
+      let attended = await conference.attended.call()
+      assert.equal(attended, 1);
+      let reported = await confirmation.report.call(confirmation_code);
+      assert.equal(reported, non_owner);
     })
   })
 
@@ -358,7 +404,7 @@ contract('Conference', function(accounts) {
     })
 
     it('can withdraw if you attend', function(done){
-      var meta = Conference.deployed();
+      var meta;
       var transaction = web3.toWei(1, "ether");
       var gas = 1000000;
       var previousBalances = [];
@@ -662,7 +708,7 @@ contract('Conference', function(accounts) {
     })
 
     it('cooling period can be set', function(done){
-      Conference.new(10, 0).then(function(meta) {
+      Conference.new(10, 0, 0).then(function(meta) {
         return meta.coolingPeriod.call();
       }).then(function(coolingPeriod){
         assert.equal(coolingPeriod.toNumber(), 10)
@@ -672,7 +718,7 @@ contract('Conference', function(accounts) {
 
     it('cannot be cleared by non owner', function(done){
       let meta;
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       let owner = accounts[0]
       let nonOwner = accounts[1]
       Conference.new(10, 0).then(function(_meta) {
@@ -689,7 +735,7 @@ contract('Conference', function(accounts) {
 
     it('cannot be cleared if event is not ended', function(done){
       let meta;
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       let owner = accounts[0]
       Conference.new().then(function(_meta) {
         meta = _meta
@@ -705,7 +751,7 @@ contract('Conference', function(accounts) {
 
     it('cannot be cleared if cooling period is not passed', function(done){
       let meta;
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       let owner = accounts[0]
       Conference.new().then(function(_meta) {
         meta = _meta
@@ -726,9 +772,9 @@ contract('Conference', function(accounts) {
 
     it('owner receives the remaining if cooling period is passed', function(done){
       let meta;
-      var transaction = Math.pow(10,18);
+      var transaction = Math.pow(10,17);
       let owner = accounts[0]
-      Conference.new(1, 0).then(function(_meta) {
+      Conference.new(1, 0, 0).then(function(_meta) {
         meta = _meta
         return meta.register.sendTransaction('one', {value:transaction});
       }).then(function(){

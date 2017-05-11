@@ -23,6 +23,7 @@ module.exports = {
       port: 8545,
       network_id: 1,
       gas: 1990000,
+      gasPrice: 2000000000, // 2 gwei
       from: '0xFa6F2D7cC987d592556ac07392b9d6395bfcc379'
     }
   }

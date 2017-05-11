@@ -129,19 +129,15 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 - Upload the content of files under `build` directory
 
 
-### Invitation code (experimental)
+### Invitation/Confirmation repository code (experimental)
 
-By passing InvitationRepository contract address as the second parameter of Conference during migration, it can force to register with invitation code.
+By passing invitation/confirmation parameter of Conference during migration, it can force to register with invitation code or/and allow user to claim attendance with confirmation code.
 
 ```
-module.exports = function(deployer) {
-  deployer.deploy(InvitationRepository).then(function() {
-    return deployer.deploy(Conference, coolingPeriod, InvitationRepository.address);
-  });
-};
+truffle migrate --config '{"invitation":true, "confirmation":true}' --reset
 ```
 
-As an example, assume you have the folliwng two invitation codes at `input.txt`
+As an example, assume you have the following two codes at `input.txt`
 
 ```
 $ cat input.txt
@@ -152,7 +148,7 @@ $ cat input.txt
 Running `invitation.js` will add the has of these invitation code into the InvitationRepository.
 
 ```
-$truffle exec scripts/invitation.js  ../input.txt
+$truffle exec scripts/repository.js -t invitation -i input.txt
 Adding 1234567890  as  0xf654274a8983066b9f810ed158b3fa883c9d26553429193e4aba65b44b76c835
 Adding 0987654321  as  0x295153b1a40cec2698cd2fb0d75c8137a5c43d67ed5e4b7abbd463bc2b0dfac7
 ```
@@ -160,21 +156,21 @@ Adding 0987654321  as  0x295153b1a40cec2698cd2fb0d75c8137a5c43d67ed5e4b7abbd463b
 If you run the same program again, it will detect.
 
 ```
-$ truffle exec scripts/invitation.js  ../input.txt
+$truffle exec scripts/repository.js -t invitation -i input.txt
 Using network 'development'.
 
-invitation_code 1234567890  is already registered. Claimed by 0x0000000000000000000000000000000000000000
-invitation_code 0987654321  is already registered. Claimed by 0x0000000000000000000000000000000000000000
+code 1234567890  is already registered. Claimed by  0x0000000000000000000000000000000000000000
+code 0987654321  is already registered. Claimed by  0x0000000000000000000000000000000000000000
 ```
 
 Pass the original invitation codes to the participants. Once participants use the code to register, you can check who used the codes by running the script again.
 
 ```
-$ truffle exec scripts/invitation.js  ../input.txt c
+$truffle exec scripts/repository.js -t invitation -i input.txt
 Using network 'development'.
 
-invitation_code 1234567890  is already registered. Claimed by 0x12ff7cfb557a7d0404b694da8d6106e219306a93
-invitation_code 0987654321  is already registered. Claimed by 0xc7ce74c8c7f2e7c5e6d039c5a48fae053ad5c952
+code 1234567890  is already registered. Claimed by 0x12ff7cfb557a7d0404b694da8d6106e219306a93
+code 0987654321  is already registered. Claimed by 0xc7ce74c8c7f2e7c5e6d039c5a48fae053ad5c952
 ```
 
 ### Essentials

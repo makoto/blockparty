@@ -22,9 +22,9 @@ contract InvitationRepository is Ownable{
     }
   }
 
-  function claim(bytes32 _invitationCode, address _sender) returns(bool){
-    LogEvent('claim', _invitationCode);
-    var code = codes[encrypt(_invitationCode)];
+  function claim(bytes32 _code, address _sender) returns(bool){
+    LogEvent('claim', _code);
+    var code = codes[encrypt(_code)];
     if(code.exist && !code.claimed){
       code.claimed = true;
       code.participant = _sender;
@@ -34,15 +34,15 @@ contract InvitationRepository is Ownable{
     return true;
   }
 
-  function encrypt(bytes32 _invitationCode) constant returns(bytes32){
-    return sha3(_invitationCode);
+  function encrypt(bytes32 _code) constant returns(bytes32){
+    return sha3(_code);
   }
 
-  function verify(bytes32 _invitationCode) constant returns(bool){
-    return codes[encrypt(_invitationCode)].exist;
+  function verify(bytes32 _code) constant returns(bool){
+    return codes[encrypt(_code)].exist;
   }
 
-  function report(bytes32 _invitationCode) constant returns(address){
-    return codes[encrypt(_invitationCode)].participant;
+  function report(bytes32 _code) constant returns(address){
+    return codes[encrypt(_code)].participant;
   }
 }

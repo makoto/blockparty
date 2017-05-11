@@ -7,7 +7,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract'
 import artifacts from '../build/contracts/Conference.json'
-
 import ConferenceDetail from './components/ConferenceDetail';
 import FormInput from './components/FormInput';
 import Notification from './components/Notification';
@@ -124,7 +123,7 @@ window.onload = function() {
     function getDetail(){
       var values;
       contract.then(function(instance){
-        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'invitation', 'invitationRepository'].map(attributeName => {
+        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'invitation', 'invitationRepository', 'confirmation', 'confirmationRepository'].map(attributeName => {
           return instance[attributeName].call();
         })).then(_values => {
           values = _values;
@@ -142,6 +141,8 @@ window.onload = function() {
             'limitOfParticipants': values[8],
             'invitation': values[9],
             'invitationRepository': values[10],
+            'confirmation': values[11],
+            'confirmationRepository': values[12],
             'contractBalance': web3.fromWei(contractBalance, "ether").toNumber(),
             'date': metadata.date,
             'map_url': metadata.map_url,
@@ -153,6 +154,7 @@ window.onload = function() {
             detail.canAttend = false
             detail.canPayback = false
             detail.canCancel = false
+            detail.canWithdraw = true
           }else{
             if(detail.registered.toNumber() > 0 ){
               detail.canAttend = true
@@ -163,6 +165,7 @@ window.onload = function() {
             }
             detail.canRegister = true
             detail.canCancel = true
+            detail.canWithdraw = false
           }
           console.log('detail', detail)
           eventEmitter.emit('detail', detail);
@@ -197,7 +200,12 @@ window.onload = function() {
               }
               return object
             })
-          }).then(participant => { if(participant) callback(participant); })
+          }).then(participant => {
+            if(participant) {
+              eventEmitter.emit('participants_updated', participant);
+              callback(participant);
+            }
+          })
         })
     }
     var gas = 1000000;
@@ -210,7 +218,7 @@ window.onload = function() {
         args = [];
       }
       if (name == "register" || name == "registerWithInvitation") {
-        options.value = Math.pow(10,18);
+        options.value = Math.pow(10,17);
       }
       args.push(options);
       contract.then(function(instance){
