@@ -241,26 +241,14 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('isAttended is false if non owner calls attend function', function(done){
-      var meta;
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {value:deposit});
-      }).then(function() {
-        return meta.attend.sendTransaction([accounts[1]], {from:accounts[1]})
-      }).then(function(){
-        return meta.isAttended.call(accounts[1])
-      }).then(function(value){
-        assert.equal(value, false)
-      }).then(function(){
-        return meta.attended.call()
-      }).then(function(value){
-        assert.equal(value.toNumber(), 0)
-        return meta.participants.call(accounts[1]);
-      }).then(function(participant){
-        assert.equal(participant[2], false)
-      })
-      .then(done).catch(done);
+    it('isAttended is false if non owner calls attend function', async function(){
+      let conference = await Conference.new();
+      await conference.register(twitterHandle, {value:deposit});
+      await conference.attend([non_owner], {from:non_owner}).catch(function(){});
+      assert.equal(await conference.isAttended.call(non_owner), false);
+      assert.equal(await conference.attended.call(), 0);
+      var participant = await conference.participants.call(non_owner);
+      assert.equal(participant[2], false)
     })
 
     it('isAttended is false if attended function for the account is not called', function(done){
@@ -316,29 +304,18 @@ contract('Conference', function(accounts) {
 
   describe('on payback', function(){
     // This test is very flakey. Fails when run all together but passes when run alone.
-    it('cannot withdraw if non owner calls', function(done){
-      var meta
+    it('cannot withdraw if non owner calls', async function(){
       var previousBalances = [];
-      var nonOwner = accounts[1];
       var registered = accounts[2]
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:registered, value:deposit, gas:gas})
-      }).then(function(){
-        // contract gets 1 ether
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-        return meta.attend.sendTransaction([registered], {gas:gas})
-      }).then(function(){
-        return meta.payback.sendTransaction({from:nonOwner, gas:gas})
-      }).then(function(){
-        previousBalances[0] = web3.eth.getBalance(registered);
-        return meta.withdraw.sendTransaction({from:registered, gas:gas})
-      }).then(function(transaction){
-        var receipt = web3.eth.getTransactionReceipt(transaction)
-        // money is still left on contract
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-      })
-      .then(done).catch(done);
+      let conference = await Conference.new()
+      await conference.register(twitterHandle, {from:registered, value:deposit, gas:gas})
+      // contract gets 1 ether
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit)
+      await conference.attend([registered], {gas:gas})
+      await conference.payback({from:non_owner, gas:gas}).catch(function(){});
+      await conference.withdraw({from:registered, gas:gas});
+      // money is still left on contract
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit)
     })
 
     it('cannot withdraw if you did not attend', function(done){
@@ -455,28 +432,19 @@ contract('Conference', function(accounts) {
   })
 
   describe('on cancel', function(){
-    it('cannot be canceld if non owner calls', function(done){
-      var meta
-      var previousBalances = [];
-      var nonOwner = accounts[1];
-
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
-      }).then(function(){
-        // contract gets 1 ether
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-        // only account 0 and 1 attend
-      }).then(function(){
-        previousBalances[0] = web3.eth.getBalance(accounts[0]);
-        return meta.cancel.sendTransaction({from:nonOwner, gas:gas})
-      }).then(function(){
-        // money is still left on contract
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-        // did not get deposit back
-        assert.strictEqual(previousBalances[0].toNumber(), web3.eth.getBalance(accounts[0]).toNumber())
-      })
-      .then(done).catch(done);
+    it('cannot be canceld if non owner calls', async function(){
+      let previousBalances = [];
+      let conference = await Conference.new();
+      await conference.register(twitterHandle, {from:owner, value:deposit, gas:gas});
+      // contract gets 1 ether
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
+      // only account 0 and 1 attend
+      previousBalances[0] = web3.eth.getBalance(owner);
+      await conference.cancel({from:non_owner, gas:gas}).catch(function(){});
+      // money is still left on contract
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
+      // did not get deposit back
+      assert.strictEqual(previousBalances[0].toNumber(), web3.eth.getBalance(accounts[0]).toNumber());
     })
 
     it('everybody receives refund', function(done){
@@ -648,19 +616,12 @@ contract('Conference', function(accounts) {
       .then(done).catch(done);
     })
 
-    it('cannot be cleared by non owner', function(done){
-      let meta;
-      let nonOwner = accounts[1]
-      Conference.new(10, 0).then(function(_meta) {
-        meta = _meta
-        return meta.register.sendTransaction('one', {value:deposit});
-      }).then(function(){
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-        return meta.clear.sendTransaction('one', {from:nonOwner});
-      }).then(function(){
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-      })
-      .then(done).catch(done);
+    it('cannot be cleared by non owner', async function(){
+      let conference = await Conference.new(10, 0);
+      await conference.register('one', {value:deposit});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
+      await conference.clear('one', {from:non_owner}).catch(function(){});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
     })
 
     it('cannot be cleared if event is not ended', function(done){
