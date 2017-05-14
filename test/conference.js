@@ -367,44 +367,41 @@ contract('Conference', function(accounts) {
     })
 
     it('can withdraw if you attend', function(done){
-      var meta;
-      var previousBalances = [];
+      var meta, previousBalance;
 
-      var balanceDiff = function(index){
-        var realDiff = web3.fromWei(web3.eth.getBalance(accounts[index]).minus(previousBalances[index]), "ether");
-        var roundedDiff = Math.round(realDiff * 10) / 10;
-        return roundedDiff;
-      }
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
+        return meta.register(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
       }).then(function() {
-        return meta.register.sendTransaction('@Cpt_Reliable', {from:accounts[1], value:deposit, gas:gas})
+        return meta.register('@Cpt_Reliable', {from:accounts[1], value:deposit, gas:gas})
       }).then(function(){
-        return meta.register.sendTransaction('@FLAKEY_99p', {from:accounts[2], value:deposit, gas:gas})
+        return meta.register('@FLAKEY_99p', {from:accounts[2], value:deposit, gas:gas})
       }).then(function(){
         // contract gets 3 ethers
         assert.strictEqual( web3.eth.getBalance(meta.address).toNumber(), deposit * 3)
         // only account 0 and 1 attend
       }).then(function(){
-        return meta.attend.sendTransaction([accounts[0]], {gas:gas})
+        return meta.attend([accounts[0]], {gas:gas})
       }).then(function(){
-        return meta.attend.sendTransaction([accounts[1]], {gas:gas})
+        return meta.attend([accounts[1]], {gas:gas})
       }).then(function(){
-        return meta.payback.sendTransaction({from:accounts[0], gas:gas})
+        return meta.payback({from:accounts[0], gas:gas})
       }).then(function(){
-        previousBalances[0] = web3.eth.getBalance(accounts[0]);
-        previousBalances[1] = web3.eth.getBalance(accounts[1]);
-        previousBalances[2] = web3.eth.getBalance(accounts[2]);
-        return meta.withdraw.sendTransaction({from:accounts[0]})
-      }).then(function(transaction){
-        assert.equal(balanceDiff(0), 1.5)
-        return meta.withdraw.sendTransaction({from:accounts[1]})
-      }).then(function(transaction){
-        assert.equal(balanceDiff(1), 1.5)
-        return meta.withdraw.sendTransaction({from:accounts[2]})
-      }).then(function(transaction){
-        assert.equal(balanceDiff(2), 0)
+        previousBalance = web3.eth.getBalance(accounts[0]);
+        return meta.withdraw({from:accounts[0]})
+      }).then(function(result){
+        var diff = web3.eth.getBalance(accounts[0]).toNumber() - previousBalance.toNumber()
+        assert( diff > (deposit * 1.4))
+        previousBalance = web3.eth.getBalance(accounts[1]);
+        return meta.withdraw({from:accounts[1]})
+      }).then(function(result){
+        var diff = web3.eth.getBalance(accounts[1]).toNumber() - previousBalance.toNumber()
+        assert( diff > (deposit * 1.4))
+        previousBalance = web3.eth.getBalance(accounts[2]);
+        return meta.withdraw({from:accounts[2]})
+      }).then(function(result){
+        var diff = web3.eth.getBalance(accounts[0]).toNumber() - previousBalance.toNumber()
+        assert( diff < 0)
         // no money is left on contract
         assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
         return meta.participants.call(accounts[0]);
@@ -412,7 +409,6 @@ contract('Conference', function(accounts) {
         // Got some money
         assert.strictEqual(participant[3].toNumber(), deposit * 1.5)
         assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
-
         assert.equal(participant[4], true)
         return meta.participants.call(accounts[1]);
       }).then(function(participant){
