@@ -14,15 +14,16 @@ if (yargs.argv.config) {
 }
 
 module.exports = function(deployer) {
+  if (deployer.network == 'test') return 'no need to deploy contract';
   deployer
     .then(() => {
-      if (deployer.network == 'test' || config.invitation) {
+      if (config.invitation) {
         return deployer.deploy(InvitationRepository)
           .then(instance => invitationAddress = InvitationRepository.address);
       }
     })
     .then(() => {
-      if (deployer.network == 'test' || config.confirmation) {
+      if (config.confirmation) {
         return deployer.deploy(ConfirmationRepository)
           .then(instance => confirmationAddress = ConfirmationRepository.address);
       }

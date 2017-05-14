@@ -1,10 +1,16 @@
 require('babel-polyfill');
-let Conference = artifacts.require("Conference.sol");
-let InvitationRepository = artifacts.require("./InvitationRepository.sol");
-let ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
-let invalid_jump_error = /Error: VM Exception while processing transaction: invalid JUMP/;
+const Conference = artifacts.require("Conference.sol");
+const InvitationRepository = artifacts.require("./InvitationRepository.sol");
+const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
+const invalid_jump_error = /Error: VM Exception while processing transaction: invalid JUMP/;
+const deposit = Math.pow(10,17);
+const twitterHandle = '@bighero6';
+const gas = 1000000;
 
 contract('Conference', function(accounts) {
+  const owner = accounts[0];
+  const non_owner = accounts[1];
+
   it("should not send money directly", function(done){
     var meta;
     Conference.new().then(function(_meta) {
@@ -22,19 +28,17 @@ contract('Conference', function(accounts) {
 
   describe('on setLimitOfParticipants', function(){
     it('does not allow to register more than the limit', function(done){
-      var transaction = Math.pow(10,17);
-      var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
         meta = _meta;
         return meta.setLimitOfParticipants.sendTransaction(1)
       }).then(function() {
-        return meta.register.sendTransaction(twitterHandle, {value:transaction});
+        return meta.register.sendTransaction(twitterHandle, {value:deposit});
       }).then(function() {
         return meta.registered.call();
       }).then(function(registered) {
         assert.equal(registered, 1)
-        return meta.register.sendTransaction('anotherName', {from: accounts[1], value:transaction});
+        return meta.register.sendTransaction('anotherName', {from: accounts[1], value:deposit});
       }).then(function() {
         return meta.registered.call();
       }).then(function(registered) {
@@ -43,29 +47,27 @@ contract('Conference', function(accounts) {
     })
 
     it('returns only your deposit for multiple invalidations', function(done){
-      var transaction = Math.pow(10,17);
-      var twitterHandle = '@bighero6';
       var meta;
       var beforeAccountBalance;
       Conference.new().then(function(_meta) {
         meta = _meta;
         return meta.setLimitOfParticipants.sendTransaction(2)
       }).then(function() {
-        return meta.register.sendTransaction(twitterHandle, {value:transaction});
+        return meta.register.sendTransaction(twitterHandle, {value:deposit});
       }).then(function() {
-        return meta.register.sendTransaction('anotherName', {from: accounts[1], value:transaction});
+        return meta.register.sendTransaction('anotherName', {from: accounts[1], value:deposit});
       }).then(function() {
         return meta.registered.call();
       }).then(function(registered) {
         assert.equal(registered.toNumber(), 2)
-        var invalidTransaction = (transaction / 2);
+        var invalidTransaction = (deposit / 2);
         beforeAccountBalance = web3.eth.getBalance(accounts[2]).toNumber();
         // Over capacity as well as wrong deposit value.
         return meta.register.sendTransaction('anotherName', {from: accounts[2], value:invalidTransaction});
       }).then(function() {
         return meta.registered.call();
       }).then(function(registered) {
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), 2 * transaction);
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 2 * deposit);
         // does not become exactly equal because it loses some gas.
         assert.equal(beforeAccountBalance > web3.eth.getBalance(accounts[2]).toNumber(), true);
       }).then(done).catch(done);
@@ -108,16 +110,12 @@ contract('Conference', function(accounts) {
 
   describe('register with invitation', function(){
     it('allows registration only if invited', async function(){
-      let twitterHandle = '@bighero6';
-      let owner = accounts[0];
-      let non_owner = accounts[1];
       let invitation = await InvitationRepository.new();
-      var transaction = Math.pow(10,17);
       let invitation_code = web3.fromUtf8('1234567890');
       let encrypted_code = await invitation.encrypt.call(invitation_code);
       await invitation.add([encrypted_code], {from:owner});
       let conference = await Conference.new(600, invitation.address,0);
-      await conference.registerWithInvitation(twitterHandle, invitation_code, {from:non_owner, value:transaction})
+      await conference.registerWithInvitation(twitterHandle, invitation_code, {from:non_owner, value:deposit})
       let result = await conference.registered.call()
       assert.equal(result, 1);
       let report_result = await invitation.report.call(invitation_code);
@@ -129,9 +127,9 @@ contract('Conference', function(accounts) {
       let owner = accounts[0];
       let non_owner = accounts[1];
       let invitation = await InvitationRepository.new();
-      var transaction = Math.pow(10,17);
+      var deposit = Math.pow(10,17);
       let conference = await Conference.new(600, invitation.address, 0);
-      await conference.registerWithInvitation(twitterHandle, 'invalid_code', {from:non_owner, value:transaction}).catch(function(){});
+      await conference.registerWithInvitation(twitterHandle, 'invalid_code', {from:non_owner, value:deposit}).catch(function(){});
       let result = await conference.registered.call()
       assert.equal(result, 0);
     })
@@ -139,13 +137,10 @@ contract('Conference', function(accounts) {
 
   describe('on registration', function(){
     it('increments registered', function(done){
-      var account = accounts[0]
-      var transaction = Math.pow(10,17);
-      var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {value:transaction});
+        return meta.register.sendTransaction(twitterHandle, {value:deposit});
       }).then(function() {
         return meta.registered.call();
       })
@@ -156,32 +151,27 @@ contract('Conference', function(accounts) {
     })
 
     it('increases balance', function(done){
-      var account = accounts[0]
-      var beforeContractBalance;
-      var transaction = Math.pow(10,17);
-      var twitterHandle = '@bighero6';
       var meta;
+      var beforeContractBalance;
       Conference.new().then(function(_meta) {
         meta = _meta;
         beforeContractBalance = web3.eth.getBalance(meta.address).toNumber();
-        return meta.register.sendTransaction(twitterHandle, {value:transaction});
+        return meta.register.sendTransaction(twitterHandle, {value:deposit});
       }).then(function() {
         return meta.totalBalance.call();
       })
       .then(function(value){
-        assert.equal(value.toNumber() - beforeContractBalance, transaction);
+        assert.equal(value.toNumber() - beforeContractBalance, deposit);
       })
       .then(done).catch(done);
     })
 
     it('isRegistered for the registered account is true', function(done){
-      var account = accounts[0]
-      var transaction = Math.pow(10,17);
-      var twitterHandle = '@bighero6';
       var meta;
+      var account = accounts[0];
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {value:transaction});
+        return meta.register.sendTransaction(twitterHandle, {value:deposit});
       }).then(function() {
         return meta.isRegistered.call(account);
       })
@@ -192,12 +182,10 @@ contract('Conference', function(accounts) {
     })
 
     it('isRegistered for the different account is not true', function(done){
-      var transaction = Math.pow(10,17);
-      var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction});
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit});
       }).then(function() {
         return meta.isRegistered.call(accounts[2]);
       })
@@ -209,7 +197,6 @@ contract('Conference', function(accounts) {
 
     it('cannot be registered if wrong amount of deposit is sent', function(done){
       var badTransaction = 5;
-      var twitterHandle = '@bighero6';
       var meta;
       var beforeAccountBalance = web3.eth.getBalance(accounts[0])
       var beforeContractBalance;
@@ -234,13 +221,10 @@ contract('Conference', function(accounts) {
 
   describe('on attend', function(){
     it('isAttended is true if owner calls attend function', function(done){
-      var transaction = Math.pow(10,17);
-      var twitterHandle = '@bighero6';
-      var owner = accounts[0]
       var meta;
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[1], value:transaction});
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[1], value:deposit});
       }).then(function() {
         return meta.attend.sendTransaction([accounts[1]], {from:owner})
       }).
@@ -258,13 +242,10 @@ contract('Conference', function(accounts) {
     })
 
     it('isAttended is false if non owner calls attend function', function(done){
-      var transaction = Math.pow(10,17);
-      var twitterHandle = '@bighero6';
       var meta;
-      var owner = accounts[0]
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {value:transaction});
+        return meta.register.sendTransaction(twitterHandle, {value:deposit});
       }).then(function() {
         return meta.attend.sendTransaction([accounts[1]], {from:accounts[1]})
       }).then(function(){
@@ -283,12 +264,10 @@ contract('Conference', function(accounts) {
     })
 
     it('isAttended is false if attended function for the account is not called', function(done){
-      var transaction = Math.pow(10,17);
-      var twitterHandle = '@bighero6';
       var meta;
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {value:transaction});
+        return meta.register.sendTransaction(twitterHandle, {value:deposit});
       }).then(function() {
         return meta.isAttended.call(accounts[0])
       }).then(function(value){
@@ -300,18 +279,14 @@ contract('Conference', function(accounts) {
 
   describe('self attend with code', function(){
     it('allows participant to attend with code', async function(){
-      let twitterHandle = '@bighero6';
-      let owner = accounts[0];
-      let non_owner = accounts[1];
       let confirmation = await ConfirmationRepository.new();
-      var transaction = Math.pow(10,17);
       let confirmation_code = web3.fromUtf8('1234567890');
       let encrypted_code = await confirmation.encrypt.call(confirmation_code);
       await confirmation.add([encrypted_code], {from:owner});
       let verified = await confirmation.verify.call(confirmation_code);
       assert.equal(verified, true);
       let conference = await Conference.new(600, 0, confirmation.address);
-      await conference.register(twitterHandle, {from:non_owner, value:transaction})
+      await conference.register(twitterHandle, {from:non_owner, value:deposit})
       await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
       let attended = await conference.attended.call()
       assert.equal(attended, 1);
@@ -320,20 +295,16 @@ contract('Conference', function(accounts) {
     })
 
     it('does not allow participants to attend with same code', async function(){
-      let twitterHandle = '@bighero6';
-      let owner = accounts[0];
-      let non_owner = accounts[1];
       let non_owner_2 = accounts[2];
       let confirmation = await ConfirmationRepository.new();
-      var transaction = Math.pow(10,17);
       let confirmation_code = web3.fromUtf8('1234567890');
       let encrypted_code = await confirmation.encrypt.call(confirmation_code);
       await confirmation.add([encrypted_code], {from:owner});
       let verified = await confirmation.verify.call(confirmation_code);
       assert.equal(verified, true);
       let conference = await Conference.new(600, 0, confirmation.address);
-      await conference.register(twitterHandle, {from:non_owner, value:transaction})
-      await conference.register(twitterHandle, {from:non_owner_2, value:transaction})
+      await conference.register(twitterHandle, {from:non_owner, value:deposit})
+      await conference.register(twitterHandle, {from:non_owner_2, value:deposit})
       await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
       await conference.attendWithConfirmation(confirmation_code, {from:non_owner_2}).catch(function(){});
       let attended = await conference.attended.call()
@@ -347,11 +318,7 @@ contract('Conference', function(accounts) {
     // This test is very flakey. Fails when run all together but passes when run alone.
     it('cannot withdraw if non owner calls', function(done){
       var meta
-      var deposit = web3.toWei(1, "ether");
-      var gas = 1000000;
       var previousBalances = [];
-      var twitterHandle = '@bighero6';
-      var owner = accounts[0];
       var nonOwner = accounts[1];
       var registered = accounts[2]
       Conference.new().then(function(_meta) {
@@ -359,7 +326,7 @@ contract('Conference', function(accounts) {
         return meta.register.sendTransaction(twitterHandle, {from:registered, value:deposit, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
         return meta.attend.sendTransaction([registered], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:nonOwner, gas:gas})
@@ -369,27 +336,23 @@ contract('Conference', function(accounts) {
       }).then(function(transaction){
         var receipt = web3.eth.getTransactionReceipt(transaction)
         // money is still left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
       })
       .then(done).catch(done);
     })
 
     it('cannot withdraw if you did not attend', function(done){
       var meta
-      var transaction = web3.toWei(1, "ether");
-      var gas = 1000000;
       var previousBalances = [];
-      var twitterHandle = '@bighero6';
       var notAttended = accounts[2];
       var attended = accounts[1];
-      var owner = accounts[0];
 
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:attended, value:transaction, gas:gas})
+        return meta.register.sendTransaction(twitterHandle, {from:attended, value:deposit, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
         return meta.attend.sendTransaction([attended], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:owner, gas:gas})
@@ -398,87 +361,78 @@ contract('Conference', function(accounts) {
         return meta.withdraw.sendTransaction({from:notAttended, gas:gas})
       }).then(function(transaction){
         // money is still left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
       })
       .then(done).catch(done);
     })
 
     it('can withdraw if you attend', function(done){
-      var meta;
-      var transaction = web3.toWei(1, "ether");
-      var gas = 1000000;
-      var previousBalances = [];
-      var twitterHandle = '@bighero6';
+      var meta, previousBalance;
 
-      var balanceDiff = function(index){
-        var realDiff = web3.fromWei(web3.eth.getBalance(accounts[index]).minus(previousBalances[index]), "ether");
-        var roundedDiff = Math.round(realDiff * 10) / 10;
-        return roundedDiff;
-      }
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+        return meta.register(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
       }).then(function() {
-        return meta.register.sendTransaction('@Cpt_Reliable', {from:accounts[1], value:transaction, gas:gas})
+        return meta.register('@Cpt_Reliable', {from:accounts[1], value:deposit, gas:gas})
       }).then(function(){
-        return meta.register.sendTransaction('@FLAKEY_99p', {from:accounts[2], value:transaction, gas:gas})
+        return meta.register('@FLAKEY_99p', {from:accounts[2], value:deposit, gas:gas})
       }).then(function(){
         // contract gets 3 ethers
-        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(3, "ether"))
+        assert.strictEqual( web3.eth.getBalance(meta.address).toNumber(), deposit * 3)
         // only account 0 and 1 attend
       }).then(function(){
-        return meta.attend.sendTransaction([accounts[0]], {gas:gas})
+        return meta.attend([accounts[0]], {gas:gas})
       }).then(function(){
-        return meta.attend.sendTransaction([accounts[1]], {gas:gas})
+        return meta.attend([accounts[1]], {gas:gas})
       }).then(function(){
-        return meta.payback.sendTransaction({from:accounts[0], gas:gas})
+        return meta.payback({from:accounts[0], gas:gas})
       }).then(function(){
-        previousBalances[0] = web3.eth.getBalance(accounts[0]);
-        previousBalances[1] = web3.eth.getBalance(accounts[1]);
-        previousBalances[2] = web3.eth.getBalance(accounts[2]);
-        return meta.withdraw.sendTransaction({from:accounts[0]})
-      }).then(function(transaction){
-        assert.equal(balanceDiff(0), 1.5)
-        return meta.withdraw.sendTransaction({from:accounts[1]})
-      }).then(function(transaction){
-        assert.equal(balanceDiff(1), 1.5)
-        return meta.withdraw.sendTransaction({from:accounts[2]})
-      }).then(function(transaction){
-        assert.equal(balanceDiff(2), 0)
+        previousBalance = web3.eth.getBalance(accounts[0]);
+        return meta.withdraw({from:accounts[0]})
+      }).then(function(result){
+        var diff = web3.eth.getBalance(accounts[0]).toNumber() - previousBalance.toNumber()
+        assert( diff > (deposit * 1.4))
+        previousBalance = web3.eth.getBalance(accounts[1]);
+        return meta.withdraw({from:accounts[1]})
+      }).then(function(result){
+        var diff = web3.eth.getBalance(accounts[1]).toNumber() - previousBalance.toNumber()
+        assert( diff > (deposit * 1.4))
+        previousBalance = web3.eth.getBalance(accounts[2]);
+        return meta.withdraw({from:accounts[2]})
+      }).then(function(result){
+        var diff = web3.eth.getBalance(accounts[0]).toNumber() - previousBalance.toNumber()
+        assert( diff < 0)
         // no money is left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(0, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
         return meta.participants.call(accounts[0]);
       }).then(function(participant){
         // Got some money
-        assert.equal(participant[3].toString(), web3.toWei(1.5, "ether"))
+        assert.strictEqual(participant[3].toNumber(), deposit * 1.5)
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
         assert.equal(participant[4], true)
         return meta.participants.call(accounts[1]);
       }).then(function(participant){
         // Got some money
-        assert.equal(participant[3].toString(), web3.toWei(1.5, "ether"))
+        assert.strictEqual(participant[3].toNumber(), deposit * 1.5)
         assert.equal(participant[4], true)
         return meta.participants.call(accounts[2]);
       }).then(function(participant){
         // Got no money
-        assert.equal(participant[3].toString(), "0")
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
         assert.equal(participant[4], false)
       }).then(done).catch(done);
     })
 
     it('cannot register any more', function(done){
       var meta;
-      var transaction = web3.toWei(1, "ether");
-      var gas = 1000000;
-      var twitterHandle = '@bighero6';
-      var owner = accounts[0];
       var currentRegistered;
 
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
         return meta.attend.sendTransaction([accounts[0]], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:owner, gas:gas})
@@ -486,11 +440,11 @@ contract('Conference', function(accounts) {
         return meta.registered.call()
       }).then(function(registered){
         currentRegistered = registered
-        return meta.register.sendTransaction('some handler', {from:accounts[1], value:transaction, gas:gas})
+        return meta.register.sendTransaction('some handler', {from:accounts[1], value:deposit, gas:gas})
       }).then(function(){
         return meta.registered.call()
       }).then(function(registered){
-        assert.equal(currentRegistered.toNumber(), registered.toNumber())
+        assert.strictEqual(currentRegistered.toNumber(), registered.toNumber())
       }).then(function(){
         return meta.ended.call()
       }).then(function(ended){
@@ -503,37 +457,31 @@ contract('Conference', function(accounts) {
   describe('on cancel', function(){
     it('cannot be canceld if non owner calls', function(done){
       var meta
-      var transaction = web3.toWei(1, "ether");
-      var gas = 1000000;
       var previousBalances = [];
-      var twitterHandle = '@bighero6';
       var nonOwner = accounts[1];
 
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
         // only account 0 and 1 attend
       }).then(function(){
         previousBalances[0] = web3.eth.getBalance(accounts[0]);
         return meta.cancel.sendTransaction({from:nonOwner, gas:gas})
       }).then(function(){
         // money is still left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
         // did not get deposit back
-        assert.equal(previousBalances[0].toNumber(), web3.eth.getBalance(accounts[0]).toNumber())
+        assert.strictEqual(previousBalances[0].toNumber(), web3.eth.getBalance(accounts[0]).toNumber())
       })
       .then(done).catch(done);
     })
 
     it('everybody receives refund', function(done){
       var meta
-      var transaction = web3.toWei(1, "ether");
-      var gas = 1000000;
       var previousBalances = [];
-      var twitterHandle = '@bighero6';
 
       var balanceDiff = function(index){
         var realDiff = web3.fromWei(web3.eth.getBalance(accounts[index]).minus(previousBalances[index]), "ether");
@@ -544,14 +492,14 @@ contract('Conference', function(accounts) {
       // 3 registrations
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
       }).then(function() {
-        return meta.register.sendTransaction('@Cpt_Reliable', {from:accounts[1], value:transaction, gas:gas})
+        return meta.register.sendTransaction('@Cpt_Reliable', {from:accounts[1], value:deposit, gas:gas})
       }).then(function(){
-        return meta.register.sendTransaction('@FLAKEY_99p', {from:accounts[2], value:transaction, gas:gas})
+        return meta.register.sendTransaction('@FLAKEY_99p', {from:accounts[2], value:deposit, gas:gas})
       }).then(function(){
         // contract gets 3 ethers
-        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(3, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit * 3)
         // only account 0 and 1 attend
       }).then(function(){
         return meta.attend.sendTransaction([accounts[0], accounts[1]], {gas:gas})
@@ -568,21 +516,17 @@ contract('Conference', function(accounts) {
         return meta.withdraw.sendTransaction({from:accounts[2], gas:gas})
       }).then(function(){
         // no money is left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(0, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
         // got deposit back
-        assert.equal(balanceDiff(0), 1)
-        assert.equal(balanceDiff(1), 1)
-        assert.equal(balanceDiff(2), 1)
+        assert.strictEqual(balanceDiff(0), 0.1)
+        assert.strictEqual(balanceDiff(1), 0.1)
+        assert.strictEqual(balanceDiff(2), 0.1)
       })
       .then(done).catch(done);
     })
 
     it('cannot register any more', function(done){
       var meta;
-      var transaction = web3.toWei(1, "ether");
-      var gas = 1000000;
-      var twitterHandle = '@bighero6';
-      var owner = accounts[0];
       var currentRegistered;
 
       Conference.new().then(function(_meta) {
@@ -593,7 +537,7 @@ contract('Conference', function(accounts) {
         return meta.registered.call()
       }).then(function(registered){
         currentRegistered = registered
-        return meta.register.sendTransaction('some handler', {from:accounts[1], value:transaction, gas:gas})
+        return meta.register.sendTransaction('some handler', {from:accounts[1], value:deposit, gas:gas})
       }).then(function(){
         return meta.registered.call()
       }).then(function(registered){
@@ -608,18 +552,14 @@ contract('Conference', function(accounts) {
 
     it('cannot be canceled if the event is already ended', function(done){
       var meta;
-      var transaction = web3.toWei(1, "ether");
-      var gas = 1000000;
-      var twitterHandle = '@bighero6';
-      var owner = accounts[0];
       var currentRegistered;
 
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:transaction, gas:gas})
+        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
       }).then(function(){
         // contract gets 1 ether
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
         return meta.attend.sendTransaction([accounts[0]], {gas:gas})
       }).then(function(){
         return meta.payback.sendTransaction({from:owner, gas:gas})
@@ -631,7 +571,7 @@ contract('Conference', function(accounts) {
       }).then(function(){
         return meta.registered.call()
       }).then(function(registered){
-        assert.equal(currentRegistered.toNumber(), registered.toNumber())
+        assert.strictEqual(currentRegistered.toNumber(), registered.toNumber())
       }).then(function(){
         return meta.ended.call()
       }).then(function(ended){
@@ -645,18 +585,14 @@ contract('Conference', function(accounts) {
   describe('on withdraw', function(){
     it('cannot withdraw if no payout', function(done){
       var meta
-      var transaction = web3.toWei(1, "ether");
-      var gas = 1000000;
       var previousBalances = [];
-      var twitterHandle = '@bighero6';
-      var owner = accounts[0];
       var registered = accounts[1];
       var notRegistered = accounts[2];
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:registered, value:transaction, gas:gas})
+        return meta.register.sendTransaction(twitterHandle, {from:registered, value:deposit, gas:gas})
       }).then(function(){
-        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
       }).then(function(){
         return meta.cancel({from:owner, gas:gas})
       }).then(function(cancel_result){
@@ -664,25 +600,21 @@ contract('Conference', function(accounts) {
         return meta.withdraw({from:notRegistered, gas:gas})
       }).then(function(result){
         // money is still left on contract
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
       })
       .then(done).catch(done);
     })
 
     it('cannot withdraw twice', function(done){
       var meta
-      var transaction = web3.toWei(1, "ether");
-      var gas = 1000000;
-      var twitterHandle = '@bighero6';
-      var owner = accounts[0];
       var registered = accounts[1];
       Conference.new().then(function(_meta) {
         meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:owner, value:transaction, gas:gas})
+        return meta.register.sendTransaction(twitterHandle, {from:owner, value:deposit, gas:gas})
       }).then(function(){
-        return meta.register.sendTransaction(twitterHandle, {from:registered, value:transaction, gas:gas})
+        return meta.register.sendTransaction(twitterHandle, {from:registered, value:deposit, gas:gas})
       }).then(function(){
-        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(2, "ether"))
+        assert.strictEqual( web3.eth.getBalance(meta.address).toNumber(), deposit * 2)
       }).then(function(){
         return meta.cancel.sendTransaction({from:owner, gas:gas})
       }).then(function(){
@@ -691,7 +623,7 @@ contract('Conference', function(accounts) {
         return meta.withdraw.sendTransaction({from:registered, gas:gas})
       }).then(function(transaction){
         // only 1 ether is taken out
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
       })
       .then(done).catch(done);
     })
@@ -718,72 +650,64 @@ contract('Conference', function(accounts) {
 
     it('cannot be cleared by non owner', function(done){
       let meta;
-      var transaction = Math.pow(10,17);
-      let owner = accounts[0]
       let nonOwner = accounts[1]
       Conference.new(10, 0).then(function(_meta) {
         meta = _meta
-        return meta.register.sendTransaction('one', {value:transaction});
+        return meta.register.sendTransaction('one', {value:deposit});
       }).then(function(){
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
         return meta.clear.sendTransaction('one', {from:nonOwner});
       }).then(function(){
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
       })
       .then(done).catch(done);
     })
 
     it('cannot be cleared if event is not ended', function(done){
       let meta;
-      var transaction = Math.pow(10,17);
-      let owner = accounts[0]
       Conference.new().then(function(_meta) {
         meta = _meta
-        return meta.register.sendTransaction('one', {value:transaction});
+        return meta.register.sendTransaction('one', {value:deposit});
       }).then(function(){
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
         return meta.clear.sendTransaction('one', {from:owner});
       }).then(function(){
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
       })
       .then(done).catch(done);
     })
 
     it('cannot be cleared if cooling period is not passed', function(done){
       let meta;
-      var transaction = Math.pow(10,17);
-      let owner = accounts[0]
       Conference.new().then(function(_meta) {
         meta = _meta
-        return meta.register.sendTransaction('one', {value:transaction});
+        return meta.register.sendTransaction('one', {value:deposit});
       }).then(function(){
         return meta.cancel.sendTransaction({from:owner});
       }).then(function(){
         return meta.ended.call()
       }).then(function(ended){
         assert.equal(ended, true)
-        assert.equal( web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual( web3.eth.getBalance(meta.address).toNumber(), deposit)
         return meta.clear.sendTransaction('one', {from:owner});
       }).then(function(){
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.equal(web3.eth.getBalance(meta.address).toNumber(), deposit)
       })
       .then(done).catch(done);
     })
 
     it('owner receives the remaining if cooling period is passed', function(done){
       let meta;
-      var transaction = Math.pow(10,17);
-      let owner = accounts[0]
       Conference.new(1, 0, 0).then(function(_meta) {
         meta = _meta
-        return meta.register.sendTransaction('one', {value:transaction});
+        return meta.register.sendTransaction('one', {value:deposit});
       }).then(function(){
         return meta.cancel.sendTransaction({from:owner});
       }).then(function(){
         return meta.ended.call()
       }).then(function(ended){
         assert.equal(ended, true)
-        assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(1, "ether"))
+        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
         var previousBalance = web3.eth.getBalance(owner);
         setTimeout(function(){
           meta.clear.sendTransaction('one', {from:owner}).then(function(transaction){
