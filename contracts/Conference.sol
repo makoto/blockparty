@@ -2,10 +2,10 @@ pragma solidity ^0.4.8;
 import './InvitationRepository.sol';
 import './ConfirmationRepository.sol';
 import './zeppelin/Rejector.sol';
-import './zeppelin/Ownable.sol';
-import './zeppelin/Killable.sol';
+import './zeppelin/ownership/Ownable.sol';
+import './zeppelin/lifecycle/Destructible.sol';
 
-contract Conference is Rejector, Killable {
+contract Conference is Rejector, Destructible {
 	string public name;
 	uint256 public totalBalance;
 	uint256 public deposit;

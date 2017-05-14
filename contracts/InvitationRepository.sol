@@ -1,6 +1,6 @@
 pragma solidity ^0.4.8;
 
-import './zeppelin/Ownable.sol';
+import './zeppelin/ownership/Ownable.sol';
 
 contract InvitationRepository is Ownable{
   bytes32 encryptedCode;
