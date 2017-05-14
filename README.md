@@ -188,7 +188,7 @@ See [Issues](https://github.com/makoto/blockparty/issues)
 
 - Register with participant's real name
 - Add new event
-- Allow other people to become the owner of the event
+- ~~Allow other people to become the owner of the event
 - Dispute period (participants can demand to cancel the event to avoid event owners cheating)
 - Test that it scales up to 200 people
 
