@@ -99,8 +99,14 @@ window.onload = function() {
         break;
       case '3':
         network_obj = {
-          name: 'TESTNET',
-          etherscan_url: 'https://testnet.etherscan.io'
+          name: 'ROPSTEN NET',
+          etherscan_url: 'https://ropsten.etherscan.io'
+        }
+        break;
+      case '42':
+        network_obj = {
+          name: 'KOVAN NET',
+          etherscan_url: 'https://kovan.etherscan.io'
         }
         break;
       default:
