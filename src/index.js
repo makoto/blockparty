@@ -43,7 +43,7 @@ function setup(){
         // the endpoint is active
       }).fail(function(error){
         console.log('Fail', error)
-        if(error.readyState == 4 && error.status == 400){
+        if(error.readyState == 4 && (error.status == 400 || error.status == 200)){
           // the endpoint is active
           console.log('Success')
         }else{
