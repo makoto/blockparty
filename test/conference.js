@@ -12,84 +12,39 @@ contract('Conference', function(accounts) {
   const non_owner = accounts[1];
 
   describe('on setLimitOfParticipants', function(){
-    it('does not allow to register more than the limit', function(done){
-      var meta;
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.setLimitOfParticipants.sendTransaction(1)
-      }).then(function() {
-        return meta.register.sendTransaction(twitterHandle, {value:deposit});
-      }).then(function() {
-        return meta.registered.call();
-      }).then(function(registered) {
-        assert.equal(registered, 1)
-        return meta.register.sendTransaction('anotherName', {from: accounts[1], value:deposit});
-      }).then(function() {
-        return meta.registered.call();
-      }).then(function(registered) {
-        assert.equal(registered.toString(), 1)
-      }).then(done).catch(done);
+    it('does not allow to register more than the limit', async function(){
+      let conference = await Conference.new()
+      await conference.setLimitOfParticipants(1)
+      await conference.register(twitterHandle, {value:deposit});
+      assert.strictEqual((await conference.registered.call()).toNumber(), 1);
+      await conference.register('anotherName', {from: non_owner, value:deposit}).catch(function(){});
+      assert.strictEqual((await conference.registered.call()).toNumber(), 1);
     })
 
-    it('returns only your deposit for multiple invalidations', function(done){
-      var meta;
-      var beforeAccountBalance;
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.setLimitOfParticipants.sendTransaction(2)
-      }).then(function() {
-        return meta.register.sendTransaction(twitterHandle, {value:deposit});
-      }).then(function() {
-        return meta.register.sendTransaction('anotherName', {from: accounts[1], value:deposit});
-      }).then(function() {
-        return meta.registered.call();
-      }).then(function(registered) {
-        assert.equal(registered.toNumber(), 2)
-        var invalidTransaction = (deposit / 2);
-        beforeAccountBalance = web3.eth.getBalance(accounts[2]).toNumber();
-        // Over capacity as well as wrong deposit value.
-        return meta.register.sendTransaction('anotherName', {from: accounts[2], value:invalidTransaction});
-      }).then(function() {
-        return meta.registered.call();
-      }).then(function(registered) {
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 2 * deposit);
-        // does not become exactly equal because it loses some gas.
-        assert.equal(beforeAccountBalance > web3.eth.getBalance(accounts[2]).toNumber(), true);
-      }).then(done).catch(done);
+    it('returns only your deposit for multiple invalidations', async function(){
+      let conference = await Conference.new();
+      await conference.setLimitOfParticipants.sendTransaction(2);
+      await conference.register.sendTransaction(twitterHandle, {value:deposit});
+      await conference.register.sendTransaction('anotherName', {from: accounts[1], value:deposit});
+      assert.strictEqual((await conference.registered.call()).toNumber(), 2);
+      let invalidTransaction = (deposit / 2);
+      let beforeAccountBalance = web3.eth.getBalance(accounts[2]).toNumber();
+      // Over capacity as well as wrong deposit value.
+      await conference.register('anotherName', {from: accounts[2], value:invalidTransaction}).catch(function(){});
+      assert.strictEqual((await conference.registered.call()).toNumber(), 2);
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), 2 * deposit);
+      // does not become exactly equal because it loses some gas.
+      assert.strictEqual(beforeAccountBalance > web3.eth.getBalance(accounts[2]).toNumber(), true);
     })
   })
 
   describe('on creation', function(){
-    it('has name', function(done){
-      Conference.new().then(function(meta) {
-        return meta.name.call()
-      }).then(function(name) {
-        assert.isNotNull(name);
-      }).then(done).catch(done);
-    })
-
-    it('registered is zero', function(done){
-      Conference.new().then(function(meta) {
-        return meta.registered.call()
-      }).then(function(value) {
-        assert.equal(value.toNumber(), 0);
-      }).then(done).catch(done);
-    })
-
-    it('attended is zero', function(done){
-      Conference.new().then(function(meta) {
-        return meta.attended.call()
-      }).then(function(value) {
-        assert.equal(value.toNumber(), 0);
-      }).then(done).catch(done);
-    })
-
-    it('balance is zero', function(done){
-      Conference.new().then(function(meta) {
-        return meta.totalBalance.call()
-      }).then(function(value) {
-        assert.equal(value.toNumber(), 0);
-      }).then(done).catch(done);
+    it('has default values', async function(){
+      let conference = await Conference.new();
+      assert.strictEqual(await conference.name.call(), 'Test');
+      assert.strictEqual((await conference.registered.call()).toNumber(), 0);
+      assert.strictEqual((await conference.attended.call()).toNumber(), 0);
+      assert.strictEqual((await conference.totalBalance.call()).toNumber(), 0);
     })
   })
 
@@ -666,26 +621,3 @@ contract('Conference', function(accounts) {
     })
   })
 })
-
-// Just a generic test to check Ether transaction is working;
-// contract('Transaction test', function(accounts) {
-//   it('shold send ether from one account to another', function(done){
-//     var before0 = web3.eth.getBalance(accounts[0]);
-//     var before1 = web3.eth.getBalance(accounts[1]);
-//     var gas = 21000; // gas price taken from the log of testrpc
-//     web3.eth.sendTransaction({from:accounts[0], to:accounts[1], gas:gas, value: web3.toWei(100, "ether")}, function(){
-//       var after0 = web3.eth.getBalance(accounts[0]);
-//       var after1 = web3.eth.getBalance(accounts[1]);
-//       assert.equal( after0.minus(before0).plus(gas).toNumber(), web3.toWei(-100, "ether"));
-//       assert.equal( after1.minus(before1).toNumber() , web3.toWei(100, "ether"));
-//       done();
-//     })
-//   })
-// })
-
-// Testing them from `truffle console`
-// var meta = Conference.deployed();
-// web3.eth.defaultAccount = web3.eth.accounts[0];
-// meta.registered.call().then(function(value) {
-//   console.log('value', value.toString());
-// })
