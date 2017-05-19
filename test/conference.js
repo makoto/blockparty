@@ -10,10 +10,14 @@ const gas = 1000000;
 contract('Conference', function(accounts) {
   const owner = accounts[0];
   const non_owner = accounts[1];
+  let conference;
+
+  beforeEach(async function(){
+    conference = await Conference.new();
+  })
 
   describe('on setLimitOfParticipants', function(){
     it('does not allow to register more than the limit', async function(){
-      let conference = await Conference.new()
       await conference.setLimitOfParticipants(1)
       await conference.register(twitterHandle, {value:deposit});
       assert.strictEqual((await conference.registered.call()).toNumber(), 1);
@@ -22,7 +26,6 @@ contract('Conference', function(accounts) {
     })
 
     it('returns only your deposit for multiple invalidations', async function(){
-      let conference = await Conference.new();
       await conference.setLimitOfParticipants.sendTransaction(2);
       await conference.register.sendTransaction(twitterHandle, {value:deposit});
       await conference.register.sendTransaction('anotherName', {from: accounts[1], value:deposit});
@@ -40,7 +43,6 @@ contract('Conference', function(accounts) {
 
   describe('on creation', function(){
     it('has default values', async function(){
-      let conference = await Conference.new();
       assert.strictEqual(await conference.name.call(), 'Test');
       assert.strictEqual((await conference.registered.call()).toNumber(), 0);
       assert.strictEqual((await conference.attended.call()).toNumber(), 0);
@@ -63,11 +65,7 @@ contract('Conference', function(accounts) {
     })
 
     it('does not allow registration if not invited', async function(){
-      let twitterHandle = '@bighero6';
-      let owner = accounts[0];
-      let non_owner = accounts[1];
       let invitation = await InvitationRepository.new();
-      var deposit = Math.pow(10,17);
       let conference = await Conference.new(600, invitation.address, 0);
       await conference.registerWithInvitation(twitterHandle, 'invalid_code', {from:non_owner, value:deposit}).catch(function(){});
       let result = await conference.registered.call()
