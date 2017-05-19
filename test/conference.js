@@ -11,21 +11,6 @@ contract('Conference', function(accounts) {
   const owner = accounts[0];
   const non_owner = accounts[1];
 
-  it("should not send money directly", function(done){
-    var meta;
-    Conference.new().then(function(_meta) {
-      meta = _meta;
-      return meta.sendTransaction({
-        from:accounts[1], value:web3.toWei(1, "ether")
-      })
-    }).catch(function(error){
-      assert.match(error.toString(), invalid_jump_error);
-    })
-    .then(function() {
-      assert.equal(web3.eth.getBalance(meta.address).toNumber(), 0)
-    }).then(done).catch(done);
-  })
-
   describe('on setLimitOfParticipants', function(){
     it('does not allow to register more than the limit', function(done){
       var meta;
