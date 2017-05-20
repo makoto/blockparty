@@ -77,86 +77,37 @@ contract('Conference', function(accounts) {
   })
 
   describe('on registration', function(){
-    it('increments registered', function(done){
-      var meta;
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {value:deposit});
-      }).then(function() {
-        return meta.registered.call();
-      })
-      .then(function(value){
-        assert.equal(value.toNumber(), 1);
-      })
-      .then(done).catch(done);
+    let beforeContractBalance, beforeAccountBalance;
+
+    beforeEach(async function(){
+      beforeContractBalance = web3.eth.getBalance(conference.address).toNumber();
+      await conference.register.sendTransaction(twitterHandle, {value:deposit});
     })
 
-    it('increases balance', function(done){
-      var meta;
-      var beforeContractBalance;
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        beforeContractBalance = web3.eth.getBalance(meta.address).toNumber();
-        return meta.register.sendTransaction(twitterHandle, {value:deposit});
-      }).then(function() {
-        return meta.totalBalance.call();
-      })
-      .then(function(value){
-        assert.equal(value.toNumber() - beforeContractBalance, deposit);
-      })
-      .then(done).catch(done);
+    it('increments registered', async function(){
+      assert.equal((await conference.registered.call()).toNumber(), 1);
     })
 
-    it('isRegistered for the registered account is true', function(done){
-      var meta;
-      var account = accounts[0];
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {value:deposit});
-      }).then(function() {
-        return meta.isRegistered.call(account);
-      })
-      .then(function(value){
-        assert.equal(value, true);
-      })
-      .then(done).catch(done);
+    it('increases totalBalance', async function(){
+      assert.equal((await conference.totalBalance.call()) - beforeContractBalance , deposit);
     })
 
-    it('isRegistered for the different account is not true', function(done){
-      var meta;
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit});
-      }).then(function() {
-        return meta.isRegistered.call(accounts[2]);
-      })
-      .then(function(value){
-        assert.equal(value, false);
-      })
-      .then(done).catch(done);
+    it('isRegistered for the registered account is true', async function(){
+      assert.equal(await conference.isRegistered.call(owner), true);
     })
 
-    it('cannot be registered if wrong amount of deposit is sent', function(done){
-      var badTransaction = 5;
-      var meta;
-      var beforeAccountBalance = web3.eth.getBalance(accounts[0])
-      var beforeContractBalance;
-      Conference.new().then(function(_meta){
-        meta = _meta;
-        beforeContractBalance = web3.eth.getBalance(meta.address)
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:badTransaction})
-      }).then(function(){
-        var  contractBalance = web3.eth.getBalance(meta.address)
-        var  accountBalance = web3.eth.getBalance(accounts[0]);
-        // Contract did not get any ether
-        assert.equal(contractBalance.toString(), beforeContractBalance.toString());
-        // Lost for some gas
-        assert.notEqual(accountBalance.toString(), beforeAccountBalance.toString());
-      }).then(function() {
-        return meta.isRegistered.call(accounts[0]);
-      }).then(function(value){
-        assert.equal(value, false);
-      }).then(done).catch(done);
+    it('isRegistered for the different account is not true', async function(){
+      assert.equal(await conference.isRegistered.call(non_owner), false);
+    })
+  })
+
+  describe('on failed registration', function(){
+    it('cannot be registered if wrong amount of deposit is sent', async function(){
+      let wrongDeposit = 5;
+      let beforeContractBalance = web3.eth.getBalance(conference.address);
+      await conference.register.sendTransaction(twitterHandle, {from:owner, value:wrongDeposit}).catch(function(){});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), beforeContractBalance.toNumber());
+      assert.equal(await conference.isRegistered.call(owner), false);
     })
   })
 
