@@ -51,24 +51,27 @@ contract('Conference', function(accounts) {
   })
 
   describe('register with invitation', function(){
-    it('allows registration only if invited', async function(){
-      let invitation = await InvitationRepository.new();
-      let invitation_code = web3.fromUtf8('1234567890');
-      let encrypted_code = await invitation.encrypt.call(invitation_code);
+    let invitation, invitation_code, encrypted_code;
+
+    beforeEach(async function(){
+      invitation = await InvitationRepository.new();
+      invitation_code = web3.fromUtf8('1234567890');
+      encrypted_code = await invitation.encrypt.call(invitation_code);
       await invitation.add([encrypted_code], {from:owner});
-      let conference = await Conference.new(600, invitation.address,0);
+      conference = await Conference.new(600, invitation.address,0);
+    })
+
+    it('allows registration only if invited', async function(){
       await conference.registerWithInvitation(twitterHandle, invitation_code, {from:non_owner, value:deposit})
-      let result = await conference.registered.call()
+      let result = await conference.registered.call();
       assert.equal(result, 1);
       let report_result = await invitation.report.call(invitation_code);
       assert.equal(report_result, non_owner);
     })
 
     it('does not allow registration if not invited', async function(){
-      let invitation = await InvitationRepository.new();
-      let conference = await Conference.new(600, invitation.address, 0);
       await conference.registerWithInvitation(twitterHandle, 'invalid_code', {from:non_owner, value:deposit}).catch(function(){});
-      let result = await conference.registered.call()
+      let result = await conference.registered.call();
       assert.equal(result, 0);
     })
   })
