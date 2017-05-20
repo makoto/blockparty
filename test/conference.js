@@ -282,49 +282,16 @@ contract('Conference', function(accounts) {
   })
 
   describe('on withdraw', function(){
-    it('cannot withdraw if no payout', function(done){
-      var meta
-      var previousBalances = [];
-      var registered = accounts[1];
-      var notRegistered = accounts[2];
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:registered, value:deposit, gas:gas})
-      }).then(function(){
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-      }).then(function(){
-        return meta.cancel({from:owner, gas:gas})
-      }).then(function(cancel_result){
-        previousBalances[0] = web3.eth.getBalance(notRegistered);
-        return meta.withdraw({from:notRegistered, gas:gas})
-      }).then(function(result){
-        // money is still left on contract
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-      })
-      .then(done).catch(done);
-    })
-
-    it('cannot withdraw twice', function(done){
-      var meta
-      var registered = accounts[1];
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:owner, value:deposit, gas:gas})
-      }).then(function(){
-        return meta.register.sendTransaction(twitterHandle, {from:registered, value:deposit, gas:gas})
-      }).then(function(){
-        assert.strictEqual( web3.eth.getBalance(meta.address).toNumber(), deposit * 2)
-      }).then(function(){
-        return meta.cancel.sendTransaction({from:owner, gas:gas})
-      }).then(function(){
-        return meta.withdraw.sendTransaction({from:registered, gas:gas})
-      }).then(function(transaction){
-        return meta.withdraw.sendTransaction({from:registered, gas:gas})
-      }).then(function(transaction){
-        // only 1 ether is taken out
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-      })
-      .then(done).catch(done);
+    it('cannot withdraw twice', async function(){
+      let registered = accounts[1];
+      await conference.register(twitterHandle, {from:owner, value:deposit});
+      await conference.register(twitterHandle, {from:registered, value:deposit});
+      assert.strictEqual( web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+      await conference.cancel({from:owner});
+      await conference.withdraw({from:registered});
+      await conference.withdraw({from:registered});
+      // only 1 ether is taken out
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
     })
   })
 
