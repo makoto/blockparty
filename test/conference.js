@@ -223,121 +223,61 @@ contract('Conference', function(accounts) {
   })
 
   describe('on cancel', function(){
-    it('cannot be canceld if non owner calls', async function(){
-      let previousBalances = [];
-      let conference = await Conference.new();
-      await conference.register(twitterHandle, {from:owner, value:deposit, gas:gas});
-      // contract gets 1 ether
-      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
-      // only account 0 and 1 attend
-      previousBalances[0] = web3.eth.getBalance(owner);
-      await conference.cancel({from:non_owner, gas:gas}).catch(function(){});
+    let previousBalance, currentRegistered, currentAttended, diff, participant;
+    let attended = accounts[2];
+    var notAttended = accounts[3];
+    var notRegistered = accounts[4];
+
+    beforeEach(async function(){
+      await conference.register(twitterHandle, {from:attended, value:deposit});
+      await conference.register(twitterHandle, {from:notAttended, value:deposit});
+      await conference.attend([attended]);
+    })
+
+    it('cannot cancel if non owner calls', async function(){
+      await conference.cancel({from:non_owner}).catch(function(){});
+      await conference.withdraw({from:attended});
       // money is still left on contract
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+    })
+
+    it('everybody receives refund', async function(){
+      await conference.cancel();
+      // attended
+      previousBalance = web3.eth.getBalance(attended);
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+      await conference.withdraw({from:attended});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
-      // did not get deposit back
-      assert.strictEqual(previousBalances[0].toNumber(), web3.eth.getBalance(accounts[0]).toNumber());
+      diff = web3.eth.getBalance(attended).toNumber() - previousBalance.toNumber();
+      assert( diff > (deposit * 0.9));
+      participant = await conference.participants.call(attended);
+      assert.equal(participant[4], true);
+      // notAttended
+      previousBalance = web3.eth.getBalance(notAttended);
+      await conference.withdraw({from:notAttended});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), 0);
+      diff = web3.eth.getBalance(notAttended).toNumber() - previousBalance.toNumber();
+      assert( diff > (deposit * 0.9));
+      participant = await conference.participants.call(notAttended);
+      assert.equal(participant[4], true);
     })
 
-    it('everybody receives refund', function(done){
-      var meta
-      var previousBalances = [];
-
-      var balanceDiff = function(index){
-        var realDiff = web3.fromWei(web3.eth.getBalance(accounts[index]).minus(previousBalances[index]), "ether");
-        // Ignore small diff introduced by gas price;
-        var roundedDiff = Math.round(realDiff * 10) / 10;
-        return roundedDiff;
-      }
-      // 3 registrations
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
-      }).then(function() {
-        return meta.register.sendTransaction('@Cpt_Reliable', {from:accounts[1], value:deposit, gas:gas})
-      }).then(function(){
-        return meta.register.sendTransaction('@FLAKEY_99p', {from:accounts[2], value:deposit, gas:gas})
-      }).then(function(){
-        // contract gets 3 ethers
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit * 3)
-        // only account 0 and 1 attend
-      }).then(function(){
-        return meta.attend.sendTransaction([accounts[0], accounts[1]], {gas:gas})
-      }).then(function(){
-        previousBalances[0] = web3.eth.getBalance(accounts[0]);
-        previousBalances[1] = web3.eth.getBalance(accounts[1]);
-        previousBalances[2] = web3.eth.getBalance(accounts[2]);
-        return meta.cancel.sendTransaction({from:accounts[0], gas:gas})
-      }).then(function(){
-        return meta.withdraw.sendTransaction({from:accounts[0], gas:gas})
-      }).then(function(){
-        return meta.withdraw.sendTransaction({from:accounts[1], gas:gas})
-      }).then(function(){
-        return meta.withdraw.sendTransaction({from:accounts[2], gas:gas})
-      }).then(function(){
-        // no money is left on contract
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
-        // got deposit back
-        assert.strictEqual(balanceDiff(0), 0.1)
-        assert.strictEqual(balanceDiff(1), 0.1)
-        assert.strictEqual(balanceDiff(2), 0.1)
-      })
-      .then(done).catch(done);
+    it('cannot register any more', async function(){
+      await conference.cancel();
+      currentRegistered = await conference.registered.call();
+      await conference.register('some handler', {from:notRegistered, value:deposit});
+      assert.strictEqual((await conference.registered.call()).toNumber(), currentRegistered.toNumber());
+      assert.equal(await conference.ended.call(), true);
     })
+    // - cannot attend any more
+    // - cannot payback any more
 
-    it('cannot register any more', function(done){
-      var meta;
-      var currentRegistered;
-
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-      }).then(function(){
-        return meta.cancel.sendTransaction({from:owner, gas:gas})
-      }).then(function(){
-        return meta.registered.call()
-      }).then(function(registered){
-        currentRegistered = registered
-        return meta.register.sendTransaction('some handler', {from:accounts[1], value:deposit, gas:gas})
-      }).then(function(){
-        return meta.registered.call()
-      }).then(function(registered){
-        assert.equal(currentRegistered.toNumber(), registered.toNumber())
-      }).then(function(){
-        return meta.ended.call()
-      }).then(function(ended){
-        assert.equal(ended, true)
-      })
-      .then(done).catch(done);
-    })
-
-    it('cannot be canceled if the event is already ended', function(done){
-      var meta;
-      var currentRegistered;
-
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
-      }).then(function(){
-        // contract gets 1 ether
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-        return meta.attend.sendTransaction([accounts[0]], {gas:gas})
-      }).then(function(){
-        return meta.payback.sendTransaction({from:owner, gas:gas})
-      }).then(function(){
-        return meta.registered.call()
-      }).then(function(registered){
-        currentRegistered = registered
-        return meta.cancel.sendTransaction()
-      }).then(function(){
-        return meta.registered.call()
-      }).then(function(registered){
-        assert.strictEqual(currentRegistered.toNumber(), registered.toNumber())
-      }).then(function(){
-        return meta.ended.call()
-      }).then(function(ended){
-        assert.equal(ended, true)
-      })
-      .then(done).catch(done);
-
+    it('cannot be canceled if the event is already ended', async function(){
+      await conference.payback();
+      await conference.cancel().catch(function(){});
+      await conference.withdraw({from:notAttended});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+      assert.equal(await conference.ended.call(), true)
     })
   })
 
