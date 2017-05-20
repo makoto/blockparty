@@ -111,7 +111,7 @@ contract('Conference', function(accounts) {
     })
   })
 
-  describe.only('on attend', function(){
+  describe('on attend', function(){
     beforeEach(async function(){
       await conference.register(twitterHandle, {value:deposit, from:non_owner});
     })
@@ -136,39 +136,32 @@ contract('Conference', function(accounts) {
   })
 
   describe('self attend with code', function(){
-    it('allows participant to attend with code', async function(){
-      let confirmation = await ConfirmationRepository.new();
-      let confirmation_code = web3.fromUtf8('1234567890');
-      let encrypted_code = await confirmation.encrypt.call(confirmation_code);
+    let confirmation, confirmation_code, encrypted_code, verified;
+    beforeEach(async function(){
+      confirmation = await ConfirmationRepository.new();
+      confirmation_code = web3.fromUtf8('1234567890');
+      encrypted_code = await confirmation.encrypt.call(confirmation_code);
       await confirmation.add([encrypted_code], {from:owner});
-      let verified = await confirmation.verify.call(confirmation_code);
+      verified = await confirmation.verify.call(confirmation_code);
       assert.equal(verified, true);
-      let conference = await Conference.new(600, 0, confirmation.address);
+      conference = await Conference.new(600, 0, confirmation.address);
+    })
+
+    it('allows participant to attend with code', async function(){
       await conference.register(twitterHandle, {from:non_owner, value:deposit})
       await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
-      let attended = await conference.attended.call()
-      assert.equal(attended, 1);
-      let reported = await confirmation.report.call(confirmation_code);
-      assert.equal(reported, non_owner);
+      assert.equal(await conference.attended.call(), 1);
+      assert.equal(await confirmation.report.call(confirmation_code), non_owner);
     })
 
     it('does not allow participants to attend with same code', async function(){
       let non_owner_2 = accounts[2];
-      let confirmation = await ConfirmationRepository.new();
-      let confirmation_code = web3.fromUtf8('1234567890');
-      let encrypted_code = await confirmation.encrypt.call(confirmation_code);
-      await confirmation.add([encrypted_code], {from:owner});
-      let verified = await confirmation.verify.call(confirmation_code);
-      assert.equal(verified, true);
-      let conference = await Conference.new(600, 0, confirmation.address);
-      await conference.register(twitterHandle, {from:non_owner, value:deposit})
-      await conference.register(twitterHandle, {from:non_owner_2, value:deposit})
-      await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
+      await conference.register(twitterHandle, {from:non_owner, value:deposit});
+      await conference.register(twitterHandle, {from:non_owner_2, value:deposit});
+      await conference.attendWithConfirmation(confirmation_code, {from:non_owner});
       await conference.attendWithConfirmation(confirmation_code, {from:non_owner_2}).catch(function(){});
-      let attended = await conference.attended.call()
-      assert.equal(attended, 1);
-      let reported = await confirmation.report.call(confirmation_code);
-      assert.equal(reported, non_owner);
+      assert.equal(await conference.attended.call(), 1);
+      assert.equal(await confirmation.report.call(confirmation_code), non_owner);
     })
   })
 
