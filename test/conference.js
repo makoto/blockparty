@@ -219,6 +219,7 @@ contract('Conference', function(accounts) {
     //   assert.strictEqual((await conference.attended.call()).toNumber(), currentAttended.toNumber());
     //   assert.equal(await conference.ended.call(), true);
     // })
+    // it('cannot payback any more', async function(){})
   })
 
   describe('on cancel', function(){
