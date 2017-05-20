@@ -111,49 +111,27 @@ contract('Conference', function(accounts) {
     })
   })
 
-  describe('on attend', function(){
-    it('isAttended is true if owner calls attend function', function(done){
-      var meta;
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[1], value:deposit});
-      }).then(function() {
-        return meta.attend.sendTransaction([accounts[1]], {from:owner})
-      }).
-      then(function(){
-        return meta.isAttended.call(accounts[1])
-      })
-      .then(function(value){
-        assert.equal(value, true)
-      }).then(function(){
-        return meta.attended.call()
-      }).then(function(value){
-        assert.equal(value.toNumber(), 1)
-      })
-      .then(done).catch(done);
+  describe.only('on attend', function(){
+    beforeEach(async function(){
+      await conference.register(twitterHandle, {value:deposit, from:non_owner});
+    })
+
+    it('isAttended is true if owner calls attend function', async function(){
+      await conference.attend([non_owner], {from:owner});
+      assert.equal(await conference.isAttended.call(non_owner), true);
+      assert.equal((await conference.attended.call()).toNumber(), 1);
     })
 
     it('isAttended is false if non owner calls attend function', async function(){
-      let conference = await Conference.new();
-      await conference.register(twitterHandle, {value:deposit});
       await conference.attend([non_owner], {from:non_owner}).catch(function(){});
       assert.equal(await conference.isAttended.call(non_owner), false);
       assert.equal(await conference.attended.call(), 0);
-      var participant = await conference.participants.call(non_owner);
+      let participant = await conference.participants.call(non_owner);
       assert.equal(participant[2], false)
     })
 
-    it('isAttended is false if attended function for the account is not called', function(done){
-      var meta;
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {value:deposit});
-      }).then(function() {
-        return meta.isAttended.call(accounts[0])
-      }).then(function(value){
-        assert.equal(value, false)
-      })
-      .then(done).catch(done);
+    it('isAttended is false if attended function for the account is not called', async function(){
+      assert.equal(await conference.isAttended.call(owner), false);
     })
   })
 
