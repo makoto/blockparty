@@ -166,132 +166,59 @@ contract('Conference', function(accounts) {
   })
 
   describe('on payback', function(){
-    // This test is very flakey. Fails when run all together but passes when run alone.
+    let previousBalance, currentRegistered, currentAttended;
+    let attended = accounts[2];
+    var notAttended = accounts[3];
+    var notRegistered = accounts[4];
+
+    beforeEach(async function(){
+      await conference.register(twitterHandle, {from:attended, value:deposit});
+      await conference.register(twitterHandle, {from:notAttended, value:deposit});
+      await conference.attend([attended]);
+    })
+
     it('cannot withdraw if non owner calls', async function(){
-      var previousBalances = [];
-      var registered = accounts[2]
-      let conference = await Conference.new()
-      await conference.register(twitterHandle, {from:registered, value:deposit, gas:gas})
-      // contract gets 1 ether
-      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit)
-      await conference.attend([registered], {gas:gas})
-      await conference.payback({from:non_owner, gas:gas}).catch(function(){});
-      await conference.withdraw({from:registered, gas:gas});
+      await conference.payback({from:non_owner}).catch(function(){});
+      await conference.withdraw({from:attended});
       // money is still left on contract
-      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit)
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
     })
 
-    it('cannot withdraw if you did not attend', function(done){
-      var meta
-      var previousBalances = [];
-      var notAttended = accounts[2];
-      var attended = accounts[1];
-
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:attended, value:deposit, gas:gas})
-      }).then(function(){
-        // contract gets 1 ether
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-        return meta.attend.sendTransaction([attended], {gas:gas})
-      }).then(function(){
-        return meta.payback.sendTransaction({from:owner, gas:gas})
-      }).then(function(){
-        previousBalances[0] = web3.eth.getBalance(notAttended);
-        return meta.withdraw.sendTransaction({from:notAttended, gas:gas})
-      }).then(function(transaction){
-        // money is still left on contract
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-      })
-      .then(done).catch(done);
+    it('cannot withdraw if you did not attend', async function(){
+      await conference.payback({from:owner});
+      await conference.withdraw({from:notAttended});
+      // money is still left on contract
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
     })
 
-    it('can withdraw if you attend', function(done){
-      var meta, previousBalance;
-
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
-      }).then(function() {
-        return meta.register('@Cpt_Reliable', {from:accounts[1], value:deposit, gas:gas})
-      }).then(function(){
-        return meta.register('@FLAKEY_99p', {from:accounts[2], value:deposit, gas:gas})
-      }).then(function(){
-        // contract gets 3 ethers
-        assert.strictEqual( web3.eth.getBalance(meta.address).toNumber(), deposit * 3)
-        // only account 0 and 1 attend
-      }).then(function(){
-        return meta.attend([accounts[0]], {gas:gas})
-      }).then(function(){
-        return meta.attend([accounts[1]], {gas:gas})
-      }).then(function(){
-        return meta.payback({from:accounts[0], gas:gas})
-      }).then(function(){
-        previousBalance = web3.eth.getBalance(accounts[0]);
-        return meta.withdraw({from:accounts[0]})
-      }).then(function(result){
-        var diff = web3.eth.getBalance(accounts[0]).toNumber() - previousBalance.toNumber()
-        assert( diff > (deposit * 1.4))
-        previousBalance = web3.eth.getBalance(accounts[1]);
-        return meta.withdraw({from:accounts[1]})
-      }).then(function(result){
-        var diff = web3.eth.getBalance(accounts[1]).toNumber() - previousBalance.toNumber()
-        assert( diff > (deposit * 1.4))
-        previousBalance = web3.eth.getBalance(accounts[2]);
-        return meta.withdraw({from:accounts[2]})
-      }).then(function(result){
-        var diff = web3.eth.getBalance(accounts[0]).toNumber() - previousBalance.toNumber()
-        assert( diff < 0)
-        // no money is left on contract
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
-        return meta.participants.call(accounts[0]);
-      }).then(function(participant){
-        // Got some money
-        assert.strictEqual(participant[3].toNumber(), deposit * 1.5)
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
-        assert.equal(participant[4], true)
-        return meta.participants.call(accounts[1]);
-      }).then(function(participant){
-        // Got some money
-        assert.strictEqual(participant[3].toNumber(), deposit * 1.5)
-        assert.equal(participant[4], true)
-        return meta.participants.call(accounts[2]);
-      }).then(function(participant){
-        // Got no money
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), 0)
-        assert.equal(participant[4], false)
-      }).then(done).catch(done);
+    it('can withdraw if you attend', async function(){
+      await conference.payback({from:owner});
+      previousBalance = web3.eth.getBalance(attended);
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+      await conference.withdraw({from:attended});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), 0);
+      let diff = web3.eth.getBalance(attended).toNumber() - previousBalance.toNumber();
+      assert( diff > (deposit * 1.9));
+      let participant = await conference.participants.call(attended);
+      assert.equal(participant[4], true);
     })
 
-    it('cannot register any more', function(done){
-      var meta;
-      var currentRegistered;
-
-      Conference.new().then(function(_meta) {
-        meta = _meta;
-        return meta.register.sendTransaction(twitterHandle, {from:accounts[0], value:deposit, gas:gas})
-      }).then(function(){
-        // contract gets 1 ether
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-        return meta.attend.sendTransaction([accounts[0]], {gas:gas})
-      }).then(function(){
-        return meta.payback.sendTransaction({from:owner, gas:gas})
-      }).then(function(){
-        return meta.registered.call()
-      }).then(function(registered){
-        currentRegistered = registered
-        return meta.register.sendTransaction('some handler', {from:accounts[1], value:deposit, gas:gas})
-      }).then(function(){
-        return meta.registered.call()
-      }).then(function(registered){
-        assert.strictEqual(currentRegistered.toNumber(), registered.toNumber())
-      }).then(function(){
-        return meta.ended.call()
-      }).then(function(ended){
-        assert.equal(ended, true)
-      })
-      .then(done).catch(done);
+    it('cannot register any more', async function(){
+      await conference.payback({from:owner});
+      currentRegistered = await conference.registered.call();
+      await conference.register('some handler', {from:notRegistered, value:deposit});
+      assert.strictEqual((await conference.registered.call()).toNumber(), currentRegistered.toNumber());
+      assert.equal(await conference.ended.call(), true);
     })
+
+    // This is faiing. Potentially bug;
+    // it('cannot attend any more', async function(){
+    //   await conference.payback({from:owner});
+    //   currentAttended = await conference.attended.call();
+    //   await conference.attend([notAttended], {from:owner});
+    //   assert.strictEqual((await conference.attended.call()).toNumber(), currentAttended.toNumber());
+    //   assert.equal(await conference.ended.call(), true);
+    // })
   })
 
   describe('on cancel', function(){
