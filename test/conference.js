@@ -2,7 +2,7 @@ require('babel-polyfill');
 const Conference = artifacts.require("Conference.sol");
 const InvitationRepository = artifacts.require("./InvitationRepository.sol");
 const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
-const invalid_jump_error = /Error: VM Exception while processing transaction: invalid JUMP/;
+const Tempo = require('@digix/tempo').default;
 const deposit = Math.pow(10,17);
 const twitterHandle = '@bighero6';
 const gas = 1000000;
@@ -296,63 +296,39 @@ contract('Conference', function(accounts) {
   })
 
   describe('on clear', function(){
-    it('default cooling period is 1 week', function(done){
-      Conference.new().then(function(meta) {
-        return meta.coolingPeriod.call();
-      }).then(function(coolingPeriod){
-        assert.equal(coolingPeriod.toNumber(), 1 * 60 * 60 * 24 * 7)
-      })
-      .then(done).catch(done);
+    let one_week = 1 * 60 * 60 * 24 * 7;
+
+    it('default cooling period is 1 week', async function(){
+      assert.equal((await conference.coolingPeriod.call()).toNumber(), one_week);
     })
 
-    it('cooling period can be set', function(done){
-      Conference.new(10, 0, 0).then(function(meta) {
-        return meta.coolingPeriod.call();
-      }).then(function(coolingPeriod){
-        assert.equal(coolingPeriod.toNumber(), 10)
-      })
-      .then(done).catch(done);
+    it('cooling period can be set', async function(){
+      conference = await Conference.new(10, 0, 0);
+      assert.equal((await conference.coolingPeriod.call()).toNumber(), 10);
     })
 
     it('cannot be cleared by non owner', async function(){
-      let conference = await Conference.new(10, 0);
+      conference = await Conference.new(10, 0);
       await conference.register('one', {value:deposit});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
       await conference.clear('one', {from:non_owner}).catch(function(){});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
     })
 
-    it('cannot be cleared if event is not ended', function(done){
-      let meta;
-      Conference.new().then(function(_meta) {
-        meta = _meta
-        return meta.register.sendTransaction('one', {value:deposit});
-      }).then(function(){
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-        return meta.clear.sendTransaction('one', {from:owner});
-      }).then(function(){
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-      })
-      .then(done).catch(done);
+    it('cannot be cleared if event is not ended', async function(){
+      await conference.register('one', {value:deposit});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
+      await conference.clear('one', {from:owner});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
     })
 
-    it('cannot be cleared if cooling period is not passed', function(done){
-      let meta;
-      Conference.new().then(function(_meta) {
-        meta = _meta
-        return meta.register.sendTransaction('one', {value:deposit});
-      }).then(function(){
-        return meta.cancel.sendTransaction({from:owner});
-      }).then(function(){
-        return meta.ended.call()
-      }).then(function(ended){
-        assert.equal(ended, true)
-        assert.strictEqual( web3.eth.getBalance(meta.address).toNumber(), deposit)
-        return meta.clear.sendTransaction('one', {from:owner});
-      }).then(function(){
-        assert.equal(web3.eth.getBalance(meta.address).toNumber(), deposit)
-      })
-      .then(done).catch(done);
+    it('cannot be cleared if cooling period is not passed', async function(){
+      await conference.register('one', {value:deposit});
+      await conference.cancel({from:owner});
+      assert.equal(await conference.ended.call(), true);
+      assert.strictEqual( web3.eth.getBalance(conference.address).toNumber(), deposit);
+      await conference.clear('one', {from:owner});
+      assert.equal(web3.eth.getBalance(conference.address).toNumber(), deposit);
     })
 
     it('owner receives the remaining if cooling period is passed', function(done){
