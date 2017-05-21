@@ -2,7 +2,8 @@ require('babel-polyfill');
 const Conference = artifacts.require("Conference.sol");
 const InvitationRepository = artifacts.require("./InvitationRepository.sol");
 const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
-const Tempo = require('@digix/tempo').default;
+const Tempo = require('@digix/tempo');
+const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const deposit = Math.pow(10,17);
 const twitterHandle = '@bighero6';
 const gas = 1000000;
@@ -331,27 +332,19 @@ contract('Conference', function(accounts) {
       assert.equal(web3.eth.getBalance(conference.address).toNumber(), deposit);
     })
 
-    it('owner receives the remaining if cooling period is passed', function(done){
-      let meta;
-      Conference.new(1, 0, 0).then(function(_meta) {
-        meta = _meta
-        return meta.register.sendTransaction('one', {value:deposit});
-      }).then(function(){
-        return meta.cancel.sendTransaction({from:owner});
-      }).then(function(){
-        return meta.ended.call()
-      }).then(function(ended){
-        assert.equal(ended, true)
-        assert.strictEqual(web3.eth.getBalance(meta.address).toNumber(), deposit)
-        var previousBalance = web3.eth.getBalance(owner);
-        setTimeout(function(){
-          meta.clear.sendTransaction('one', {from:owner}).then(function(transaction){
-            var receipt = web3.eth.getTransactionReceipt(transaction)
-            assert.equal(web3.eth.getBalance(meta.address).toString(), web3.toWei(0, "ether"))
-            done()
-          }).catch(done)
-        }, 2000)
-      }).catch(done);
+    it('owner receives the remaining if cooling period is passed', async function(){
+      let tempo = await new Tempo(web3);
+      conference = await Conference.new(1, 0, 0)
+      await conference.register('one', {value:deposit});
+      await conference.cancel({from:owner});
+      assert.equal(await conference.ended.call(), true);
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
+      let previousBalance = web3.eth.getBalance(owner);
+      await wait(2, 1);
+      await conference.clear('one', {from:owner});
+      let diff = web3.eth.getBalance(owner) - previousBalance.toNumber();
+      assert( diff > (deposit * 0.9));
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), 0);
     })
   })
 })
