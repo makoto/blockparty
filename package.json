@@ -50,6 +50,7 @@
     "zeppelin-solidity": "0.0.6"
   },
   "devDependencies": {
+    "@digix/tempo": "^0.2.0",
     "autoprefixer": "6.4.1",
     "babel-core": "6.14.0",
     "babel-eslint": "6.1.2",
