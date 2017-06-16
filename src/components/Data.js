@@ -4,12 +4,12 @@ import React from 'react';
 
 let Data = [
   {
-    name: 'Edcon Post conference lunch',
+    name: null,
     address: null,
     date:'TBD',
-    map_url: '',
-    location_text: 'TBD',
-    description_text: "TBD"
+    map_url: 'https://www.google.co.uk/maps/place/Simply+Business/@51.51528,-0.0904011,15z/data=!4m5!3m4!1s0x0:0x70f23f24baccffdc!8m2!3d51.51528!4d-0.0904011',
+    location_text: 'Simply Business (99 Gresham St, London EC2V 7NG)',
+    description_text: ''
   },
   {
     name: 'Edcon Post conference lunch',
