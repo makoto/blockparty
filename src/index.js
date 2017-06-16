@@ -224,7 +224,7 @@ window.onload = function() {
         args = [];
       }
       if (name == "register" || name == "registerWithInvitation") {
-        options.value = Math.pow(10,17);
+        options.value = Math.pow(10,18) / 20;
       }
       args.push(options);
       contract.then(function(instance){
