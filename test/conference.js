@@ -312,18 +312,18 @@ contract('Conference', function(accounts) {
     })
 
     it('cannot be cleared by non owner', async function(){
-      conference = await Conference.new(10, 0);
+      conference = await Conference.new(10, 0, 0);
       deposit = (await conference.deposit.call()).toNumber();
       await conference.register('one', {value:deposit});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
-      await conference.clear('one', {from:non_owner}).catch(function(){});
+      await conference.clear({from:non_owner}).catch(function(){});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
     })
 
     it('cannot be cleared if event is not ended', async function(){
       await conference.register('one', {value:deposit});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
-      await conference.clear('one', {from:owner});
+      await conference.clear({from:owner}).catch(function(){});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
     })
 
@@ -332,7 +332,7 @@ contract('Conference', function(accounts) {
       await conference.cancel({from:owner});
       assert.equal(await conference.ended.call(), true);
       assert.strictEqual( web3.eth.getBalance(conference.address).toNumber(), deposit);
-      await conference.clear('one', {from:owner});
+      await conference.clear({from:owner}).catch(function(){});
       assert.equal(web3.eth.getBalance(conference.address).toNumber(), deposit);
     })
 
@@ -347,7 +347,7 @@ contract('Conference', function(accounts) {
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
       let previousBalance = web3.eth.getBalance(owner);
       await wait(2, 1);
-      await conference.clear('one', {from:owner});
+      await conference.clear({from:owner});
       let diff = web3.eth.getBalance(owner) - previousBalance.toNumber();
       assert( diff > (deposit * 0.9));
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), 0);

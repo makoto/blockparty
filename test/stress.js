@@ -32,7 +32,7 @@ contract('Stress test', function(accounts) {
     await conference.setLimitOfParticipants(participants);
   })
 
-  it.only('can handle ' + participants + ' participants', async function(){
+  it('can handle ' + participants + ' participants', async function(){
     const formatArray = function(array){
       return array.join("\t\t")
     }
