@@ -60,11 +60,10 @@ class ConferenceDetail extends React.Component {
         this.props.eventEmitter.emit('instruction');
       }
     }.bind(this), 5000)
-
     // Listen to watcher event.
     this.serverRequest = $.get('https://www.cryptocompare.com/api/data/price?fsym=ETH&tsyms=GBP', function (result) {
       this.setState({
-        rate: result.Data[0].Price / 10
+        rate: result.Data[0].Price / 20
       });
     }.bind(this));
   }
