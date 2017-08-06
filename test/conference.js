@@ -4,17 +4,18 @@ const InvitationRepository = artifacts.require("./InvitationRepository.sol");
 const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
 const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
-const deposit = Math.pow(10,17);
 const twitterHandle = '@bighero6';
 const gas = 1000000;
+const gasPrice = 1;
 
 contract('Conference', function(accounts) {
   const owner = accounts[0];
   const non_owner = accounts[1];
-  let conference;
+  let conference, deposit;
 
   beforeEach(async function(){
     conference = await Conference.new();
+    deposit = (await conference.deposit.call()).toNumber();
   })
 
   describe('on setLimitOfParticipants', function(){
@@ -60,6 +61,7 @@ contract('Conference', function(accounts) {
       encrypted_code = await invitation.encrypt.call(invitation_code);
       await invitation.add([encrypted_code], {from:owner});
       conference = await Conference.new(600, invitation.address,0);
+      deposit = (await conference.deposit.call()).toNumber();
     })
 
     it('allows registration only if invited', async function(){
@@ -146,6 +148,7 @@ contract('Conference', function(accounts) {
       verified = await confirmation.verify.call(confirmation_code);
       assert.equal(verified, true);
       conference = await Conference.new(600, 0, confirmation.address);
+      deposit = (await conference.deposit.call()).toNumber();
     })
 
     it('allows participant to attend with code', async function(){
@@ -310,6 +313,7 @@ contract('Conference', function(accounts) {
 
     it('cannot be cleared by non owner', async function(){
       conference = await Conference.new(10, 0);
+      deposit = (await conference.deposit.call()).toNumber();
       await conference.register('one', {value:deposit});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
       await conference.clear('one', {from:non_owner}).catch(function(){});
@@ -335,6 +339,8 @@ contract('Conference', function(accounts) {
     it('owner receives the remaining if cooling period is passed', async function(){
       let tempo = await new Tempo(web3);
       conference = await Conference.new(1, 0, 0)
+      deposit = (await conference.deposit.call()).toNumber();
+
       await conference.register('one', {value:deposit});
       await conference.cancel({from:owner});
       assert.equal(await conference.ended.call(), true);

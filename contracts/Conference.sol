@@ -109,7 +109,7 @@ contract Conference is Destructible {
 	/* Public functions */
 
 	function Conference(uint _coolingPeriod, address _invitation_repository_address, address _confirmation_repository_address) {
-		name = 'CodeUp #21';
+		name = 'Test';
 		deposit = 0.05 ether;
 		totalBalance = 0;
 		registered = 0;

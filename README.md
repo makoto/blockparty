@@ -118,7 +118,7 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 
 ### Running locally
 
-- Run `testrpc` in one console
+- Run `testrpc -a 30` in one console
 - Run `truffle migrate`
 - Run `npm run dev`
 - Open `http://localhost:8080`

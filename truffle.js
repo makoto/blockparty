@@ -10,7 +10,8 @@ module.exports = {
     test: {
       host: "localhost",
       port: 8545,
-      network_id: "*"
+      network_id: "*",
+      gasPrice: 0x01
     },
     ropsten: {
       host: "localhost",
