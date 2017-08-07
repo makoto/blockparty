@@ -45,7 +45,7 @@ contract Conference is Destructible {
 		if (msg.value == deposit) {
 			_;
 		}else{
-			if(!msg.sender.send(msg.value)) throw;
+			assert(msg.sender.send(msg.value));
 		}
 	}
 
@@ -59,7 +59,7 @@ contract Conference is Destructible {
 		if (ended == false) {
 			_;
 		}else{
-			if(!msg.sender.send(msg.value)) throw;
+			assert(msg.sender.send(msg.value));
 		}
 	}
 
@@ -67,7 +67,7 @@ contract Conference is Destructible {
 		if (registered < limitOfParticipants ) {
 			_;
 		}else{
-			if(!msg.sender.send(msg.value)) throw;
+			assert(msg.sender.send(msg.value));
 		}
 	}
 
@@ -161,9 +161,7 @@ contract Conference is Destructible {
 		Participant participant = participants[msg.sender];
 		participant.paid = true;
 		totalBalance -= participant.payout;
-		if (!msg.sender.send(participant.payout)) {
-			throw;
-		}
+		assert(msg.sender.send(participant.payout));
 		WithdrawEvent(msg.sender, participant.payout);
 	}
 
@@ -212,7 +210,7 @@ contract Conference is Destructible {
 		var leftOver = totalBalance;
 		totalBalance = 0;
 		ClearEvent(owner, leftOver);
-		if(!owner.send(leftOver)) throw;
+		assert(owner.send(leftOver));
 	}
 
 	function setLimitOfParticipants(uint _limitOfParticipants) public onlyOwner{
