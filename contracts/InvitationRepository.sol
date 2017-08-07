@@ -29,7 +29,7 @@ contract InvitationRepository is Ownable{
       code.claimed = true;
       code.participant = _sender;
     }else{
-      throw;
+      revert();
     }
     return true;
   }
