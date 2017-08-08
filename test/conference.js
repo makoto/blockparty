@@ -216,14 +216,13 @@ contract('Conference', function(accounts) {
     })
 
     // This is faiing. Potentially bug;
-    // it('cannot attend any more', async function(){
-    //   await conference.payback({from:owner});
-    //   currentAttended = await conference.attended.call();
-    //   await conference.attend([notAttended], {from:owner});
-    //   assert.strictEqual((await conference.attended.call()).toNumber(), currentAttended.toNumber());
-    //   assert.equal(await conference.ended.call(), true);
-    // })
-    // it('cannot payback any more', async function(){})
+    it('cannot attend any more', async function(){
+      await conference.payback({from:owner});
+      currentAttended = await conference.attended.call();
+      await conference.attend([notAttended], {from:owner});
+      assert.strictEqual((await conference.attended.call()).toNumber(), currentAttended.toNumber());
+      assert.equal(await conference.ended.call(), true);
+    })
   })
 
   describe('on cancel', function(){

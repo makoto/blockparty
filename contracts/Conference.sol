@@ -217,7 +217,7 @@ contract Conference is Destructible {
 		limitOfParticipants = _limitOfParticipants;
 	}
 
-	function attend(address[] _addresses) public onlyOwner{
+	function attend(address[] _addresses) public onlyOwner onlyActive{
 		for(uint i=0;i<_addresses.length;i++){
 			var _addr = _addresses[i];
 			require(isRegistered(_addr));
