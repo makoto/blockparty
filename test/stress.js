@@ -80,6 +80,7 @@ const reportTest = async function (participants, accounts){
     bodies.push(row);
   }
   var date = moment().format("YYYYMMDD");
+  fs.writeFileSync(`./log/stress_${pad(participants, 4)}.log`, bodies.join('\n') + '\n');
   fs.writeFileSync(`./log/stress_${pad(participants, 4)}_${date}.log`, bodies.join('\n') + '\n');
 }
 
