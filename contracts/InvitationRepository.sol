@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 import './zeppelin/ownership/Ownable.sol';
 
@@ -29,7 +29,7 @@ contract InvitationRepository is Ownable{
       code.claimed = true;
       code.participant = _sender;
     }else{
-      throw;
+      revert();
     }
     return true;
   }

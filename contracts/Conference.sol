@@ -1,4 +1,5 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
+
 import './InvitationRepository.sol';
 import './ConfirmationRepository.sol';
 import './zeppelin/ownership/Ownable.sol';
@@ -44,7 +45,7 @@ contract Conference is Destructible {
 		if (msg.value == deposit) {
 			_;
 		}else{
-			if(!msg.sender.send(msg.value)) throw;
+			assert(msg.sender.send(msg.value));
 		}
 	}
 
@@ -58,7 +59,7 @@ contract Conference is Destructible {
 		if (ended == false) {
 			_;
 		}else{
-			if(!msg.sender.send(msg.value)) throw;
+			assert(msg.sender.send(msg.value));
 		}
 	}
 
@@ -66,7 +67,7 @@ contract Conference is Destructible {
 		if (registered < limitOfParticipants ) {
 			_;
 		}else{
-			if(!msg.sender.send(msg.value)) throw;
+			assert(msg.sender.send(msg.value));
 		}
 	}
 
@@ -97,12 +98,12 @@ contract Conference is Destructible {
 	}
 
 	modifier ifInvited(bytes32 invitation_code){
-		if(invitation && !invitationRepository.claim(invitation_code, msg.sender)) throw;
+		require(invitation && invitationRepository.claim(invitation_code, msg.sender));
 		_;
 	}
 
 	modifier ifConfirmed(bytes32 _code){
-		if(confirmation && !confirmationRepository.claim(_code, msg.sender)) throw;
+		require(confirmation && confirmationRepository.claim(_code, msg.sender));
 		_;
 	}
 
@@ -140,30 +141,28 @@ contract Conference is Destructible {
 	}
 
 	function register(string _participant) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn payable{
-		RegisterEvent(msg.sender, _participant);
-		if (isRegistered(msg.sender)) throw;
+		require(!isRegistered(msg.sender));
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, 0, false);
 		totalBalance = totalBalance + (deposit * 1);
+		RegisterEvent(msg.sender, _participant);
 	}
 
 	function attendWithConfirmation(bytes32 _confirmation) public ifConfirmed(_confirmation){
-		if (isRegistered(msg.sender) != true) throw;
-		if (isAttended(msg.sender)) throw;
-		AttendEvent(msg.sender);
+		require(isRegistered(msg.sender));
+		require(!isAttended(msg.sender));
 		participants[msg.sender].attended = true;
 		attended++;
+		AttendEvent(msg.sender);
 	}
 
 	function withdraw() public onlyPayable notPaid {
-		WithdrawEvent(msg.sender, participant.payout);
 		Participant participant = participants[msg.sender];
 		participant.paid = true;
 		totalBalance -= participant.payout;
-		if (!msg.sender.send(participant.payout)) {
-			throw;
-		}
+		assert(msg.sender.send(participant.payout));
+		WithdrawEvent(msg.sender, participant.payout);
 	}
 
 	/* Constants */
@@ -211,18 +210,18 @@ contract Conference is Destructible {
 		var leftOver = totalBalance;
 		totalBalance = 0;
 		ClearEvent(owner, leftOver);
-		if(!owner.send(leftOver)) throw;
+		assert(owner.send(leftOver));
 	}
 
 	function setLimitOfParticipants(uint _limitOfParticipants) public onlyOwner{
 		limitOfParticipants = _limitOfParticipants;
 	}
 
-	function attend(address[] _addresses) public onlyOwner{
+	function attend(address[] _addresses) public onlyOwner onlyActive{
 		for(uint i=0;i<_addresses.length;i++){
 			var _addr = _addresses[i];
-			if (isRegistered(_addr) != true) throw;
-			if (isAttended(_addr)) throw;
+			require(isRegistered(_addr));
+			require(!isAttended(_addr));
 			AttendEvent(_addr);
 			participants[_addr].attended = true;
 			attended++;
