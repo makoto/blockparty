@@ -129,7 +129,7 @@ window.onload = function() {
     function getDetail(){
       var values;
       contract.then(function(instance){
-        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'invitation', 'invitationRepository', 'confirmation', 'confirmationRepository'].map(attributeName => {
+        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'invitation', 'invitationRepository', 'confirmation', 'confirmationRepository', 'payoutAmount'].map(attributeName => {
           return instance[attributeName].call();
         })).then(_values => {
           values = _values;
@@ -149,6 +149,7 @@ window.onload = function() {
             'invitationRepository': values[10],
             'confirmation': values[11],
             'confirmationRepository': values[12],
+            'payoutAmount': values[13],
             'contractBalance': web3.fromWei(contractBalance, "ether").toNumber(),
             'date': metadata.date,
             'map_url': metadata.map_url,
@@ -201,8 +202,7 @@ window.onload = function() {
                 name: participant[0],
                 address: participant[1],
                 attended: participant[2],
-                payout: participant[3],
-                paid: participant[4]
+                paid: participant[3]
               }
               return object
             })

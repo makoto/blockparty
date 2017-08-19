@@ -9,6 +9,7 @@ import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import math from 'mathjs';
+import participantStatus from '../util/participantStatus';
 
 const getTwitterIcon = (name) =>(
   <Avatar style={{verticalAlign:'middle'}} src={`https://avatars.io/twitter/${name}`} size={26} />
@@ -113,24 +114,30 @@ class Participants extends React.Component {
   }
 
   displayBalance(participant){
-    var amount = web3.fromWei(this.toNumber(participant.payout))
-    let color = 'black';
-    let message = '';
-    if (amount > 0){
+    var message = participantStatus(participant, this.state.detail);
+    console.log('status', message);
+    let color, amount;
+    switch(message) {
+    case 'Won':
+    case 'Earned':
       color = 'green';
-      if(participant.paid){
-        message = 'Earned';
-      }else{
-        message = 'Won';
-      }
+      amount = web3.fromWei(this.state.detail.payoutAmount.toNumber());
+      break;
+    case 'Lost':
+      color = 'red';
+      amount = 0;
+      break;
+    default :
+      color = 'black';
+      amount = 0;
     }
-    if (amount < 0){
-      color = 'red' ;
-      message = 'Lost';
+    if (amount != 0) {
+      var amountToDisplay = math.round(amount, 3).toString()
     }
+
     return(
       <span style={{color:color}}>
-        { math.round(amount, 3).toString() } {message}
+        { amountToDisplay } {message}
       </span>
     )
   }
