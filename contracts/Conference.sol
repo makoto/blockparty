@@ -12,8 +12,10 @@ contract Conference is Destructible {
 	uint public registered;
 	uint public attended;
 	bool public ended;
+	bool public cancelled;
 	uint public endedAt;
 	uint public coolingPeriod;
+	uint256 public payoutAmount;
 	InvitationRepository public invitationRepository;
 	ConfirmationRepository public confirmationRepository;
 
@@ -26,15 +28,14 @@ contract Conference is Destructible {
 		string participantName;
 		address addr;
 		bool attended;
-		uint256 payout;
 		bool paid;
 	}
 
 	event RegisterEvent(address addr, string participantName);
 	event AttendEvent(address addr);
-	event PaybackEvent(address addr, uint256 _payout);
+	event PaybackEvent(uint256 _payout);
 	event WithdrawEvent(address addr, uint256 _payout);
-	event CancelEvent(address addr, uint256 _payout);
+	event CancelEvent();
 	event ClearEvent(address addr, uint256 leftOver);
 
 	/* Modifiers */
@@ -82,7 +83,7 @@ contract Conference is Destructible {
 
 	modifier onlyPayable {
 		Participant participant = participants[msg.sender];
-		if (participant.payout > 0){
+		if (cancelled || (payoutAmount > 0 && participant.attended)){
 			_;
 		}
 	}
@@ -133,7 +134,7 @@ contract Conference is Destructible {
 		require(!isRegistered(msg.sender));
 		registered++;
 		participantsIndex[registered] = msg.sender;
-		participants[msg.sender] = Participant(_participant, msg.sender, false, 0, false);
+		participants[msg.sender] = Participant(_participant, msg.sender, false, false);
 		RegisterEvent(msg.sender, _participant);
 	}
 
@@ -148,8 +149,8 @@ contract Conference is Destructible {
 	function withdraw() public onlyPayable notPaid {
 		Participant participant = participants[msg.sender];
 		participant.paid = true;
-		assert(msg.sender.send(participant.payout));
-		WithdrawEvent(msg.sender, participant.payout);
+		assert(msg.sender.send(payoutAmount));
+		WithdrawEvent(msg.sender, payoutAmount);
 	}
 
 	/* Constants */
@@ -185,23 +186,18 @@ contract Conference is Destructible {
 	/* Admin only functions */
 
 	function payback() onlyOwner{
-		for(uint i=1;i<=registered;i++){
-			if(participants[participantsIndex[i]].attended){
-				participants[participantsIndex[i]].payout = payout();
-				PaybackEvent(participantsIndex[i], payout());
-			}
-		}
+		payoutAmount = payout();
 		ended = true;
 		endedAt = now;
+		PaybackEvent(payoutAmount);
 	}
 
 	function cancel() onlyOwner onlyActive{
-		for(uint i=1;i<=registered;i++){
-			participants[participantsIndex[i]].payout = deposit;
-			CancelEvent(participantsIndex[i], deposit);
-		}
+		payoutAmount = deposit;
+		cancelled = true;
 		ended = true;
 		endedAt = now;
+		CancelEvent();
 	}
 
 	/* return the remaining of balance if there are any unclaimed after cooling period */

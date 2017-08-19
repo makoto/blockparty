@@ -7,6 +7,11 @@ const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const twitterHandle = '@bighero6';
 const gas = 1000000;
 const gasPrice = 1;
+const participantAttributes = ['participantName', 'addr', 'attended', 'paid'];
+
+const getParticipantDetail = function(participant, detail){
+  return participant[participantAttributes.indexOf(detail)];
+}
 
 contract('Conference', function(accounts) {
   const owner = accounts[0];
@@ -130,7 +135,7 @@ contract('Conference', function(accounts) {
       assert.equal(await conference.isAttended.call(non_owner), false);
       assert.equal(await conference.attended.call(), 0);
       let participant = await conference.participants.call(non_owner);
-      assert.equal(participant[2], false)
+      assert.equal(getParticipantDetail(participant, 'attended'), false);
     })
 
     it('isAttended is false if attended function for the account is not called', async function(){
@@ -212,7 +217,7 @@ contract('Conference', function(accounts) {
       let diff = web3.eth.getBalance(attended).toNumber() - previousBalance.toNumber();
       assert( diff > (deposit * 1.9));
       let participant = await conference.participants.call(attended);
-      assert.equal(participant[4], true);
+      assert.equal(getParticipantDetail(participant, 'paid'), true);
     })
 
     it('cannot register any more', async function(){
@@ -262,7 +267,7 @@ contract('Conference', function(accounts) {
       diff = web3.eth.getBalance(attended).toNumber() - previousBalance.toNumber();
       assert( diff > (deposit * 0.9));
       participant = await conference.participants.call(attended);
-      assert.equal(participant[4], true);
+      assert.equal(getParticipantDetail(participant, 'paid'), true);
       // notAttended
       previousBalance = web3.eth.getBalance(notAttended);
       await conference.withdraw({from:notAttended});
@@ -270,7 +275,7 @@ contract('Conference', function(accounts) {
       diff = web3.eth.getBalance(notAttended).toNumber() - previousBalance.toNumber();
       assert( diff > (deposit * 0.9));
       participant = await conference.participants.call(notAttended);
-      assert.equal(participant[4], true);
+      assert.equal(getParticipantDetail(participant, 'paid'), true);
     })
 
     it('cannot register any more', async function(){
