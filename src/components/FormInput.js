@@ -5,6 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import participantStatus from '../util/participantStatus';
 
 const styles = {margin:12}
 
@@ -80,20 +81,9 @@ class FormInput extends React.Component {
   participantStatus(){
     var p = this.selectParticipant(this.state.participants, this.state.address);
     if (p) {
-      if (p.attended == false) {
-        return 'registered';
-      }else if(p.attended && p.payout == 0 && !p.paid){
-        return 'attended';
-      }else if (p.attended && p.payout >= 0 && !p.paid){
-        return 'won';
-      }else if (p.paid){
-        return 'withdrawn';
-      }else{
-        console.log('unrecognised', p)
-        return('unrecognised state');
-      }
+      return participantStatus(p, this.state.detail)
     }else{
-      return 'not registered';
+      return 'Not registered';
     }
   }
 
@@ -104,11 +94,11 @@ class FormInput extends React.Component {
   }
 
   isOwner(){
-    return this.state.accounts.includes(this.state.detail.owner);
+    return this.state.address == this.state.detail.owner;
   }
 
   showRegister(){
-    return this.state.detail.canRegister && this.participantStatus() == 'not registered';
+    return this.state.detail.canRegister && this.participantStatus() == 'Not registered';
   }
 
   showAttend(){
@@ -116,11 +106,11 @@ class FormInput extends React.Component {
   }
 
   showWithdraw(){
-    return this.state.detail.canWithdraw && this.participantStatus() == 'won';
+    return this.state.detail.canWithdraw && this.participantStatus() == 'Won';
   }
 
   showAttendForAttendant(){
-    return this.state.detail.confirmation && this.state.detail.canAttend && this.participantStatus() == 'registered';
+    return this.state.detail.confirmation && this.state.detail.canAttend && this.participantStatus() == 'Registered';
   }
 
   showPayback(){
