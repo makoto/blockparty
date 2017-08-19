@@ -158,6 +158,14 @@ contract('Conference', function(accounts) {
       assert.equal(await confirmation.report.call(confirmation_code), non_owner);
     })
 
+    it('does not allow participants to attend with non confirmation code', async function(){
+      let non_confirmation_code = web3.fromUtf8('non_confirmation');
+      await conference.register(twitterHandle, {from:non_owner, value:deposit});
+      await conference.attendWithConfirmation(non_confirmation_code, {from:non_owner}).catch(function(){});
+      assert.equal(await conference.attended.call(), 0);
+      assert.equal(await confirmation.report.call(non_confirmation_code), 0);
+    })
+
     it('does not allow participants to attend with same code', async function(){
       let non_owner_2 = accounts[2];
       await conference.register(twitterHandle, {from:non_owner, value:deposit});

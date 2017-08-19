@@ -15,8 +15,6 @@ contract Conference is Destructible {
 	bool public ended;
 	uint public endedAt;
 	uint public coolingPeriod;
-	bool public invitation;
-	bool public confirmation;
 	InvitationRepository public invitationRepository;
 	ConfirmationRepository public confirmationRepository;
 
@@ -98,12 +96,12 @@ contract Conference is Destructible {
 	}
 
 	modifier ifInvited(bytes32 invitation_code){
-		require(invitation && invitationRepository.claim(invitation_code, msg.sender));
+		require(invitationRepository.claim(invitation_code, msg.sender));
 		_;
 	}
 
 	modifier ifConfirmed(bytes32 _code){
-		require(confirmation && confirmationRepository.claim(_code, msg.sender));
+		require(confirmationRepository.claim(_code, msg.sender));
 		_;
 	}
 
@@ -120,12 +118,10 @@ contract Conference is Destructible {
 		}
 
 		if (_invitation_repository_address !=0) {
-			invitation = true;
 			invitationRepository = InvitationRepository(_invitation_repository_address);
 		}
 
 		if (_confirmation_repository_address !=0) {
-			confirmation = true;
 			confirmationRepository = ConfirmationRepository(_confirmation_repository_address);
 		}
 	}
