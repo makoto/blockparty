@@ -7,7 +7,6 @@ import './zeppelin/lifecycle/Destructible.sol';
 
 contract Conference is Destructible {
 	string public name;
-	uint256 public totalBalance;
 	uint256 public deposit;
 	uint public limitOfParticipants;
 	uint public registered;
@@ -135,7 +134,6 @@ contract Conference is Destructible {
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, 0, false);
-		totalBalance = totalBalance + (deposit * 1);
 		RegisterEvent(msg.sender, _participant);
 	}
 
@@ -150,14 +148,25 @@ contract Conference is Destructible {
 	function withdraw() public onlyPayable notPaid {
 		Participant participant = participants[msg.sender];
 		participant.paid = true;
-		totalBalance -= participant.payout;
 		assert(msg.sender.send(participant.payout));
 		WithdrawEvent(msg.sender, participant.payout);
 	}
 
 	/* Constants */
+	function totalBalance() constant returns (uint256){
+		return this.balance;
+	}
+
+	function invitation() constant returns (bool){
+		invitationRepository != address(0);
+	}
+
+	function confirmation() constant returns (bool){
+		confirmationRepository != address(0);
+	}
+
 	function isRegistered(address _addr) constant returns (bool){
-		return participants[_addr].addr != 0x0;
+		return participants[_addr].addr != address(0);
 	}
 
 	function isAttended(address _addr) constant returns (bool){
@@ -170,7 +179,7 @@ contract Conference is Destructible {
 
 	function payout() constant returns(uint256){
 		if (attended == 0) return 0;
-		return uint(totalBalance) / uint(attended);
+		return uint(totalBalance()) / uint(attended);
 	}
 
 	/* Admin only functions */
@@ -197,8 +206,7 @@ contract Conference is Destructible {
 
 	/* return the remaining of balance if there are any unclaimed after cooling period */
 	function clear() public onlyOwner isEnded onlyAfter(endedAt + coolingPeriod) {
-		var leftOver = totalBalance;
-		totalBalance = 0;
+		var leftOver = totalBalance();
 		ClearEvent(owner, leftOver);
 		assert(owner.send(leftOver));
 	}
