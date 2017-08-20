@@ -22,18 +22,17 @@ contract('Encryption', function(accounts) {
   describe('on registration', function(){
     beforeEach(async function(){
       conference = await Conference.new();
-      // console.log('conference.abi', conference.abi);
       console.log(getTransaction('create   ', conference.transactionHash));
       deposit = (await conference.deposit.call()).toNumber();
     })
 
-    it.only('increments registered', async function(){
+    it('increments registered', async function(){
       var publicKey = fs.readFileSync('./tmp/test_public.key', {encoding: 'ascii'});
       var privateKey = fs.readFileSync('./tmp/test_private.key', {encoding: 'ascii'});
       var message = "マコト";
 
       var encrypted = crypto.publicEncrypt(publicKey, new Buffer(message, 'utf-8'));
-      let registered = await conference.register.sendTransaction(twitterOne, encrypted.toString('hex'), {value:deposit});
+      let registered = await conference.registerWithEncryption.sendTransaction(twitterOne, encrypted.toString('hex'), {value:deposit});
       console.log(getTransaction('register   ', registered));
       let decrypted;
       let event = conference.RegisterEvent({});

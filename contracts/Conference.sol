@@ -126,16 +126,21 @@ contract Conference is Destructible {
 		}
 	}
 
-	function registerWithInvitation(string _participant, bytes32 _invitation_code, string _encrypted) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn ifInvited(_invitation_code) payable{
-		register(_participant, _encrypted);
+	function registerWithEncryption(string _participant, string _encrypted) public payable{
+		registerInternal(_participant);
+		RegisterEvent(msg.sender, _participant, _encrypted);
 	}
 
-	function register(string _participant, string _encrypted) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn payable{
+	function register(string _participant) public payable{
+		registerInternal(_participant);
+		RegisterEvent(msg.sender, _participant, '');
+	}
+
+	function registerInternal(string _participant) internal sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn {
 		require(!isRegistered(msg.sender));
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, false);
-		RegisterEvent(msg.sender, _participant, _encrypted);
 	}
 
 	function attendWithConfirmation(bytes32 _confirmation) public ifConfirmed(_confirmation){
