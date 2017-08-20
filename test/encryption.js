@@ -21,7 +21,7 @@ function awaitEvent(event, handler) {
 contract('Encryption', function(accounts) {
   describe('on registration', function(){
     beforeEach(async function(){
-      conference = await Conference.new();
+      conference = await Conference.new(10,0, true);
       console.log(getTransaction('create   ', conference.transactionHash));
       deposit = (await conference.deposit.call()).toNumber();
     })

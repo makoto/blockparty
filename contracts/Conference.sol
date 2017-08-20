@@ -1,6 +1,5 @@
 pragma solidity ^0.4.11;
 
-import './InvitationRepository.sol';
 import './ConfirmationRepository.sol';
 import './zeppelin/ownership/Ownable.sol';
 import './zeppelin/lifecycle/Destructible.sol';
@@ -16,8 +15,8 @@ contract Conference is Destructible {
 	uint public endedAt;
 	uint public coolingPeriod;
 	uint256 public payoutAmount;
-	InvitationRepository public invitationRepository;
 	ConfirmationRepository public confirmationRepository;
+	bool public encryption;
 
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
@@ -95,11 +94,6 @@ contract Conference is Destructible {
 		}
 	}
 
-	modifier ifInvited(bytes32 invitation_code){
-		require(invitationRepository.claim(invitation_code, msg.sender));
-		_;
-	}
-
 	modifier ifConfirmed(bytes32 _code){
 		require(confirmationRepository.claim(_code, msg.sender));
 		_;
@@ -107,7 +101,7 @@ contract Conference is Destructible {
 
 	/* Public functions */
 
-	function Conference(uint _coolingPeriod, address _invitation_repository_address, address _confirmation_repository_address) {
+	function Conference(uint _coolingPeriod, address _confirmation_repository_address, bool _encryption) {
 		name = 'Test';
 		deposit = 0.05 ether;
 		limitOfParticipants = 20;
@@ -117,8 +111,8 @@ contract Conference is Destructible {
 			coolingPeriod = 1 weeks;
 		}
 
-		if (_invitation_repository_address !=0) {
-			invitationRepository = InvitationRepository(_invitation_repository_address);
+		if (_encryption) {
+			encryption = true;
 		}
 
 		if (_confirmation_repository_address !=0) {
@@ -161,10 +155,6 @@ contract Conference is Destructible {
 	/* Constants */
 	function totalBalance() constant returns (uint256){
 		return this.balance;
-	}
-
-	function invitation() constant returns (bool){
-		invitationRepository != address(0);
 	}
 
 	function confirmation() constant returns (bool){
