@@ -129,7 +129,7 @@ window.onload = function() {
     function getDetail(){
       var values;
       contract.then(function(instance){
-        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'invitation', 'invitationRepository', 'confirmation', 'confirmationRepository', 'payoutAmount'].map(attributeName => {
+        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'confirmation', 'confirmationRepository', 'payoutAmount', 'encryption'].map(attributeName => {
           return instance[attributeName].call();
         })).then(_values => {
           values = _values;
@@ -145,11 +145,10 @@ window.onload = function() {
             'owner': values[6],
             'ended': values[7],
             'limitOfParticipants': values[8],
-            'invitation': values[9],
-            'invitationRepository': values[10],
-            'confirmation': values[11],
-            'confirmationRepository': values[12],
-            'payoutAmount': values[13],
+            'confirmation': values[9],
+            'confirmationRepository': values[10],
+            'payoutAmount': values[11],
+            'encryption': values[12],
             'contractBalance': web3.fromWei(contractBalance, "ether").toNumber(),
             'date': metadata.date,
             'map_url': metadata.map_url,
@@ -223,7 +222,7 @@ window.onload = function() {
       if (!args) {
         args = [];
       }
-      if (name == "register" || name == "registerWithInvitation") {
+      if (name == "register" || name == "registerWithEncryption") {
         options.value = Math.pow(10,18) / 20;
       }
       args.push(options);

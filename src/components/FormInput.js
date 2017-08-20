@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import participantStatus from '../util/participantStatus';
+import cryptoBrowserify from 'crypto-browserify';
 
 const styles = {margin:12}
 
@@ -59,9 +60,10 @@ class FormInput extends React.Component {
       case 'register':
         args.push(this.state.name);
         break;
-      case 'registerWithInvitation':
+      case 'registerWithEncryption':
         args.push(this.state.name);
-        args.push(this.state.invitation_code);
+        let encryptedData = cryptoBrowserify.publicEncrypt(this.state.detail.encryption, new Buffer(this.state.full_name, 'utf-8'));
+        args.push(encryptedData.toString('hex'));
         break;
     }
     this.props.action(actionName, this.state.address.trim(), args)
@@ -131,9 +133,9 @@ class FormInput extends React.Component {
     });
   }
 
-  handleInvitationCode(e) {
+  handleEncryptedField(e) {
     this.setState({
-      invitation_code: e.target.value
+      full_name: e.target.value
     });
   }
 
@@ -176,15 +178,15 @@ class FormInput extends React.Component {
       }else if (availableSpots <= 0){
         registerButton = <span>No more spots left</span>
       }else{
-        if (this.state.detail.invitation) {
-          var invitationField =  <TextField
-                      floatingLabelText="invitation code"
+        if (this.state.detail.encryption && this.showRegister()) {
+          var encryptionField =  <TextField
+                      floatingLabelText="Full name (to be encrypted)"
                       floatingLabelFixed={true}
-                      value={this.state.invitation_code}
-                      onChange={this.handleInvitationCode.bind(this)}
+                      value={this.state.full_name}
+                      onChange={this.handleEncryptedField.bind(this)}
                       style={{margin:'0 5px'}}
           />
-          var action = 'registerWithInvitation';
+          var action = 'registerWithEncryption';
         }else{
           var action = 'register';
         }
@@ -235,7 +237,7 @@ class FormInput extends React.Component {
       <Paper zDepth={1}>
         <form>
           {confirmationField}
-          {invitationField}
+          {encryptionField}
           {nameField}
           <SelectField
             value={this.state.address}
