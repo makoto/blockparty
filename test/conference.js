@@ -125,7 +125,7 @@ contract('Conference', function(accounts) {
       await confirmation.add([encrypted_code], {from:owner});
       verified = await confirmation.verify.call(confirmation_code);
       assert.equal(verified, true);
-      conference = await Conference.new(600, confirmation.address, false);
+      conference = await Conference.new(600, confirmation.address, '');
       deposit = (await conference.deposit.call()).toNumber();
     })
 
@@ -292,12 +292,12 @@ contract('Conference', function(accounts) {
     })
 
     it('cooling period can be set', async function(){
-      conference = await Conference.new(10, 0, false);
+      conference = await Conference.new(10, 0, '');
       assert.equal((await conference.coolingPeriod.call()).toNumber(), 10);
     })
 
     it('cannot be cleared by non owner', async function(){
-      conference = await Conference.new(10, 0, false);
+      conference = await Conference.new(10, 0, '');
       deposit = (await conference.deposit.call()).toNumber();
       await conference.register('one', {value:deposit});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
@@ -323,7 +323,7 @@ contract('Conference', function(accounts) {
 
     it('owner receives the remaining if cooling period is passed', async function(){
       let tempo = await new Tempo(web3);
-      conference = await Conference.new(1, 0, false)
+      conference = await Conference.new(1, 0, '')
       deposit = (await conference.deposit.call()).toNumber();
 
       await conference.register('one', {value:deposit});

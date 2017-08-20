@@ -16,7 +16,7 @@ contract Conference is Destructible {
 	uint public coolingPeriod;
 	uint256 public payoutAmount;
 	ConfirmationRepository public confirmationRepository;
-	bool public encryption;
+	string public encryption;
 
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
@@ -101,7 +101,7 @@ contract Conference is Destructible {
 
 	/* Public functions */
 
-	function Conference(uint _coolingPeriod, address _confirmation_repository_address, bool _encryption) {
+	function Conference(uint _coolingPeriod, address _confirmation_repository_address, string _encryption) {
 		name = 'Test';
 		deposit = 0.05 ether;
 		limitOfParticipants = 20;
@@ -111,8 +111,8 @@ contract Conference is Destructible {
 			coolingPeriod = 1 weeks;
 		}
 
-		if (_encryption) {
-			encryption = true;
+		if (bytes(_encryption).length != 0) {
+			encryption = _encryption;
 		}
 
 		if (_confirmation_repository_address !=0) {
