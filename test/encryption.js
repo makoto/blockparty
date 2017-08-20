@@ -1,7 +1,9 @@
 const Conference = artifacts.require("Conference.sol");
+
 let deposit, conference;
 let twitterOne = '@twitter1';
 var crypto = require('crypto');
+var cryptoBrowserify = require('crypto-browserify');
 var fs = require('fs');
 
 const getTransaction = function(type, transactionHash){
@@ -26,12 +28,12 @@ contract('Encryption', function(accounts) {
       deposit = (await conference.deposit.call()).toNumber();
     })
 
-    it('increments registered', async function(){
+    it.only('increments registered', async function(){
       var publicKey = fs.readFileSync('./tmp/test_public.key', {encoding: 'ascii'});
       var privateKey = fs.readFileSync('./tmp/test_private.key', {encoding: 'ascii'});
       var message = "マコト";
 
-      var encrypted = crypto.publicEncrypt(publicKey, new Buffer(message, 'utf-8'));
+      var encrypted = cryptoBrowserify.publicEncrypt(publicKey, new Buffer(message, 'utf-8'));
       let registered = await conference.registerWithEncryption.sendTransaction(twitterOne, encrypted.toString('hex'), {value:deposit});
       console.log(getTransaction('register   ', registered));
       let decrypted;

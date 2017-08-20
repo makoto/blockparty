@@ -114,6 +114,14 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 ### Running test
 
 - Run `testrpc` in one console
+- Generate test public/secret key
+
+```
+cd tmp/
+openssl genrsa 2048 > test_private.key
+openssl rsa -pubout < test_private.key > test_public.key
+```
+
 - Run `truffle test --network test`
 
 ### Running locally
