@@ -146,7 +146,7 @@ By passing confirmation parameter of Conference during migration, it can allow u
 By passing public key file location to parameter of Conference during migration, it can allow user to register with their user name encrypted.
 
 ```
-truffle migrate --config '{"encryption":'tmp/test_public.key', "confirmation":true}' --reset
+truffle migrate --config '{"encryption":"tmp/test_public.key", "confirmation":true}' --reset
 ```
 
 As an example, assume you have the following two codes at `input.txt`
@@ -157,7 +157,7 @@ $ cat input.txt
 0987654321
 ```
 
-Running `repository.js` will add the has of these invitation code into the ConfirmationRepository.
+Running `repository.js` will add the has of these confirmation code into the ConfirmationRepository.
 
 ```
 $truffle exec scripts/repository.js -t confirmation -i input.txt
