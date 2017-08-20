@@ -137,12 +137,16 @@ openssl rsa -pubout < test_private.key > test_public.key
 - Upload the content of files under `build` directory
 
 
-### Invitation/Confirmation repository code (experimental)
+### Confirmation repository code (experimental)
 
-By passing invitation/confirmation parameter of Conference during migration, it can force to register with invitation code or/and allow user to claim attendance with confirmation code.
+By passing confirmation parameter of Conference during migration, it can allow user to claim attendance with confirmation code.
+
+### Encryption (experimental)
+
+By passing public key file location to parameter of Conference during migration, it can allow user to register with their user name encrypted.
 
 ```
-truffle migrate --config '{"invitation":true, "confirmation":true}' --reset
+truffle migrate --config '{"encryption":'tmp/test_public.key', "confirmation":true}' --reset
 ```
 
 As an example, assume you have the following two codes at `input.txt`
@@ -153,10 +157,10 @@ $ cat input.txt
 0987654321
 ```
 
-Running `invitation.js` will add the has of these invitation code into the InvitationRepository.
+Running `repository.js` will add the has of these invitation code into the ConfirmationRepository.
 
 ```
-$truffle exec scripts/repository.js -t invitation -i input.txt
+$truffle exec scripts/repository.js -t confirmation -i input.txt
 Adding 1234567890  as  0xf654274a8983066b9f810ed158b3fa883c9d26553429193e4aba65b44b76c835
 Adding 0987654321  as  0x295153b1a40cec2698cd2fb0d75c8137a5c43d67ed5e4b7abbd463bc2b0dfac7
 ```
@@ -164,17 +168,17 @@ Adding 0987654321  as  0x295153b1a40cec2698cd2fb0d75c8137a5c43d67ed5e4b7abbd463b
 If you run the same program again, it will detect.
 
 ```
-$truffle exec scripts/repository.js -t invitation -i input.txt
+$truffle exec scripts/repository.js -t confirmation -i input.txt
 Using network 'development'.
 
 code 1234567890  is already registered. Claimed by  0x0000000000000000000000000000000000000000
 code 0987654321  is already registered. Claimed by  0x0000000000000000000000000000000000000000
 ```
 
-Pass the original invitation codes to the participants. Once participants use the code to register, you can check who used the codes by running the script again.
+Pass the original confirmation ion codes to the participants. Once participants use the code to register, you can check who used the codes by running the script again.
 
 ```
-$truffle exec scripts/repository.js -t invitation -i input.txt
+$truffle exec scripts/repository.js -t confirmation -i input.txt
 Using network 'development'.
 
 code 1234567890  is already registered. Claimed by 0x12ff7cfb557a7d0404b694da8d6106e219306a93
@@ -187,18 +191,13 @@ See [Issues](https://github.com/makoto/blockparty/issues)
 
 ### Milestones
 
-#### Hackathon ready (~ 2017 July)
-
-- ~~Register with Invitation code~~
-- Test that it scales up to 100 people
-
 #### Local meetups ready (~ 2017 September)
 
 - Register with participant's real name
 - Add new event
 - ~~Allow other people to become the owner of the event
 - Dispute period (participants can demand to cancel the event to avoid event owners cheating)
-- Test that it scales up to 200 people
+- ~~Test that it scales up to 200 people
 
 ### Wishlists
 
