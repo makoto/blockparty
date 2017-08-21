@@ -193,7 +193,7 @@ See [Issues](https://github.com/makoto/blockparty/issues)
 
 #### Local meetups ready (~ 2017 September)
 
-- Register with participant's real name
+- ~~Register with participant's real name
 - Add new event
 - ~~Allow other people to become the owner of the event
 - Dispute period (participants can demand to cancel the event to avoid event owners cheating)
