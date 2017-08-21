@@ -1,6 +1,5 @@
 pragma solidity ^0.4.11;
 
-import './InvitationRepository.sol';
 import './ConfirmationRepository.sol';
 import './zeppelin/ownership/Ownable.sol';
 import './zeppelin/lifecycle/Destructible.sol';
@@ -16,8 +15,8 @@ contract Conference is Destructible {
 	uint public endedAt;
 	uint public coolingPeriod;
 	uint256 public payoutAmount;
-	InvitationRepository public invitationRepository;
 	ConfirmationRepository public confirmationRepository;
+	string public encryption;
 
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
@@ -31,7 +30,7 @@ contract Conference is Destructible {
 		bool paid;
 	}
 
-	event RegisterEvent(address addr, string participantName);
+	event RegisterEvent(address addr, string participantName, string encryption);
 	event AttendEvent(address addr);
 	event PaybackEvent(uint256 _payout);
 	event WithdrawEvent(address addr, uint256 _payout);
@@ -95,11 +94,6 @@ contract Conference is Destructible {
 		}
 	}
 
-	modifier ifInvited(bytes32 invitation_code){
-		require(invitationRepository.claim(invitation_code, msg.sender));
-		_;
-	}
-
 	modifier ifConfirmed(bytes32 _code){
 		require(confirmationRepository.claim(_code, msg.sender));
 		_;
@@ -107,7 +101,7 @@ contract Conference is Destructible {
 
 	/* Public functions */
 
-	function Conference(uint _coolingPeriod, address _invitation_repository_address, address _confirmation_repository_address) {
+	function Conference(uint _coolingPeriod, address _confirmation_repository_address, string _encryption) {
 		name = 'Test';
 		deposit = 0.05 ether;
 		limitOfParticipants = 20;
@@ -117,8 +111,8 @@ contract Conference is Destructible {
 			coolingPeriod = 1 weeks;
 		}
 
-		if (_invitation_repository_address !=0) {
-			invitationRepository = InvitationRepository(_invitation_repository_address);
+		if (bytes(_encryption).length != 0) {
+			encryption = _encryption;
 		}
 
 		if (_confirmation_repository_address !=0) {
@@ -126,16 +120,21 @@ contract Conference is Destructible {
 		}
 	}
 
-	function registerWithInvitation(string _participant, bytes32 _invitation_code) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn ifInvited(_invitation_code) payable{
-		register(_participant);
+	function registerWithEncryption(string _participant, string _encrypted) public payable{
+		registerInternal(_participant);
+		RegisterEvent(msg.sender, _participant, _encrypted);
 	}
 
-	function register(string _participant) public sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn payable{
+	function register(string _participant) public payable{
+		registerInternal(_participant);
+		RegisterEvent(msg.sender, _participant, '');
+	}
+
+	function registerInternal(string _participant) internal sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn {
 		require(!isRegistered(msg.sender));
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, false);
-		RegisterEvent(msg.sender, _participant);
 	}
 
 	function attendWithConfirmation(bytes32 _confirmation) public ifConfirmed(_confirmation){
@@ -156,10 +155,6 @@ contract Conference is Destructible {
 	/* Constants */
 	function totalBalance() constant returns (uint256){
 		return this.balance;
-	}
-
-	function invitation() constant returns (bool){
-		invitationRepository != address(0);
 	}
 
 	function confirmation() constant returns (bool){
