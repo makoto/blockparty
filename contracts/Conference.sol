@@ -101,10 +101,32 @@ contract Conference is Destructible {
 
 	/* Public functions */
 
-	function Conference(uint _coolingPeriod, address _confirmation_repository_address, string _encryption) {
-		name = 'Test';
-		deposit = 0.05 ether;
-		limitOfParticipants = 20;
+	function Conference(
+		string _name,
+		uint256 _deposit,
+		uint _limitOfParticipants,
+		uint _coolingPeriod,
+		address _confirmation_repository_address,
+		string _encryption
+	) {
+		if(bytes(_name).length != 0){
+			name = _name;
+		}else{
+			name = 'Test';
+		}
+
+		if(_deposit != 0){
+			deposit = _deposit;
+		}else{
+			deposit = 0.05 ether;
+		}
+
+		if(_limitOfParticipants !=0){
+			limitOfParticipants = _limitOfParticipants;
+		}else{
+			limitOfParticipants = 20;
+		}
+
 		if (_coolingPeriod != 0) {
 			coolingPeriod = _coolingPeriod;
 		} else {

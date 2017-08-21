@@ -38,10 +38,9 @@ const formatArray = function(array){
 const reportTest = async function (participants, accounts){
   const transactions = [];
   const owner = accounts[0];
-  conference = await Conference.new({gasPrice:gasPrice});
+  conference = await Conference.new('Test', 0, participants, 0, 0, '', {gasPrice:gasPrice});
   transactions.push(getTransaction('create   ', conference.transactionHash))
   deposit = (await conference.deposit.call()).toNumber();
-  await conference.setLimitOfParticipants(participants);
 
   for (var i = 0; i < participants; i++) {
     var registerTrx = await conference.register('test', {from:accounts[i], value:deposit, gasPrice:gasPrice});
@@ -85,7 +84,7 @@ const reportTest = async function (participants, accounts){
 }
 
 contract('Stress test', function(accounts) {
-  describe('stress test', function(){
+  describe.only('stress test', function(){
     it('can handle 2 participants', async function(){
       await reportTest(2, accounts)
     })

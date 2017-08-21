@@ -51,9 +51,18 @@ contract('Conference', function(accounts) {
   describe('on creation', function(){
     it('has default values', async function(){
       assert.strictEqual(await conference.name.call(), 'Test');
+      assert.strictEqual((await conference.deposit.call()).toString(), web3.toWei(0.05, "ether"));
+      assert.strictEqual((await conference.limitOfParticipants.call()).toNumber(), 20);
       assert.strictEqual((await conference.registered.call()).toNumber(), 0);
       assert.strictEqual((await conference.attended.call()).toNumber(), 0);
       assert.strictEqual((await conference.totalBalance.call()).toNumber(), 0);
+    })
+
+    it('can set config values', async function(){
+      conference = await Conference.new('Test 1', parseInt(web3.toWei(2, "ether")), 100, 2, 0, 'public key');
+      assert.strictEqual(await conference.name.call(), 'Test 1');
+      assert.strictEqual((await conference.deposit.call()).toString(), web3.toWei(2, "ether"));
+      assert.strictEqual((await conference.limitOfParticipants.call()).toNumber(), 100);
     })
   })
 
@@ -125,7 +134,7 @@ contract('Conference', function(accounts) {
       await confirmation.add([encrypted_code], {from:owner});
       verified = await confirmation.verify.call(confirmation_code);
       assert.equal(verified, true);
-      conference = await Conference.new(600, confirmation.address, '');
+      conference = await Conference.new('', 0, 0, 600, confirmation.address, '');
       deposit = (await conference.deposit.call()).toNumber();
     })
 
@@ -292,12 +301,12 @@ contract('Conference', function(accounts) {
     })
 
     it('cooling period can be set', async function(){
-      conference = await Conference.new(10, 0, '');
+      conference = await Conference.new('', 0, 0, 10, 0, '');
       assert.equal((await conference.coolingPeriod.call()).toNumber(), 10);
     })
 
     it('cannot be cleared by non owner', async function(){
-      conference = await Conference.new(10, 0, '');
+      conference = await Conference.new('', 0, 0, 10, 0, '');
       deposit = (await conference.deposit.call()).toNumber();
       await conference.register('one', {value:deposit});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
@@ -323,7 +332,7 @@ contract('Conference', function(accounts) {
 
     it('owner receives the remaining if cooling period is passed', async function(){
       let tempo = await new Tempo(web3);
-      conference = await Conference.new(1, 0, '')
+      conference = await Conference.new('', 0, 0, 1, 0, '')
       deposit = (await conference.deposit.call()).toNumber();
 
       await conference.register('one', {value:deposit});
