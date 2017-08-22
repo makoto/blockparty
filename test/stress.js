@@ -84,7 +84,7 @@ const reportTest = async function (participants, accounts){
 }
 
 contract('Stress test', function(accounts) {
-  describe.only('stress test', function(){
+  describe('stress test', function(){
     it('can handle 2 participants', async function(){
       await reportTest(2, accounts)
     })
