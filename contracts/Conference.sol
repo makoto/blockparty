@@ -180,7 +180,7 @@ contract Conference is Destructible {
 	}
 
 	function confirmation() constant returns (bool){
-		confirmationRepository != address(0);
+		return address(confirmationRepository) != address(0);
 	}
 
 	function isRegistered(address _addr) constant returns (bool){

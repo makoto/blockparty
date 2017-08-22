@@ -138,6 +138,10 @@ contract('Conference', function(accounts) {
       deposit = (await conference.deposit.call()).toNumber();
     })
 
+    it('confirmation is true', async function(){
+      assert.equal(await conference.confirmation.call(), true);
+    })
+
     it('allows participant to attend with code', async function(){
       await conference.register(twitterHandle, {from:non_owner, value:deposit})
       await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
