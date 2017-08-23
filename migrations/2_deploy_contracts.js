@@ -1,33 +1,41 @@
-var Conference = artifacts.require("./Conference.sol");
-var ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
-
-var coolingPeriod = 1 * 60 * 60 * 24 * 7;
-var invitationAddress = 0;
-var confirmationAddress = 0;
+const Conference = artifacts.require("./Conference.sol");
+const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
+const coolingPeriod = 1 * 60 * 60 * 24 * 7;
 // this is already required by truffle;
-var yargs = require('yargs');
-var crypto = require('crypto');
-var fs = require('fs');
+const yargs = require('yargs');
+const crypto = require('crypto');
+const fs = require('fs');
 let encryption;
-// eg:  truffle migrate --config '{"encryption":'/tmp/test_pulic.key', "confirmation":true}'
+let name = ''; // empty name falls back to the contract default
+let deposit = 0; // 0 falls back to the contract default
+let limitOfParticipants = 0; // 0 falls back to the contract default
+let confirmationAddress = 0;
+
+// eg: truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key", "confirmation":true}'
 if (yargs.argv.config) {
   var config = JSON.parse(yargs.argv.config);
 }
 
 module.exports = function(deployer) {
   if (deployer.network == 'test') return 'no need to deploy contract';
+  if (config.name){
+    name = config.name;
+  }
+
   if (config.encryption) {
     encryption = fs.readFileSync(config.encryption, {encoding: 'ascii'});
-    console.log('publicKey', encryption)
   }
   deployer
     .then(() => {
       if (config.confirmation) {
         return deployer.deploy(ConfirmationRepository)
-          .then(instance => confirmationAddress = ConfirmationRepository.address);
+          .then(instance => {
+            confirmationAddress = ConfirmationRepository.address;
+          })
       }
     })
     .then(() => {
-      return deployer.deploy(Conference, coolingPeriod, confirmationAddress, encryption);
+      console.log([name, deposit,limitOfParticipants, coolingPeriod, confirmationAddress, encryption].join(','));
+      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, confirmationAddress, encryption);
     })
 };

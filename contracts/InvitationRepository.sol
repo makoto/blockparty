@@ -15,10 +15,16 @@ contract InvitationRepository is Ownable{
 
   event LogEvent(string event_type, bytes32 code);
 
-  function add(bytes32[] _encryptedInvitationCodes) onlyOwner{
+  function add() onlyOwner{
+  }
+
+  function add(bytes32 _encryptedInvitationCode) onlyOwner{
+    codes[_encryptedInvitationCode] = Code(true, false, 0);
+  }
+
+  function addMultiple(bytes32[] _encryptedInvitationCodes) onlyOwner{
     for(uint i=0;i<_encryptedInvitationCodes.length;i++){
-      var _encryptedInvitationCode = _encryptedInvitationCodes[i];
-      codes[_encryptedInvitationCode] = Code(true, false, 0);
+      add(_encryptedInvitationCodes[i]);
     }
   }
 

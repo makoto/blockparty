@@ -12,7 +12,7 @@ contract('InvitationRepository', function(accounts) {
       let invitation_code =  web3.fromUtf8('1234567890');
       let instance = await InvitationRepository.new()
       let encrypted_code = await instance.encrypt.call(invitation_code);
-      await instance.add([encrypted_code], {from:non_owner}).catch(function(){});
+      await instance.add(encrypted_code, {from:non_owner}).catch(function(){});
       let result = await instance.verify.call(invitation_code);
       assert.equal(result, false);
     });
@@ -28,7 +28,7 @@ contract('InvitationRepository', function(accounts) {
         var encrypted = await instance.encrypt.call(uuids[i]);
         encryptions.push(encrypted);
       }
-      await instance.add(encryptions, {from:owner});
+      await instance.addMultiple(encryptions, {from:owner});
       for (var i = 0; i < uuids.length; i++) {
         var result = await instance.verify.call(uuids[i]);
         assert.equal(result, true);
@@ -41,8 +41,8 @@ contract('InvitationRepository', function(accounts) {
       let invitation_code = web3.fromUtf8('1234567890');
       let instance = await InvitationRepository.new()
       let encrypted_code = await instance.encrypt.call(invitation_code);
-      await instance.add([encrypted_code], {from:owner});
-      await instance.add(['other_code'], {from:owner});
+      await instance.add(encrypted_code, {from:owner});
+      await instance.add('other_code', {from:owner});
       let result = await instance.verify.call(invitation_code);
       assert.equal(result, true);
     });
@@ -56,7 +56,7 @@ contract('InvitationRepository', function(accounts) {
       let invitation_code =  web3.fromUtf8('1234567890');
       let instance = await InvitationRepository.new()
       let encrypted_code = await instance.encrypt.call(invitation_code);
-      await instance.add([encrypted_code], {from:owner})
+      await instance.add(encrypted_code, {from:owner})
       await instance.claim(invitation_code, {from:invited_person}).catch(function(){});
       let result = await instance.report.call(invitation_code);
       assert.notEqual(result, invited_person);
@@ -66,7 +66,7 @@ contract('InvitationRepository', function(accounts) {
       let invitation_code = web3.fromUtf8('1234567890');
       let instance = await InvitationRepository.new()
       let encrypted_code = await instance.encrypt.call(invitation_code);
-      await instance.add([encrypted_code], {from:owner});
+      await instance.add(encrypted_code, {from:owner});
       await instance.claim(invitation_code, invited_person, {from:owner});
       let result = await instance.report.call(invitation_code);
       assert.equal(result, invited_person);
@@ -76,7 +76,7 @@ contract('InvitationRepository', function(accounts) {
       let invitation_code = web3.fromUtf8('1234567890');
       let instance = await InvitationRepository.new()
       let encrypted_code = await instance.encrypt.call(invitation_code);
-      await instance.add([encrypted_code], {from:owner});
+      await instance.add(encrypted_code, {from:owner});
       await instance.claim(invitation_code, invited_person, {from:owner});
       await instance.claim(invitation_code, not_invited_person, {from:owner}).catch(function(){});
       let result = await instance.report.call(invitation_code);
