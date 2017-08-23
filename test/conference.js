@@ -131,7 +131,7 @@ contract('Conference', function(accounts) {
       confirmation = await ConfirmationRepository.new();
       confirmation_code = web3.fromUtf8('1234567890');
       encrypted_code = await confirmation.encrypt.call(confirmation_code);
-      await confirmation.add([encrypted_code], {from:owner});
+      await confirmation.add(encrypted_code, {from:owner});
       verified = await confirmation.verify.call(confirmation_code);
       assert.equal(verified, true);
       conference = await Conference.new('', 0, 0, 600, confirmation.address, '');
