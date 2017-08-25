@@ -1,4 +1,14 @@
-require('babel-register')
+const yargs = require('yargs');
+
+if (yargs.argv.network  == 'ropsten' || yargs.argv.network  == 'mainnet') {
+  var providerURL = `https://${yargs.argv.network}.infura.io`
+  var HDWalletProvider = require('truffle-hdwallet-provider');
+  // todo: Think about more secure way
+  var mnemonic = yargs.argv.mnemonic
+  provider = new HDWalletProvider(mnemonic, providerURL);
+  console.log('Deployment address', provider.getAddress());
+  console.log('Deploying to ', providerURL);
+}
 
 module.exports = {
   networks: {
@@ -14,25 +24,16 @@ module.exports = {
       gasPrice: 0x01
     },
     ropsten: {
-      host: "localhost",
-      port: 8545,
+      gasPrice: 2000000000, // 2 gwei,
+      provider: provider,
       network_id: 3,
-      gas: 1990000,
-      gasPrice: 2000000000, // 2 gwei
-    },
-    kovan: {
-      host: 'localhost',
-      port: 8545,
-      // gas: 4700000,
-      network_id: 42
+      from: provider.getAddress()
     },
     mainnet: {
-      host: "localhost",
-      port: 8545,
       network_id: 1,
       gas: 1990000,
       gasPrice: 2000000000, // 2 gwei
-      from: '0xFa6F2D7cC987d592556ac07392b9d6395bfcc379'
+      from: provider.getAddress()
     }
   }
 };
