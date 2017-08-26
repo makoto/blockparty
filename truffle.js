@@ -4,9 +4,10 @@ if (yargs.argv.network  == 'ropsten' || yargs.argv.network  == 'mainnet') {
   var providerURL = `https://${yargs.argv.network}.infura.io`
   var HDWalletProvider = require('truffle-hdwallet-provider');
   // todo: Think about more secure way
-  var mnemonic = yargs.argv.mnemonic
-  provider = new HDWalletProvider(mnemonic, providerURL);
-  console.log('Deployment address', provider.getAddress());
+  var mnemonic = yargs.argv.mnemonic;
+  provider = new HDWalletProvider(mnemonic, providerURL, 0);
+  var address = "0x" + provider.wallet.getAddress().toString("hex");
+  console.log('Provider address', provider.getAddress());
   console.log('Deploying to ', providerURL);
 }
 
