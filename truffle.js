@@ -24,7 +24,7 @@ module.exports = {
       gasPrice: 0x01
     },
     ropsten: {
-      gasPrice: 2000000000, // 2 gwei,
+      gasPrice: 20000000000, // 20 gwei,
       provider: provider,
       network_id: 3,
       from: provider.getAddress()
