@@ -193,6 +193,16 @@ code 1234567890  is already registered. Claimed by 0x12ff7cfb557a7d0404b694da8d6
 code 0987654321  is already registered. Claimed by 0xc7ce74c8c7f2e7c5e6d039c5a48fae053ad5c952
 ```
 
+## Running on real network
+
+For `ropsten` and `mainnet` it now deploys via Infura. Pass the extra to set deployment specific
+
+```
+--network $NETWORK --mnemonic $SECRET
+```
+
+NOTE: `ropsten` and `mainnet` uses different gasPrice. Check `truffle.js` file and `scripts/util/set_gas.js` for the detail.
+
 ### Essentials
 
 See [Issues](https://github.com/makoto/blockparty/issues)
