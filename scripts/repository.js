@@ -1,4 +1,5 @@
 let fs = require('fs');
+let setGas = require('./util/set_gas');
 let ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
 let repository;
 let arg = require('yargs').argv;
@@ -6,7 +7,9 @@ let arg = require('yargs').argv;
 if (!(arg.i && arg.t)) {
   throw('usage: truffle exec scripts/repository.js -t confirmation -i codes.txt');
 }
+
 module.exports = async function(callback) {
+  let gas = await setGas(web3);
   let file = arg.i;
   console.log('file', file)
   switch (arg.t) {
@@ -26,7 +29,7 @@ module.exports = async function(callback) {
       console.log('code', code, ' is already registered. Claimed by ', claimed);
     }else{
       var encrypted_code = await repository.encrypt.call(code);
-      var result = await repository.add(encrypted_code);
+      var result = await repository.add(encrypted_code, {gasPrice:gas});
       console.log('Adding', code, ' as ', encrypted_code, ' with trx', result.tx);
     }
   }
