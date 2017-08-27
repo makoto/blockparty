@@ -48,6 +48,7 @@
     "react-tap-event-plugin": "^1.0.0",
     "style-loader": "^0.13.1",
     "truffle-contract": "^1.1.8",
+    "truffle-hdwallet-provider": "0.0.3",
     "url-loader": "^0.5.7",
     "web3": "^0.16.0",
     "zeppelin-solidity": "0.0.6"
