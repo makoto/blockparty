@@ -72,19 +72,15 @@ window.onload = function() {
     var Conference  = TruffleContract(artifacts);
     Conference.setProvider(provider);
     Conference.setNetwork(network_id);
-    Data[0].address = Conference.address;
+    var contract = Conference.at(Conference.address);
     let metadata;
-    let contractAddress = document.baseURI.split('#')[1]
-    if (contractAddress && contractAddress.length == 42) {
-      metadata = Data.filter(function(d){
-        return d.address == contractAddress
-      })[0];
-    }else{
-      contractAddress = Conference.address;
-
-      metadata = Data[0];
+    metadata = Data.filter(function(d){
+      return d.address == Conference.address;
+    })[0];
+    if (!metadata) {
+      metadata = Data[0]
+      metadata.address = Conference.address;
     }
-    var contract = Conference.at(contractAddress);
     window.contract = contract
     window.web3 = web3
     const eventEmitter = EventEmitter()
