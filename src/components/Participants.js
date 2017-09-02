@@ -150,7 +150,7 @@ class Participants extends React.Component {
           The reason are more likely to be one of the followings.
           <ul>
             <li>
-              You are not connected to the correct Ethereum network (testnet) with correct options.
+              You are not connected to the correct Ethereum network with correct options.
             </li>
             <li>
               Your local node is out of sync (may take a few hours if this is your first time using Ethereum).

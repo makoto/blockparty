@@ -70,16 +70,27 @@ function setup(){
 window.onload = function() {
   setup().then(({provider, web3, read_only, network_id}) => {
     var Conference  = TruffleContract(artifacts);
+    let contract, contractAddress;
     Conference.setProvider(provider);
     Conference.setNetwork(network_id);
-    var contract = Conference.at(Conference.address);
-    let metadata;
-    metadata = Data.filter(function(d){
-      return d.address == Conference.address;
+    try {
+      contract = Conference.at(Conference.address);
+    } catch (e) {
+      console.log("ERROR")
+      console.log(e)
+    }
+    if (contract){
+      contractAddress = contract.address;
+    }else{
+      contractAddress = '0x';
+    }
+
+    let metadata = Data.filter(function(d){
+      return d.address == contractAddress;
     })[0];
     if (!metadata) {
       metadata = Data[0]
-      metadata.address = Conference.address;
+      metadata.address = contractAddress;
     }
     window.contract = contract
     window.web3 = web3
@@ -123,6 +134,8 @@ window.onload = function() {
 
     // Functions to interact with contract
     function getDetail(){
+      if (!contract) return false;
+
       var values;
       contract.then(function(instance){
         Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'confirmation', 'confirmationRepository', 'payoutAmount', 'encryption'].map(attributeName => {
@@ -176,7 +189,10 @@ window.onload = function() {
     }
 
     function getParticipants(callback){
+      if (!contract) return false;
+
       var instance;
+
       contract
         .then(function(_instance){
           instance = _instance;
@@ -286,7 +302,7 @@ window.onload = function() {
             <Instruction eventEmitter={eventEmitter} />
             <Notification eventEmitter={eventEmitter} />
             <div className='container' class='foo'>
-              <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} contract={contract} web3={web3} />
+              <ConferenceDetail eventEmitter={eventEmitter} getDetail={getDetail} web3={web3} contract={contract} web3={web3} contractAddress={contractAddress} />
               <Participants eventEmitter={eventEmitter} getDetail={getDetail} getParticipants={getParticipants} getAccounts={getAccounts} action={action} web3={web3}  />
             </div>
             <FormInput read_only={read_only} eventEmitter={eventEmitter} getAccounts={getAccounts} getDetail={getDetail} action={action} />
