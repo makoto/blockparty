@@ -82,7 +82,7 @@ window.onload = function() {
     if (contract){
       contractAddress = contract.address;
     }else{
-      contractAddress = '0x';
+      contractAddress = '0x000';
     }
 
     let metadata = Data.filter(function(d){
