@@ -32,9 +32,10 @@ module.exports = {
       from: address
     },
     mainnet: {
-      network_id: 1,
       gas: 1990000,
       gasPrice: 2000000000, // 2 gwei
+      provider: provider,
+      network_id: 1,
       from: address
     }
   }

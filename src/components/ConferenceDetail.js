@@ -61,9 +61,9 @@ class ConferenceDetail extends React.Component {
       }
     }.bind(this), 5000)
     // Listen to watcher event.
-    this.serverRequest = $.get('https://www.cryptocompare.com/api/data/price?fsym=ETH&tsyms=GBP', function (result) {
+    this.serverRequest = $.get('https://coinmarketcap-nexuist.rhcloud.com/api/eth', function (result) {
       this.setState({
-        rate: result.Data[0].Price / 20
+        rate: math.round((result.price.gbp / 20), 2).toString()
       });
     }.bind(this));
   }
@@ -146,7 +146,7 @@ class ConferenceDetail extends React.Component {
         <List>
           <ListItem innerDivStyle={styles.innerDiv} insetChildren={true} disabled={true}
             primaryText={
-              <p>Name{this.getNameContent(this.state.name, this.props.contract.address)}</p>
+              <p>Name{this.getNameContent(this.state.name, this.props.contractAddress)}</p>
             }
           />
           <ListItem innerDivStyle={styles.innerDiv} leftIcon={<EventIcon />} disabled={true}
