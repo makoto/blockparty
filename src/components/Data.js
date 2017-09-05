@@ -13,7 +13,7 @@ let Data = [
   },
   {
     name: 'CodeUp #22',
-    address: null,
+    address: '0x03738b2fd7ab1d8b3003c3e4d83864eef636bed2',
     date:'Sep 7th (Thur) 6:30 PM(UTC+1)',
     map_url: 'https://www.google.co.uk/maps/place/Simply+Business/@51.51528,-0.0904011,15z/data=!4m5!3m4!1s0x0:0x70f23f24baccffdc!8m2!3d51.51528!4d-0.0904011',
     location_text: 'Simply Business (99 Gresham St, London EC2V 7NG)',
