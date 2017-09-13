@@ -191,7 +191,7 @@ class FormInput extends React.Component {
           var action = 'register';
         }
         registerButton = <RaisedButton secondary={this.showRegister()} disabled={!this.showRegister()}
-          label="Register" style={styles}
+          label="RSVP" style={styles}
           onClick={this.handleAction.bind(this, action)}
         />
         warningText = <div style={{textAlign:'center', color:'red'}}>Please be aware that you <strong>cannot</strong> cancel once regiesterd. Please read FAQ section at ABOUT page on top right corner for more detail about this service.</div>
@@ -212,7 +212,7 @@ class FormInput extends React.Component {
       }
       var action = 'attendWithConfirmation';
       var attendWithConfirmationButton = <RaisedButton secondary={this.showAttendForAttendant()} disabled={!this.showAttendForAttendant()}
-        label="Attend" style={styles}
+        label="Confirm Attend" style={styles}
         onClick={this.handleAction.bind(this, action)}
       />
     }
