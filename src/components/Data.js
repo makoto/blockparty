@@ -4,7 +4,7 @@ import React from 'react';
 
 let Data = [
   {
-    name: 'September Ethereum London Meetup at Imperial College',
+    name: 'Ethereum London September 2017',
     address: null,
     date:'Wednesday, September 13, 2017 6:45 PM to 9:00 PM(UTC+1)',
     map_url: 'https://maps.google.com/maps?f=q&hl=en&q=Huxley+Building%2C+Imperial+College+%2C+London+SW7+2AZ%2C+gb',
