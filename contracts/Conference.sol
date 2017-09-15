@@ -156,7 +156,7 @@ contract Conference is Destructible {
 	function withdraw() public{
 		require(payoutAmount > 0);
 		Participant participant = participants[msg.sender];
-		require(participant.addr != 0x0);
+		require(participant.addr == msg.sender);
 		require(cancelled || participant.attended);
 		require(participant.paid == false);
 
