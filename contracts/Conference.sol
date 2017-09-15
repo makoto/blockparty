@@ -80,20 +80,6 @@ contract Conference is Destructible {
 		}
 	}
 
-	modifier onlyPayable {
-		Participant participant = participants[msg.sender];
-		if (cancelled || (payoutAmount > 0 && participant.attended)){
-			_;
-		}
-	}
-
-	modifier notPaid {
-		Participant participant = participants[msg.sender];
-		if (participant.paid == false){
-			_;
-		}
-	}
-
 	modifier ifConfirmed(bytes32 _code){
 		require(confirmationRepository.claim(_code, msg.sender));
 		_;
@@ -167,10 +153,15 @@ contract Conference is Destructible {
 		AttendEvent(msg.sender);
 	}
 
-	function withdraw() public onlyPayable notPaid {
+	function withdraw() public{
+		require(payoutAmount > 0);
 		Participant participant = participants[msg.sender];
+		require(participant.addr != 0x0);
+		require(cancelled || participant.attended);
+		require(participant.paid == false);
+
 		participant.paid = true;
-		assert(msg.sender.send(payoutAmount));
+		assert(participant.addr.send(payoutAmount));
 		WithdrawEvent(msg.sender, payoutAmount);
 	}
 

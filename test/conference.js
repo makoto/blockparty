@@ -182,14 +182,14 @@ contract('Conference', function(accounts) {
 
     it('cannot withdraw if non owner calls', async function(){
       await conference.payback({from:non_owner}).catch(function(){});
-      await conference.withdraw({from:attended});
+      await conference.withdraw({from:attended}).catch(function(){});
       // money is still left on contract
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
     })
 
     it('cannot withdraw if you did not attend', async function(){
       await conference.payback({from:owner});
-      await conference.withdraw({from:notAttended});
+      await conference.withdraw({from:notAttended}).catch(function(){});
       // money is still left on contract
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
     })
@@ -238,7 +238,7 @@ contract('Conference', function(accounts) {
 
     it('cannot cancel if non owner calls', async function(){
       await conference.cancel({from:non_owner}).catch(function(){});
-      await conference.withdraw({from:attended});
+      await conference.withdraw({from:attended}).catch(function(){});
       // money is still left on contract
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
     })
@@ -277,23 +277,37 @@ contract('Conference', function(accounts) {
     it('cannot be canceled if the event is already ended', async function(){
       await conference.payback();
       await conference.cancel().catch(function(){});
-      await conference.withdraw({from:notAttended});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+      await conference.withdraw({from:notAttended}).catch(function(){});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+      await conference.withdraw({from:attended});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), 0);
       assert.equal(await conference.ended.call(), true)
     })
   })
 
   describe('on withdraw', function(){
-    it('cannot withdraw twice', async function(){
-      let registered = accounts[1];
+    let registered = accounts[1];
+    let notRegistered = accounts[2];
+
+    beforeEach(async function(){
       await conference.register(twitterHandle, {from:owner, value:deposit});
       await conference.register(twitterHandle, {from:registered, value:deposit});
       assert.strictEqual( web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+    })
+
+    it('cannot withdraw twice', async function(){
       await conference.cancel({from:owner});
       await conference.withdraw({from:registered});
-      await conference.withdraw({from:registered});
+      await conference.withdraw({from:registered}).catch(function(){});
       // only 1 ether is taken out
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
+    })
+
+    it('cannot withdraw if you did not register', async function(){
+      await conference.cancel({from:owner});
+      await conference.withdraw({from:notRegistered}).catch(function(){});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
     })
   })
 
