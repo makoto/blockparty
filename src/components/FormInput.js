@@ -212,7 +212,7 @@ class FormInput extends React.Component {
       }
       var action = 'attendWithConfirmation';
       var attendWithConfirmationButton = <RaisedButton secondary={this.showAttendForAttendant()} disabled={!this.showAttendForAttendant()}
-        label="Confirm Attend" style={styles}
+        label="Confirm Attendance" style={styles}
         onClick={this.handleAction.bind(this, action)}
       />
     }
