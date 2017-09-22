@@ -22,7 +22,7 @@ function awaitEvent(event, handler) {
 
 contract('Encryption', function(accounts) {
   describe('on registration', function(){
-    it.only('increments registered', async function(){
+    it('increments registered', async function(){
       var publicKey = fs.readFileSync('./tmp/test_public.key', {encoding: 'ascii'});
       var privateKey = fs.readFileSync('./tmp/test_private.key', {encoding: 'ascii'});
       var message = "マコト";
