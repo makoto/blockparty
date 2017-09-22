@@ -21,7 +21,6 @@ contract Conference is Destructible {
 	mapping (address => Participant) public participants;
 	mapping (uint => address) public participantsIndex;
 	bool paid;
-	uint256 _payout;
 
 	struct Participant {
 		string participantName;
@@ -30,7 +29,7 @@ contract Conference is Destructible {
 		bool paid;
 	}
 
-	event RegisterEvent(address addr, string participantName, string encryption);
+	event RegisterEvent(address addr, string participantName, string _encryption);
 	event AttendEvent(address addr);
 	event PaybackEvent(uint256 _payout);
 	event WithdrawEvent(address addr, uint256 _payout);
