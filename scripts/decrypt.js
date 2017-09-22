@@ -26,7 +26,7 @@ module.exports = async function(callback) {
     if (err) { throw err; }
     let currentBlock = await getBlock(web3, result.blockNumber);
     let registeredAt = moment(currentBlock.timestamp * 1000).format();
-    decrypted = crypto.privateDecrypt(privateKey, new Buffer(result.args.encryption, 'hex'));
+    decrypted = crypto.privateDecrypt(privateKey, new Buffer(result.args._encryption, 'hex'));
     console.log([registeredAt, result.args.participantName, decrypted.toString('utf8')].join('\t'));
   };
   await awaitEvent(event, watcher);

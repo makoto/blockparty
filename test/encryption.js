@@ -22,7 +22,7 @@ function awaitEvent(event, handler) {
 
 contract('Encryption', function(accounts) {
   describe('on registration', function(){
-    it('increments registered', async function(){
+    it.only('increments registered', async function(){
       var publicKey = fs.readFileSync('./tmp/test_public.key', {encoding: 'ascii'});
       var privateKey = fs.readFileSync('./tmp/test_private.key', {encoding: 'ascii'});
       var message = "マコト";
@@ -40,7 +40,7 @@ contract('Encryption', function(accounts) {
       let watcher = async function(err, result) {
         event.stopWatching();
         if (err) { throw err; }
-        decrypted = crypto.privateDecrypt(privateKey, new Buffer(result.args.encryption, 'hex'));
+        decrypted = crypto.privateDecrypt(privateKey, new Buffer(result.args._encryption, 'hex'));
         console.log('decrypted', decrypted.toString('utf8'));
       };
       await awaitEvent(event, watcher);
