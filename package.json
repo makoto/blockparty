@@ -47,7 +47,7 @@
     "react-pure-render": "^1.0.2",
     "react-tap-event-plugin": "^1.0.0",
     "style-loader": "^0.13.1",
-    "truffle-contract": "^1.1.8",
+    "truffle-contract": "^3.0.0",
     "truffle-hdwallet-provider": "0.0.3",
     "url-loader": "^0.5.7",
     "web3": "^0.16.0",

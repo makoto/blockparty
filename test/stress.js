@@ -6,7 +6,6 @@ const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const gasPrice = web3.toWei(2, 'gwei');
 const usd = 303;
-let addresses = [];
 let deposit, conference;
 let trx,trx2, gasUsed, gasUsed2, result, trxReceipt;
 
@@ -36,6 +35,7 @@ const formatArray = function(array){
 }
 
 const reportTest = async function (participants, accounts){
+  const addresses = [];
   const transactions = [];
   const owner = accounts[0];
   conference = await Conference.new('Test', 0, participants, 0, 0, '', {gasPrice:gasPrice});
@@ -47,23 +47,19 @@ const reportTest = async function (participants, accounts){
     if ((i % 100) == 0 && i != 0) {
       console.log('register', i)
     }
-    var attendTrx = await conference.attend([accounts[i]], {from:owner, gasPrice:gasPrice});
     if (i == 0) {
       transactions.push(getTransaction('register', registerTrx.tx))
-      transactions.push(getTransaction('attend  ', attendTrx.tx))
     }
     addresses.push(accounts[i]);
   }
+  var attendTrx = await conference.attend(addresses, {from:owner, gasPrice:gasPrice});
+  transactions.push(getTransaction('batchAttend  ', attendTrx.tx))
+
   assert.strictEqual((await conference.registered.call()).toNumber(), participants);
   assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * participants)
-  // console.log('attend')
-  // var attendTrx = await conference.attend(addresses, {from:owner, gasPrice:gasPrice});
-  // transactions.push(getTransaction('attend  ', attendTrx))
 
-  // console.log('payback')
   trx = await conference.payback({from:owner, gasPrice:gasPrice});
   transactions.push(getTransaction('payback ', trx.tx))
-  // console.log('withdraw')
   for (var i = 0; i < participants; i++) {
     trx = await conference.withdraw({from:accounts[i], gasPrice:gasPrice});
     if (i == 0) {

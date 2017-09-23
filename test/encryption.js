@@ -40,7 +40,7 @@ contract('Encryption', function(accounts) {
       let watcher = async function(err, result) {
         event.stopWatching();
         if (err) { throw err; }
-        decrypted = crypto.privateDecrypt(privateKey, new Buffer(result.args.encryption, 'hex'));
+        decrypted = crypto.privateDecrypt(privateKey, new Buffer(result.args._encryption, 'hex'));
         console.log('decrypted', decrypted.toString('utf8'));
       };
       await awaitEvent(event, watcher);
