@@ -1,12 +1,15 @@
 require('babel-polyfill');
+
 const moment = require('moment');
 const fs = require('fs');
 const Conference = artifacts.require("Conference.sol");
+const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
+
 const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const gasPrice = web3.toWei(2, 'gwei');
 const usd = 303;
-let deposit, conference;
+let deposit, conference, confirmation;
 let trx,trx2, gasUsed, gasUsed2, result, trxReceipt;
 
 const pad = function(n, width, z) {
@@ -37,11 +40,22 @@ const formatArray = function(array){
 const reportTest = async function (participants, accounts){
   const addresses = [];
   const transactions = [];
+  const encrypted_codes = [];
   const owner = accounts[0];
-  conference = await Conference.new('Test', 0, participants, 0, 0, '', {gasPrice:gasPrice});
+  confirmation = await ConfirmationRepository.new();
+  conference = await Conference.new('Test', 0, participants, 0, confirmation.address, '', {gasPrice:gasPrice});
   transactions.push(getTransaction('create   ', conference.transactionHash))
   deposit = (await conference.deposit.call()).toNumber();
 
+  for (var i = 0; i < participants; i++) {
+    encrypted_codes.push(await confirmation.encrypt.call(accounts[i]));
+  }
+  var addMultipleTrx = await confirmation.addMultiple(encrypted_codes, {gasPrice:gasPrice}).catch(function(a){
+    console.log('error on addMultipleTrx', a);
+  });
+  if (addMultipleTrx) {
+    transactions.push(getTransaction('addConfirmation', addMultipleTrx.tx));
+  }
   for (var i = 0; i < participants; i++) {
     var registerTrx = await conference.register('test', {from:accounts[i], value:deposit, gasPrice:gasPrice});
     if ((i % 100) == 0 && i != 0) {
@@ -95,6 +109,10 @@ contract('Stress test', function(accounts) {
 
     it('can handle 200 participants', async function(){
       await reportTest(200, accounts)
+    })
+
+    it('can handle 300 participants', async function(){
+      await reportTest(300, accounts)
     })
   })
 })

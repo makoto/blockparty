@@ -21,6 +21,7 @@ module.exports = async function(callback) {
       throw('-t must be either confirmation');
   }
   let codes = fs.readFileSync(file, 'utf8').trim().split('\n');
+  let encrypted_codes = [];
   for (var i = 0; i < codes.length; i++) {
     var code = codes[i];
     var registered = await repository.verify.call(code);
@@ -29,8 +30,10 @@ module.exports = async function(callback) {
       console.log('code', code, ' is already registered. Claimed by ', claimed);
     }else{
       var encrypted_code = await repository.encrypt.call(code);
-      var result = await repository.add(encrypted_code, {gasPrice:gas});
-      console.log('Adding', code, ' as ', encrypted_code, ' with trx', result.tx);
+      console.log('Adding', code, ' as ', encrypted_code);
+      encrypted_codes.push(encrypted_code);
     }
   }
+  var result = await repository.addMultiple(encrypted_codes, {gasPrice:gas});
+  console.log('addMultiple trx', result.tx);
 }

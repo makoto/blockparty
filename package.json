@@ -50,7 +50,7 @@
     "truffle-contract": "^3.0.0",
     "truffle-hdwallet-provider": "0.0.3",
     "url-loader": "^0.5.7",
-    "web3": "^0.16.0",
+    "web3": "^0.20.2",
     "zeppelin-solidity": "0.0.6"
   },
   "devDependencies": {
