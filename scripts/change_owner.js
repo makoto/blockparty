@@ -1,7 +1,8 @@
 let arg = require('yargs').argv;
 let fs = require('fs');
-let Conference = artifacts.require("./Conference.sol");
 let setGas = require('./util/set_gas');
+let setContract = require('./util/set_contract');
+
 if (!(arg.f && arg.t)) {
   throw('usage: truffle exec scripts/change_owner.js -f original_owner.txt -t address_to_change.txt');
 }
@@ -11,7 +12,7 @@ module.exports = async function() {
   let from = fs.readFileSync(arg.f, 'utf8').trim().split('\n')[0];
   let to = fs.readFileSync(arg.t, 'utf8').trim().split('\n')[0];
   console.log('Changing ownership from ', from, ' to ', to);
-  let conference = await Conference.deployed();
+  const conference = await setContract(artifacts, 'Conference');
   let owner = await conference.owner.call();
   console.log('owner', owner, from, owner === from)
   if (owner != from) {

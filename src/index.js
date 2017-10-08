@@ -69,12 +69,29 @@ function setup(){
 
 window.onload = function() {
   setup().then(({provider, web3, read_only, network_id}) => {
+    var env;
+    switch (network_id) {
+      case '1':
+        env = 'mainnet';
+        break;
+      case '3':
+        env = 'ropsten';
+        break;
+      default:
+        env = 'development';
+    }
+    var network_obj = require('../app_config.js')[env];
+
     var Conference  = TruffleContract(artifacts);
     let contract, contractAddress;
     Conference.setProvider(provider);
     Conference.setNetwork(network_id);
     try {
-      contract = Conference.at(Conference.address);
+      if (network_obj.contract_addresses['Conference']) {
+        contract = Conference.at(network_obj.contract_addresses['Conference']);
+      }else{
+        contract = Conference.at(Conference.address);
+      }
     } catch (e) {
       console.log("ERROR")
       console.log(e)
@@ -95,34 +112,6 @@ window.onload = function() {
     window.contract = contract
     window.web3 = web3
     const eventEmitter = EventEmitter()
-
-    var network_obj;
-    switch (network_id) {
-      case '1':
-        network_obj = {
-          name: 'MAINNET',
-          etherscan_url: 'https://etherscan.io'
-        }
-        break;
-      case '3':
-        network_obj = {
-          name: 'ROPSTEN NET',
-          etherscan_url: 'https://ropsten.etherscan.io'
-        }
-        break;
-      case '42':
-        network_obj = {
-          name: 'KOVAN NET',
-          etherscan_url: 'https://kovan.etherscan.io'
-        }
-        break;
-      default:
-        network_obj = {
-          name: 'PRIVATE NET',
-          etherscan_url: null
-        }
-
-    }
 
     function getBalance(address){
       return new Promise(function(resolve,reject){

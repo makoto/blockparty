@@ -1,25 +1,25 @@
 let fs = require('fs');
 let setGas = require('./util/set_gas');
+let setContract = require('./util/set_contract');
 let ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
+
 let repository;
 let arg = require('yargs').argv;
 
-if (!(arg.i && arg.t)) {
-  throw('usage: truffle exec scripts/repository.js -t confirmation -i codes.txt');
+if (!(arg.i)) {
+  throw('usage: truffle exec scripts/repository.js -i codes.txt');
 }
 
 module.exports = async function(callback) {
-  let gas = await setGas(web3);
-  let file = arg.i;
-  console.log('file', file)
-  switch (arg.t) {
-    case 'confirmation':
-      repository = await ConfirmationRepository.deployed();
-      console.log('repository', repository.address)
-      break;
-    default:
-      throw('-t must be either confirmation');
+  const gas = await setGas(web3);
+  const conference = await setContract(artifacts, 'Conference');
+  const repositoryAddress = await conference.confirmationRepository.call();
+  if (!repositoryAddress) {
+    throw("repository address does not exist")
   }
+  const repository = await ConfirmationRepository.at(repositoryAddress);
+  let file = arg.i;
+
   let codes = fs.readFileSync(file, 'utf8').trim().split('\n');
   let encrypted_codes = [];
   for (var i = 0; i < codes.length; i++) {
