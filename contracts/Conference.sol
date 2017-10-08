@@ -103,7 +103,6 @@ contract Conference is Destructible {
 	function registerInternal(string _participant) internal {
 		require(msg.value == deposit);
 		require(registered < limitOfParticipants);
-		require(!ended);
 		require(!isRegistered(msg.sender));
 
 		registered++;
