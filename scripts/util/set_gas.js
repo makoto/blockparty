@@ -6,7 +6,7 @@ module.exports = function(web3){
       if (network_id == 1) { // mainnet
         gas = 2000000000 // 2 gwei
       }else if (network_id == 3) {
-        gas = 20000000000 // 20 gwei
+        gas = 50000000000 // 50 gwei
       }else{
         gas = 1;
       }
