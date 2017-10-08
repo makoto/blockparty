@@ -12,7 +12,7 @@ module.exports = {
   },
   ropsten: {
     contract_addresses:{
-      'Conference': '0x9320e062d621938bf0e1761f5a005b5caa441e39',
+      'Conference': '0xf5397b6ac55e74da9a312eeca3b59a8bd8ba976b',
       'ConfirmationRepository': '0xe444b7bec7a2dbd571523a1e2e4580a1b4c1c9b1'
     },
     name: 'ROPSTEN NET',
