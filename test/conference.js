@@ -99,20 +99,30 @@ contract('Conference', function(accounts) {
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), beforeContractBalance.toNumber());
       assert.equal(await conference.isRegistered.call(owner), false);
     })
+
+    it('cannot register twice with same address', async function(){
+      await conference.register.sendTransaction(twitterHandle, {from:owner, value:deposit});
+      await conference.register.sendTransaction(twitterHandle, {from:owner, value:deposit}).catch(function(){});
+      assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
+      assert.equal(await conference.registered.call(), 1);
+      assert.equal(await conference.isRegistered.call(owner), true);
+    })
   })
 
   describe('on attend', function(){
+    var non_registered = accounts[4];
+
     beforeEach(async function(){
       await conference.register(twitterHandle, {value:deposit, from:non_owner});
     })
 
-    it('isAttended is true if owner calls attend function', async function(){
+    it('can be called by owner', async function(){
       await conference.attend([non_owner], {from:owner});
       assert.equal(await conference.isAttended.call(non_owner), true);
       assert.equal((await conference.attended.call()).toNumber(), 1);
     })
 
-    it('isAttended is false if non owner calls attend function', async function(){
+    it('cannot be called by non owner', async function(){
       await conference.attend([non_owner], {from:non_owner}).catch(function(){});
       assert.equal(await conference.isAttended.call(non_owner), false);
       assert.equal(await conference.attended.call(), 0);
@@ -122,6 +132,20 @@ contract('Conference', function(accounts) {
 
     it('isAttended is false if attended function for the account is not called', async function(){
       assert.equal(await conference.isAttended.call(owner), false);
+    })
+
+    it('cannot be attended if the list includes non registered address', async function(){
+      await conference.attend([non_owner, non_registered], {from:owner}).catch(function(){});
+      assert.equal(await conference.isAttended.call(non_owner), false);
+      assert.equal(await conference.isAttended.call(non_registered), false);
+      assert.equal((await conference.attended.call()).toNumber(), 0);
+    })
+
+    it('cannot be attended twice', async function(){
+      await conference.attend([non_owner], {from:owner});
+      await conference.attend([non_owner], {from:owner}).catch(function(){});
+      assert.equal(await conference.isAttended.call(non_owner), true);
+      assert.equal((await conference.attended.call()).toNumber(), 1);
     })
   })
 
@@ -166,6 +190,20 @@ contract('Conference', function(accounts) {
       assert.equal(await conference.attended.call(), 1);
       assert.equal(await confirmation.report.call(confirmation_code), non_owner);
     })
+
+    it('cannot be attended twice', async function(){
+      await conference.register(twitterHandle, {from:non_owner, value:deposit});
+      await conference.attend([non_owner], {from:owner});
+      await conference.attendWithConfirmation([non_owner], {from:non_owner}).catch(function(){});
+      assert.equal(await conference.isAttended.call(non_owner), true);
+      assert.equal((await conference.attended.call()).toNumber(), 1);
+    })
+
+    it('cannot be attended if not registered', async function(){
+      await conference.attendWithConfirmation([non_owner], {from:non_owner}).catch(function(){});
+      assert.equal(await conference.isAttended.call(non_owner), false);
+      assert.equal((await conference.attended.call()).toNumber(), 0);
+    })
   })
 
   describe('on payback', function(){
@@ -209,7 +247,7 @@ contract('Conference', function(accounts) {
     it('cannot register any more', async function(){
       await conference.payback({from:owner});
       currentRegistered = await conference.registered.call();
-      await conference.register('some handler', {from:notRegistered, value:deposit});
+      await conference.register('some handler', {from:notRegistered, value:deposit}).catch(function(){});
       assert.strictEqual((await conference.registered.call()).toNumber(), currentRegistered.toNumber());
       assert.equal(await conference.ended.call(), true);
     })
@@ -218,7 +256,7 @@ contract('Conference', function(accounts) {
     it('cannot attend any more', async function(){
       await conference.payback({from:owner});
       currentAttended = await conference.attended.call();
-      await conference.attend([notAttended], {from:owner});
+      await conference.attend([notAttended], {from:owner}).catch(function(){});
       assert.strictEqual((await conference.attended.call()).toNumber(), currentAttended.toNumber());
       assert.equal(await conference.ended.call(), true);
     })
@@ -267,7 +305,7 @@ contract('Conference', function(accounts) {
     it('cannot register any more', async function(){
       await conference.cancel();
       currentRegistered = await conference.registered.call();
-      await conference.register('some handler', {from:notRegistered, value:deposit});
+      await conference.register('some handler', {from:notRegistered, value:deposit}).catch(function(){});
       assert.strictEqual((await conference.registered.call()).toNumber(), currentRegistered.toNumber());
       assert.equal(await conference.ended.call(), true);
     })
