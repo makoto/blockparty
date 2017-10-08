@@ -51,6 +51,7 @@
     "truffle-hdwallet-provider": "0.0.3",
     "url-loader": "^0.5.7",
     "web3": "^0.20.2",
+    "yargs": "^9.0.1",
     "zeppelin-solidity": "0.0.6"
   },
   "devDependencies": {
