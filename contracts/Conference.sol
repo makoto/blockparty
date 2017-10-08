@@ -37,50 +37,8 @@ contract Conference is Destructible {
 	event ClearEvent(address addr, uint256 leftOver);
 
 	/* Modifiers */
-	modifier sentDepositOrReturn {
-		if (msg.value == deposit) {
-			_;
-		}else{
-			assert(msg.sender.send(msg.value));
-		}
-	}
-
 	modifier onlyActive {
-		if (ended == false) {
-			_;
-		}
-	}
-
-	modifier onlyActiveOrReturn {
-		if (ended == false) {
-			_;
-		}else{
-			assert(msg.sender.send(msg.value));
-		}
-	}
-
-	modifier withinLimitOrReturn {
-		if (registered < limitOfParticipants ) {
-			_;
-		}else{
-			assert(msg.sender.send(msg.value));
-		}
-	}
-
-	modifier isEnded {
-		if (ended){
-			_;
-		}
-	}
-
-	modifier onlyAfter(uint _time) {
-		if (now > _time){
-			_;
-		}
-	}
-
-	modifier ifConfirmed(bytes32 _code){
-		require(confirmationRepository.claim(_code, msg.sender));
+		require(ended == false);
 		_;
 	}
 
@@ -137,16 +95,22 @@ contract Conference is Destructible {
 		RegisterEvent(msg.sender, _participant, '');
 	}
 
-	function registerInternal(string _participant) internal sentDepositOrReturn withinLimitOrReturn onlyActiveOrReturn {
+	function registerInternal(string _participant) internal {
+		require(msg.value == deposit);
+		require(registered < limitOfParticipants);
+		require(!ended);
 		require(!isRegistered(msg.sender));
+
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, false);
 	}
 
-	function attendWithConfirmation(bytes32 _confirmation) public ifConfirmed(_confirmation){
+	function attendWithConfirmation(bytes32 _confirmation) public {
 		require(isRegistered(msg.sender));
 		require(!isAttended(msg.sender));
+		require(confirmationRepository.claim(_confirmation, msg.sender));
+
 		participants[msg.sender].attended = true;
 		attended++;
 		AttendEvent(msg.sender);
@@ -192,14 +156,14 @@ contract Conference is Destructible {
 
 	/* Admin only functions */
 
-	function payback() onlyOwner{
+	function payback() public onlyOwner{
 		payoutAmount = payout();
 		ended = true;
 		endedAt = now;
 		PaybackEvent(payoutAmount);
 	}
 
-	function cancel() onlyOwner onlyActive{
+	function cancel() public onlyOwner onlyActive{
 		payoutAmount = deposit;
 		cancelled = true;
 		ended = true;
@@ -208,10 +172,12 @@ contract Conference is Destructible {
 	}
 
 	/* return the remaining of balance if there are any unclaimed after cooling period */
-	function clear() public onlyOwner isEnded onlyAfter(endedAt + coolingPeriod) {
+	function clear() public onlyOwner{
+		require(now > endedAt + coolingPeriod);
+		require(ended);
 		var leftOver = totalBalance();
+		require(owner.send(leftOver));
 		ClearEvent(owner, leftOver);
-		assert(owner.send(leftOver));
 	}
 
 	function setLimitOfParticipants(uint _limitOfParticipants) public onlyOwner{

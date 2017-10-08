@@ -209,7 +209,7 @@ contract('Conference', function(accounts) {
     it('cannot register any more', async function(){
       await conference.payback({from:owner});
       currentRegistered = await conference.registered.call();
-      await conference.register('some handler', {from:notRegistered, value:deposit});
+      await conference.register('some handler', {from:notRegistered, value:deposit}).catch(function(){});
       assert.strictEqual((await conference.registered.call()).toNumber(), currentRegistered.toNumber());
       assert.equal(await conference.ended.call(), true);
     })
@@ -218,7 +218,7 @@ contract('Conference', function(accounts) {
     it('cannot attend any more', async function(){
       await conference.payback({from:owner});
       currentAttended = await conference.attended.call();
-      await conference.attend([notAttended], {from:owner});
+      await conference.attend([notAttended], {from:owner}).catch(function(){});
       assert.strictEqual((await conference.attended.call()).toNumber(), currentAttended.toNumber());
       assert.equal(await conference.ended.call(), true);
     })
@@ -267,7 +267,7 @@ contract('Conference', function(accounts) {
     it('cannot register any more', async function(){
       await conference.cancel();
       currentRegistered = await conference.registered.call();
-      await conference.register('some handler', {from:notRegistered, value:deposit});
+      await conference.register('some handler', {from:notRegistered, value:deposit}).catch(function(){});
       assert.strictEqual((await conference.registered.call()).toNumber(), currentRegistered.toNumber());
       assert.equal(await conference.ended.call(), true);
     })
