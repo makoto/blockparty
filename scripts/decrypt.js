@@ -27,7 +27,8 @@ module.exports = async function(callback) {
   if (contractAccount) {
     conference = await Conference.at(contractAccount);
   }else{
-    conference = await Conference.deployed();
+    let setContract = require('./util/set_contract');
+    conference = await setContract(artifacts, 'Conference');
   }
   let event = conference.RegisterEvent({}, {fromBlock:fromBlock});
   console.log(['regisered at            ', '@twitter', 'full name'].join('\t'));

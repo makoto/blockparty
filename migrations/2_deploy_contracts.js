@@ -10,13 +10,15 @@ let name = ''; // empty name falls back to the contract default
 let deposit = 0; // 0 falls back to the contract default
 let limitOfParticipants = 0; // 0 falls back to the contract default
 let confirmationAddress = 0;
-
 // eg: truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key", "confirmation":true}'
 if (yargs.argv.config) {
   var config = JSON.parse(yargs.argv.config);
 }
 
 module.exports = function(deployer) {
+  const app_config = require('../app_config.js')[deployer.network];
+  console.log('app_config', app_config)
+
   if (deployer.network == 'test') return 'no need to deploy contract';
   if (config.name){
     name = config.name;
@@ -28,10 +30,14 @@ module.exports = function(deployer) {
   deployer
     .then(() => {
       if (config.confirmation) {
-        return deployer.deploy(ConfirmationRepository)
-          .then(instance => {
-            confirmationAddress = ConfirmationRepository.address;
-          })
+        if (app_config && app_config.contract_addresses['ConfirmationRepository']) {
+            confirmationAddress = app_config.contract_addresses['ConfirmationRepository'];
+        }else{
+          return deployer.deploy(ConfirmationRepository)
+            .then(instance => {
+              confirmationAddress = ConfirmationRepository.address;
+            })
+        }
       }
     })
     .then(() => {
