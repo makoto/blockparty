@@ -38,7 +38,12 @@ contract Conference is Destructible {
 
 	/* Modifiers */
 	modifier onlyActive {
-		require(ended == false);
+		require(!ended);
+		_;
+	}
+
+	modifier onlyEnded {
+		require(ended);
 		_;
 	}
 
@@ -85,12 +90,12 @@ contract Conference is Destructible {
 		}
 	}
 
-	function registerWithEncryption(string _participant, string _encrypted) public payable{
+	function registerWithEncryption(string _participant, string _encrypted) public payable onlyActive{
 		registerInternal(_participant);
 		RegisterEvent(msg.sender, _participant, _encrypted);
 	}
 
-	function register(string _participant) public payable{
+	function register(string _participant) public payable onlyActive{
 		registerInternal(_participant);
 		RegisterEvent(msg.sender, _participant, '');
 	}
@@ -106,7 +111,7 @@ contract Conference is Destructible {
 		participants[msg.sender] = Participant(_participant, msg.sender, false, false);
 	}
 
-	function attendWithConfirmation(bytes32 _confirmation) public {
+	function attendWithConfirmation(bytes32 _confirmation) public onlyActive{
 		require(isRegistered(msg.sender));
 		require(!isAttended(msg.sender));
 		require(confirmationRepository.claim(_confirmation, msg.sender));
@@ -116,7 +121,7 @@ contract Conference is Destructible {
 		AttendEvent(msg.sender);
 	}
 
-	function withdraw() public{
+	function withdraw() public onlyEnded{
 		require(payoutAmount > 0);
 		Participant participant = participants[msg.sender];
 		require(participant.addr == msg.sender);
@@ -156,7 +161,7 @@ contract Conference is Destructible {
 
 	/* Admin only functions */
 
-	function payback() public onlyOwner{
+	function payback() public onlyOwner onlyActive{
 		payoutAmount = payout();
 		ended = true;
 		endedAt = now;
@@ -172,7 +177,7 @@ contract Conference is Destructible {
 	}
 
 	/* return the remaining of balance if there are any unclaimed after cooling period */
-	function clear() public onlyOwner{
+	function clear() public onlyOwner onlyEnded{
 		require(now > endedAt + coolingPeriod);
 		require(ended);
 		var leftOver = totalBalance();
@@ -180,7 +185,7 @@ contract Conference is Destructible {
 		ClearEvent(owner, leftOver);
 	}
 
-	function setLimitOfParticipants(uint _limitOfParticipants) public onlyOwner{
+	function setLimitOfParticipants(uint _limitOfParticipants) public onlyOwner onlyActive{
 		limitOfParticipants = _limitOfParticipants;
 	}
 
