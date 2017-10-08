@@ -5,7 +5,7 @@ import React from 'react';
 let Data = [
   {
     name: 'Ethereum London October 2017',
-    address: null,
+    address: '0x9320e062d621938bf0e1761f5a005b5caa441e39',
     date:'Wednesday, October 11, 2017 6:25 PM to 9:00 PM(UTC+1)',
     map_url: 'https://www.google.com/maps/place/Imperial+College+London/@51.4987997,-0.1770659,17z/data=!3m1!4b1!4m5!3m4!1s0x48760567da220a01:0x31911b371c692e86!8m2!3d51.4987997!4d-0.1748772?hl=en',
     location_text: 'Sir Alexander Fleming Building (SAF) LT1 G16',
