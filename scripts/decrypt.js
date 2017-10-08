@@ -1,23 +1,34 @@
 const Conference = artifacts.require("Conference.sol");
+const yargs = require('yargs');
 const moment = require('moment');
-let arg = require('yargs').argv;
+let arg = yargs
+    .usage('Usage: truffle exec scripts/decrypt.js -i ./tmp/test_private.key -b 0 -c $CONTRACT_ACCOUNT')
+    // avoid address to hex conversion
+    .coerce(['c'], function (arg) { return arg})
+    .demandOption(['i'])
+    .argv;
+
 let fs = require('fs');
 let crypto = require('crypto');
-let decrypted;
+let decrypted, contractAccount, conference;
 let fromBlock = 0;
 let getBlock = require('./util/get_block');
-
-if (!(arg.i)) {
-  throw('usage: truffle exec scripts/decrypt.js -i ./tmp/test_private.key -b 0');
-}
 
 if (arg.b) {
   fromBlock = arg.b;
 }
 
+if (arg.c) {
+  contractAccount = arg.c
+}
+
 module.exports = async function(callback) {
   let privateKey = fs.readFileSync(arg.i, 'utf8');
-  let conference = await Conference.deployed();
+  if (contractAccount) {
+    conference = await Conference.at(contractAccount);
+  }else{
+    conference = await Conference.deployed();
+  }
   let event = conference.RegisterEvent({}, {fromBlock:fromBlock});
   console.log(['regisered at            ', '@twitter', 'full name'].join('\t'));
   console.log(['------------------------', '--------', '---------'].join('\t'));

@@ -34,6 +34,8 @@ module.exports = async function(callback) {
       encrypted_codes.push(encrypted_code);
     }
   }
-  var result = await repository.addMultiple(encrypted_codes, {gasPrice:gas});
-  console.log('addMultiple trx', result.tx);
+  if (encrypted_codes.length > 0) {
+    var result = await repository.addMultiple(encrypted_codes, {gasPrice:gas});
+    console.log('addMultiple trx', result.tx);
+  }
 }
