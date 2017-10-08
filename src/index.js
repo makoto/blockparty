@@ -87,8 +87,8 @@ window.onload = function() {
     Conference.setProvider(provider);
     Conference.setNetwork(network_id);
     try {
-      if (network_obj.conference_contract_address) {
-        contract = Conference.at(network_obj.conference_contract_address);
+      if (network_obj.contract_addresses['Conference']) {
+        contract = Conference.at(network_obj.contract_addresses['Conference']);
       }else{
         contract = Conference.at(Conference.address);
       }

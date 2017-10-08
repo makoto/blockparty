@@ -30,8 +30,8 @@ module.exports = function(deployer) {
   deployer
     .then(() => {
       if (config.confirmation) {
-        if (app_config && app_config.confirmation_contract_address) {
-            confirmationAddress = app_config.confirmation_contract_address;
+        if (app_config && app_config.contract_addresses['ConfirmationRepository']) {
+            confirmationAddress = app_config.contract_addresses['ConfirmationRepository'];
         }else{
           return deployer.deploy(ConfirmationRepository)
             .then(instance => {
