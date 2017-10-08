@@ -70,7 +70,8 @@ class ConferenceDetail extends React.Component {
 
   toEther(value){
     if(value){
-      return math.round(this.props.web3.fromWei(value, "ether").toNumber(), 3).toString();
+      // return math.round(this.props.web3.fromWei(value, "ether").toNumber(), 3).toString();
+      return this.props.web3.fromWei(value, "ether").toString();
     }
   }
 

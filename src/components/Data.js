@@ -4,8 +4,16 @@ import React from 'react';
 
 let Data = [
   {
+    name: 'Ethereum London October 2017',
+    address: '0x9320e062d621938bf0e1761f5a005b5caa441e39',
+    date:'Wednesday, October 11, 2017 6:25 PM to 9:00 PM(UTC+1)',
+    map_url: 'https://www.google.com/maps/place/Imperial+College+London/@51.4987997,-0.1770659,17z/data=!3m1!4b1!4m5!3m4!1s0x48760567da220a01:0x31911b371c692e86!8m2!3d51.4987997!4d-0.1748772?hl=en',
+    location_text: 'Sir Alexander Fleming Building (SAF) LT1 G16',
+    description_text: ''
+  },
+  {
     name: 'Ethereum London September 2017',
-    address: null,
+    address: '0x56812b5b1c3594af9e0b8a22d07025f5ee3debcd',
     date:'Wednesday, September 13, 2017 6:45 PM to 9:00 PM(UTC+1)',
     map_url: 'https://maps.google.com/maps?f=q&hl=en&q=Huxley+Building%2C+Imperial+College+%2C+London+SW7+2AZ%2C+gb',
     location_text: 'Clore Lecture Theatre, Huxley Building, Imperial College, London (SW7 2AZ)',
