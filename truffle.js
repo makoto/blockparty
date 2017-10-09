@@ -32,7 +32,7 @@ module.exports = {
       from: address
     },
     mainnet: {
-      gas: 1990000,
+      gas: 2550000,
       gasPrice: 2000000000, // 2 gwei
       provider: provider,
       network_id: 1,
