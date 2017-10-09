@@ -20,7 +20,7 @@ module.exports = {
   },
   mainnet: {
     contract_addresses:{
-      'Conference': null,
+      'Conference': '0xf618af176f6521ae0ab249133740dd173c3e43e1',
       'ConfirmationRepository': '0xe0e0229484b1088e0a751ddffd05b2e6b833e3a2'
     },
     name: 'MAINNET',
