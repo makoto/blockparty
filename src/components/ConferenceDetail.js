@@ -124,7 +124,7 @@ class ConferenceDetail extends React.Component {
   getDepositContent(deposit, rate){
     if(deposit){
       return (
-        <span style={styles.list}>{this.toEther(deposit)} (&pound;{rate})</span>
+        <span style={styles.list}> ETH {this.toEther(deposit)}</span>
       )
     }else{
       return (
