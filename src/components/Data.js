@@ -1,8 +1,15 @@
 import React from 'react';
 // This is to add non contract binding data into Dapp.
 // May be replaced with IPFS at some point.
-
 let Data = [
+  {
+    name: 'Devcon3 dinner for global Ethereum meetup organisers',
+    address: null,
+    date:'Wednesday, November 1, 2017 6:30 PM ~ (UTC-05:00)',
+    map_url: 'https://www.google.co.uk/maps/place/La+Isla+Shopping+Village/@21.1108433,-86.7653545,17z/data=!3m1!4b1!4m5!3m4!1s0x8f4c285f9f1c5055:0xc2d79d4d1a890dc7!8m2!3d21.1108433!4d-86.7631658',
+    location_text: 'Hotel Zone, Blvd. Kukulcan, La Isla Shopping Village Km.12, TEL. 883-0902 883-0897',
+    description_text: "<a target='_blank' href='https://www.opentable.com/r/cambalache-cancun?lang=en&utm_source=opentable&utm_medium=tms_email&utm_campaign=reso_confirm'>Cambalache</a> steak house (price range $26 or over). Chance to chat with other Ethereum meetup organisers around the world over dinner."
+  },
   {
     name: 'Ethereum London October 2017',
     address: '0x9320e062d621938bf0e1761f5a005b5caa441e39',
