@@ -127,11 +127,6 @@ export default class Instruction extends React.Component {
             Please contact the <a href="http://twitter.com/makoto_inoue">author of this project</a> if you are interested.
           </p>
 
-          <h3>Do you take any commission?</h3>
-          <p>
-            No, but if you like this project, it would be great if you can donate to my <a href="https://simplybusiness.everydayhero.com/uk/makoto">5 days Sahara trekking challenge page</a> mentioning "BlockParty". This will help Whizz-Kidz, disabled children's charity, which I am currently fund raising.
-          </p>
-
           <h2>Terms and conditions</h2>
           <p>
             By accessing this website, you agree to our terms and conditions of use. We accept no responsibility whether in contract, tort or otherwise for any loss or damage arising out of or in connection with your use of our software and recommend that you ensure your devices are protected by using appropriate virus protection.
