@@ -69,7 +69,7 @@ export default class Instruction extends React.Component {
           <p>This is the standard way of accessing Dapp</p>
           <ul>
             <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>mainnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
-            <li>Step 2: Create an account on your wallet, and make sure you have at least 1.1 Ether.</li>
+            <li>Step 2: Create an account on your wallet, and make sure you have some Ether.</li>
             <li>Step 3: Refresh the page </li>
           </ul>
 
@@ -77,7 +77,7 @@ export default class Instruction extends React.Component {
           <p>For those of you who have problem installing the Mist browser, or no time to download the big blockchain, why don't you try out via this browser based extension</p>
           <ul>
             <li>Step 1: Install <a href='https://metamask.io/'>Metamask</a> Chrome extension </li>
-            <li>Step 2: Create an account on your metamask, and make sure you have at least 1.1 Ether.</li>
+            <li>Step 2: Create an account on your metamask, and make sure you have some Ether.</li>
             <li>Step 3: Refresh the page </li>
           </ul>
 
@@ -85,7 +85,7 @@ export default class Instruction extends React.Component {
           <p>This has been the standard way to access Dapp prior to Ethereum Wallet (lower than v 0.7)</p>
           <ul>
             <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>mainnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
-            <li>Step 2: Create an account on your wallet, and make sure you have at least 1.1 Ether.</li>
+            <li>Step 2: Create an account on your wallet, and make sure you have some Ether.</li>
             <li>Step 3: Stop Ethereum Wallet</li>
             <li>Step 4: Start geth(Go Etheruem, command line tool) with the following options. (See the <a href='https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum'>installation instructions</a> for each platform)</li>
             <li>Step 5: Refresh this page </li>
