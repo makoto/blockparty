@@ -3,8 +3,16 @@ import React from 'react';
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name: 'Ethereum London November 2017',
+    address: '0x9320e062d621938bf0e1761f5a005b5caa441e39',
+    date:'Wednesday, November 15, 2017 6:25 PM to 9:00 PM(UTC+1)',
+    map_url: 'https://www.google.com/maps?f=q&hl=en&q=Huxley+Building,+Imperial+College+,+London+SW7+2AZ,+gb',
+    location_text: 'Clore Lecture Theatre, Huxley Building, Imperial College , London SW7 2AZ',
+    description_text: ''
+  },
+  {
     name: 'Devcon3 dinner for global Ethereum meetup organisers',
-    address: null,
+    address: '0x6f36d375c11f410d7dc4c170b1f14af601a4d108',
     date:'Wednesday, November 1, 2017 6:30 PM ~ (UTC-05:00)',
     map_url: 'https://www.google.co.uk/maps/place/La+Isla+Shopping+Village/@21.1108433,-86.7653545,17z/data=!3m1!4b1!4m5!3m4!1s0x8f4c285f9f1c5055:0xc2d79d4d1a890dc7!8m2!3d21.1108433!4d-86.7631658',
     location_text: 'Hotel Zone, Blvd. Kukulcan, La Isla Shopping Village Km.12, TEL. 883-0902 883-0897',
