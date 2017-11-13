@@ -8,7 +8,6 @@ contract Conference is Destructible {
 	string public name;
 	uint256 public deposit;
 	uint public limitOfParticipants;
-	uint public registered;
 	uint public attended;
 	bool public ended;
 	bool public cancelled;
@@ -19,7 +18,7 @@ contract Conference is Destructible {
 	string public encryption;
 
 	mapping (address => Participant) public participants;
-	mapping (uint => address) public participantsIndex;
+	address[] public participantsIndex;
 	bool paid;
 
 	struct Participant {
@@ -102,11 +101,10 @@ contract Conference is Destructible {
 
 	function registerInternal(string _participant) internal {
 		require(msg.value == deposit);
-		require(registered < limitOfParticipants);
+		require(registered() < limitOfParticipants);
 		require(!isRegistered(msg.sender));
 
-		registered++;
-		participantsIndex[registered] = msg.sender;
+		participantsIndex.push(msg.sender);
 		participants[msg.sender] = Participant(_participant, msg.sender, false, false);
 	}
 
@@ -133,6 +131,14 @@ contract Conference is Destructible {
 	}
 
 	/* Constants */
+	function registered() constant returns(uint){
+		return participantsIndex.length;
+	}
+
+	function getParticipants() constant returns (address[]){
+		return participantsIndex;
+	}
+
 	function totalBalance() constant returns (uint256){
 		return this.balance;
 	}

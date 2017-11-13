@@ -78,6 +78,10 @@ contract('Conference', function(accounts) {
       assert.equal((await conference.registered.call()).toNumber(), 1);
     })
 
+    it('getParticipants returns list of addresses', async function(){
+      assert.equal((await conference.getParticipants.call())[0], owner);
+    })
+
     it('increases totalBalance', async function(){
       assert.equal((await conference.totalBalance.call()) - beforeContractBalance , deposit);
     })
