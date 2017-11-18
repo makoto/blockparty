@@ -1,18 +1,29 @@
-import React from 'react';
 // This is to add non contract binding data into Dapp.
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name: 'Ethereum London November 2017',
+    address: '0xda0ec6ef1288cf3829d0cd499a626a107ef3943d',
+    date:'Wednesday, November 15, 2017 6:25 PM to 9:00 PM(UTC+1)',
+    map_url: 'https://www.google.com/maps?f=q&hl=en&q=Huxley+Building,+Imperial+College+,+London+SW7+2AZ,+gb',
+    location_text: 'Clore Lecture Theatre, Huxley Building, Imperial College , London SW7 2AZ',
+    description_text: ''
+  },
+  {
     name: 'Devcon3 dinner for global Ethereum meetup organisers',
-    address: null,
+    address: '0x6f36d375c11f410d7dc4c170b1f14af601a4d108',
     date:'Wednesday, November 1, 2017 6:30 PM ~ (UTC-05:00)',
     map_url: 'https://www.google.co.uk/maps/place/La+Isla+Shopping+Village/@21.1108433,-86.7653545,17z/data=!3m1!4b1!4m5!3m4!1s0x8f4c285f9f1c5055:0xc2d79d4d1a890dc7!8m2!3d21.1108433!4d-86.7631658',
     location_text: 'Hotel Zone, Blvd. Kukulcan, La Isla Shopping Village Km.12, TEL. 883-0902 883-0897',
     description_text: "<a target='_blank' href='https://www.opentable.com/r/cambalache-cancun?lang=en&utm_source=opentable&utm_medium=tms_email&utm_campaign=reso_confirm'>Cambalache</a> steak house (price range $26 or over). Chance to chat with other Ethereum meetup organisers around the world over dinner."
   },
   {
+    name: 'CodeUp #23',
+    address: '0x015b631f1ea6434b1a71ed1bff5ac38b79e7f5c4',
+  },
+  {
     name: 'Ethereum London October 2017',
-    address: '0x9320e062d621938bf0e1761f5a005b5caa441e39',
+    address: '0xf618af176f6521ae0ab249133740dd173c3e43e1',
     date:'Wednesday, October 11, 2017 6:25 PM to 9:00 PM(UTC+1)',
     map_url: 'https://www.google.com/maps/place/Imperial+College+London/@51.4987997,-0.1770659,17z/data=!3m1!4b1!4m5!3m4!1s0x48760567da220a01:0x31911b371c692e86!8m2!3d51.4987997!4d-0.1748772?hl=en',
     location_text: 'Sir Alexander Fleming Building (SAF) LT1 G16',
@@ -59,4 +70,4 @@ let Data = [
     description_text: "After meeting at the lobby, we will head to <a target='_blank' href='http://chope.net.cn/shanghai-restaurants/restaurant/lostheaven-yadl'> Lost Heaven</a>(17 Yan An Dong Lu, Huangpu District). The table of 10 is booked under Makoto"
   },
 ]
-export default Data;
+module.exports = Data;
