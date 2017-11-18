@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/makoto/blockparty#readme",
   "dependencies": {
+    "axios": "^0.17.1",
     "babel-core": "^6.8.0",
     "babel-loader": "^6.2.4",
     "babel-polyfill": "^6.23.0",
