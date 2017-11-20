@@ -1,4 +1,3 @@
-// https://api.etherscan.io/api?module=logs&action=getLogs&fromBlock=379224&toBlock=latest&address=0x33990122638b9132ca29c723bdf037f1a891a70c&topic0=0xf63780e752c6a54a94fc52715dbc5518a3b4c3c2833d301a204226548a2a8545&apikey=YourApiKeyToken
 let Conference = artifacts.require("./Conference.sol");
 let fs = require('fs');
 let moment = require('moment');
@@ -8,10 +7,6 @@ const Data = require('../src/components/Data.js')
 
 let InputDataDecoder = require('ethereum-input-data-decoder');
 let decoder = new InputDataDecoder(Conference.abi);
-
-// content.result[0]
-// content.result[2].input
-// decoder.decodeData(c.result[2].input).name,
 
 let getTransaction = function(web3, trxHash){
   return new Promise(function(resolve,reject){
@@ -42,7 +37,7 @@ var showReport = async function(event){
     var r = content.result[i];
     var decoded = decoder.decodeData(r.input);
     results.push({
-      timestamp:moment(r.timeStamp * 1000).format('DD/MM/YYYY'),
+      timestamp:moment(r.timeStamp * 1000),
       name:decoded.name,
       inputs: decoded.inputs,
       hash: r.hash,
@@ -52,9 +47,6 @@ var showReport = async function(event){
       gas:r.gas, gasPrice:r.gasPrice, gasUsed:r.gasUsed, isError:r.isError
     })
   }
-  // console.log('content', content)
-  // console.log('results', results)
-  // console.log('results', results.map((r)=>{return [r.hash, web3.fromWei(r.total, 'ether') * 256]}));
 
   if (results.length == 0) {
     return;
@@ -75,6 +67,9 @@ var showReport = async function(event){
   )
   payback = results.filter(function(r){ return r.name == 'payback' })[0]
   withdraws = results.filter(function(r){ return r.name == 'withdraw' })
+  // withdraws.map(function(w){
+  //   console.log((w.timestamp - payback.timestamp) / 1000 / 60 / 60 / 24)
+  // })
   errors = results.filter(function(r){ return r.isError != '0' })
   var index = 0
   header[index++] = 'address';
@@ -82,12 +77,16 @@ var showReport = async function(event){
   header[index++] = 'name';
   row.push(event.name);
   header[index++] = 'date';
-  row.push(payback.timestamp);
+  row.push(payback.timestamp.format('DD/MM/YYYY'));
   header[index++] = 'RSVP';
   let registered = (await conference.registered.call());
   row.push(registered)
   header[index++] = 'attended';
   let attended = (await conference.attended.call());
+  // for (var i = 0; i < attended - withdraws.length; i++) {
+  //   console.log(7)
+  // }
+
   row.push(attended)
   header[index++] = 'ratio';
   row.push(attended/registered);
