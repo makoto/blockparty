@@ -2,6 +2,14 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name: 'CodeUp #24',
+    address: null,
+    date:'Nov 28th (Tues) 6:30 PM(UTC)',
+    map_url: 'https://www.google.co.uk/maps/place/Simply+Business/@51.51528,-0.0904011,15z/data=!4m5!3m4!1s0x0:0x70f23f24baccffdc!8m2!3d51.51528!4d-0.0904011',
+    location_text: 'Simply Business (99 Gresham St, London EC2V 7NG)',
+    description_text: ''
+  },
+  {
     name: 'Ethereum London November 2017',
     address: '0xda0ec6ef1288cf3829d0cd499a626a107ef3943d',
     date:'Wednesday, November 15, 2017 6:25 PM to 9:00 PM(UTC+1)',
@@ -20,6 +28,10 @@ let Data = [
   {
     name: 'CodeUp #23',
     address: '0x015b631f1ea6434b1a71ed1bff5ac38b79e7f5c4',
+    date:'Oct 18th (Tues) 6:30 PM(UTC+1)',
+    map_url: 'https://www.google.co.uk/maps/place/Simply+Business/@51.51528,-0.0904011,15z/data=!4m5!3m4!1s0x0:0x70f23f24baccffdc!8m2!3d51.51528!4d-0.0904011',
+    location_text: 'Simply Business (99 Gresham St, London EC2V 7NG)',
+    description_text: ''
   },
   {
     name: 'Ethereum London October 2017',
