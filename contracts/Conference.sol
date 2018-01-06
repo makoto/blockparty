@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.18;
 
 import './ConfirmationRepository.sol';
 import './zeppelin/ownership/Ownable.sol';
@@ -49,14 +49,14 @@ contract Conference is Destructible {
 
 	/* Public functions */
 
-	function Conference(
+	function Conference (
 		string _name,
 		uint256 _deposit,
 		uint _limitOfParticipants,
 		uint _coolingPeriod,
 		address _confirmation_repository_address,
 		string _encryption
-	) {
+	) public {
 		if(bytes(_name).length != 0){
 			name = _name;
 		}else{
@@ -133,27 +133,27 @@ contract Conference is Destructible {
 	}
 
 	/* Constants */
-	function totalBalance() constant returns (uint256){
+	function totalBalance() constant public returns (uint256){
 		return this.balance;
 	}
 
-	function confirmation() constant returns (bool){
+	function confirmation() constant public returns (bool){
 		return address(confirmationRepository) != address(0);
 	}
 
-	function isRegistered(address _addr) constant returns (bool){
+	function isRegistered(address _addr) constant public returns (bool){
 		return participants[_addr].addr != address(0);
 	}
 
-	function isAttended(address _addr) constant returns (bool){
+	function isAttended(address _addr) constant public returns (bool){
 		return isRegistered(_addr) && participants[_addr].attended;
 	}
 
-	function isPaid(address _addr) constant returns (bool){
+	function isPaid(address _addr) constant public returns (bool){
 		return isRegistered(_addr) && participants[_addr].paid;
 	}
 
-	function payout() constant returns(uint256){
+	function payout() constant public returns(uint256){
 		if (attended == 0) return 0;
 		return uint(totalBalance()) / uint(attended);
 	}
