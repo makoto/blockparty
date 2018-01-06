@@ -97,8 +97,8 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 - [nodejs](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/)
 - [webpack](https://webpack.github.io/)
-- [truffle](http://truffle.readthedocs.org) = version 3.2.1
-- [testrpc](https://github.com/ethereumjs/testrpc) = version 3.0.3
+- [truffle](http://truffle.readthedocs.org) = version 4.0.4
+- [ganache-cli](https://github.com/trufflesuite/ganache-cli) = v6.0.3 (ganache-core: 2.0.2)
 
 ### Installation
 
@@ -108,7 +108,7 @@ NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
 
 ### Running test
 
-- Run `testrpc` in one console
+- Run `ganache-cli -a 300` in one console
 - Generate test public/secret key
 
 ```
@@ -121,7 +121,6 @@ openssl rsa -pubout < test_private.key > test_public.key
 
 ### Running locally
 
-- Run `testrpc -a 30` in one console
 - Run `truffle migrate`
 - Run `npm run dev`
 - Open `http://localhost:8080`
