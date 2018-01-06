@@ -4,7 +4,11 @@ let Data = [
   {
     name: 'CodeUp #24',
     address: '0x19a61bf1436d6b8f6b918575583d4b0481cf3989',
-    ether_price: 474,
+    date:'Nov 28th (Tues) 6:30 PM(UTC)',
+    map_url: 'https://www.google.co.uk/maps/place/Simply+Business/@51.51528,-0.0904011,15z/data=!4m5!3m4!1s0x0:0x70f23f24baccffdc!8m2!3d51.51528!4d-0.0904011',
+    location_text: 'Simply Business (99 Gresham St, London EC2V 7NG)',
+    description_text: '',
+    ether_price: 474
   },
   {
     name: 'Ethereum London November 2017',
@@ -27,6 +31,10 @@ let Data = [
   {
     name: 'CodeUp #23',
     address: '0x015b631f1ea6434b1a71ed1bff5ac38b79e7f5c4',
+    date:'Oct 18th (Tues) 6:30 PM(UTC+1)',
+    map_url: 'https://www.google.co.uk/maps/place/Simply+Business/@51.51528,-0.0904011,15z/data=!4m5!3m4!1s0x0:0x70f23f24baccffdc!8m2!3d51.51528!4d-0.0904011',
+    location_text: 'Simply Business (99 Gresham St, London EC2V 7NG)',
+    description_text: '',
     ether_price: 317,
   },
   {
