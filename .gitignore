@@ -5,4 +5,7 @@ node_modules
 yarn-error.log
 .DS_Store
 archive/*
+coverage
+coverageEnv
+coverage.json
 tmp

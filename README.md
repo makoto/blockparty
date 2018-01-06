@@ -119,6 +119,12 @@ openssl rsa -pubout < test_private.key > test_public.key
 
 - Run `truffle test --network test`
 
+### Running test coverage
+
+```
+./node_modules/.bin/solidity-coverage
+```
+
 ### Running locally
 
 - Run `truffle migrate`

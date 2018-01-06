@@ -18,8 +18,7 @@ if (yargs.argv.config) {
 module.exports = function(deployer) {
   const app_config = require('../app_config.js')[deployer.network];
   console.log('app_config', app_config)
-
-  if (deployer.network == 'test') return 'no need to deploy contract';
+  if (deployer.network == 'test' || deployer.network == 'coverage') return 'no need to deploy contract';
   if (config.name){
     name = config.name;
   }
