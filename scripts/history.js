@@ -29,6 +29,7 @@ let getAvg = function(name, list){
 var header = [];
 var showReport = async function(event){
   let row = [];
+  let ether_price = event.ether_price;
   let conference = Conference.at(event.address);
   let fileName = `tmp/response-data-export-${event.address}.json`;
   let content = JSON.parse(fs.readFileSync(fileName, 'utf8'));
@@ -78,6 +79,8 @@ var showReport = async function(event){
   row.push(event.name);
   header[index++] = 'date';
   row.push(payback.timestamp.format('DD/MM/YYYY'));
+  header[index++] = 'ether_price';
+  row.push(event.ether_price);
   header[index++] = 'RSVP';
   let registered = (await conference.registered.call());
   row.push(registered)
@@ -92,7 +95,7 @@ var showReport = async function(event){
   row.push(attended/registered);
   header[index++] = 'payout';
   let deposit = web3.fromWei((await conference.deposit.call()), 'ether').toNumber();
-  row.push((registered - attended) * deposit / attended * 256);
+  row.push((registered - attended) * deposit / attended * ether_price);
   header[index++] = 'trxs';
   row.push(results.length);
   header[index++] = 'errors';
@@ -100,15 +103,15 @@ var showReport = async function(event){
   header[index++] = 'gasPrice_avg(gwei)';
   row.push(parseFloat(web3.fromWei(getAvg('gasPrice', results), 'gwei')));
   header[index++] = 'total';
-  row.push(parseFloat(web3.fromWei(getTotal('total', results), 'ether')) * 256);
+  row.push(parseFloat(web3.fromWei(getTotal('total', results), 'ether')) * ether_price);
   header[index++] = 'admin_total';
-  row.push(parseFloat(web3.fromWei(getTotal('total', owners), 'ether')) * 256);
+  row.push(parseFloat(web3.fromWei(getTotal('total', owners), 'ether')) * ether_price);
   header[index++] = 'register_avg';
-  row.push(parseFloat(web3.fromWei(getAvg('total', registers), 'ether')) * 256);
+  row.push(parseFloat(web3.fromWei(getAvg('total', registers), 'ether')) * ether_price);
   header[index++] = 'attend_avg';
-  row.push(parseFloat(web3.fromWei(getAvg('total', attendWithConfirmation), 'ether')) * 256);
+  row.push(parseFloat(web3.fromWei(getAvg('total', attendWithConfirmation), 'ether')) * ether_price);
   header[index++] = 'withdraw_avg';
-  row.push(parseFloat(web3.fromWei(getAvg('total', withdraws), 'ether')) * 256);
+  row.push(parseFloat(web3.fromWei(getAvg('total', withdraws), 'ether')) * ether_price);
   return row;
 }
 
