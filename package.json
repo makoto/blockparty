@@ -9,7 +9,9 @@
   "scripts": {
     "lint": "eslint ./",
     "build": "webpack -p",
-    "dev": "webpack-dev-server -d --inline --hot"
+    "dev": "webpack-dev-server -d --inline --hot",
+    "coverage": "./node_modules/.bin/solidity-coverage",
+    "build-contracts": "sol-merger './contracts/*.sol' ./build"
   },
   "repository": {
     "type": "git",
@@ -50,6 +52,7 @@
     "react-notifications": "^1.2.0",
     "react-pure-render": "^1.0.2",
     "react-tap-event-plugin": "^1.0.0",
+    "sol-merger": "^0.1.2",
     "style-loader": "^0.13.1",
     "truffle-contract": "^3.0.0",
     "truffle-hdwallet-provider": "0.0.3",
@@ -97,6 +100,7 @@
     "react-dev-utils": "^0.2.1",
     "recursive-readdir": "2.1.0",
     "rimraf": "2.5.4",
+    "solidity-coverage": "^0.4.8",
     "strip-ansi": "3.0.1",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
