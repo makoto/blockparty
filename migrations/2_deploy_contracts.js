@@ -6,13 +6,14 @@ const yargs = require('yargs');
 const crypto = require('crypto');
 const fs = require('fs');
 let encryption = '';
+let config = {};
 let name = ''; // empty name falls back to the contract default
 let deposit = 0; // 0 falls back to the contract default
 let limitOfParticipants = 0; // 0 falls back to the contract default
 let confirmationAddress = 0;
 // eg: truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key", "confirmation":true}'
 if (yargs.argv.config) {
-  var config = JSON.parse(yargs.argv.config);
+  config = JSON.parse(yargs.argv.config);
 }
 
 module.exports = function(deployer) {
@@ -26,6 +27,7 @@ module.exports = function(deployer) {
   if (config.encryption) {
     encryption = fs.readFileSync(config.encryption, {encoding: 'ascii'});
   }
+
   deployer
     .then(() => {
       if (config.confirmation) {
