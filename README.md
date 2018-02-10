@@ -117,7 +117,7 @@ openssl genrsa 2048 > test_private.key
 openssl rsa -pubout < test_private.key > test_public.key
 ```
 
-- Run `truffle test --network test`
+- Run `npm run test`
 
 ### Running test coverage
 
@@ -127,7 +127,7 @@ openssl rsa -pubout < test_private.key > test_public.key
 
 ### Running locally
 
-- Run `truffle migrate`
+- Run `npm run truffle migrate`
 - Run `npm run dev`
 - Open `http://localhost:8080`
 
@@ -154,7 +154,7 @@ Event name is configurable as `name`
 First, deploy the contract.
 
 ```
-truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key", "confirmation":true}'
+npm run truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key", "confirmation":true}'
 ```
 
 As an example, assume you have the following two codes at `input.txt`
@@ -168,7 +168,7 @@ $ cat tmp/input.txt
 Running `repository.js` will add these confirmation code into the ConfirmationRepository.
 
 ```
-$truffle exec scripts/repository.js -t confirmation -i tmp/input.txt
+$npm run truffle exec scripts/repository.js -t confirmation -i tmp/input.txt
 Adding 1234567890  as  0xf654274a8983066b9f810ed158b3fa883c9d26553429193e4aba65b44b76c835
 Adding 0987654321  as  0x295153b1a40cec2698cd2fb0d75c8137a5c43d67ed5e4b7abbd463bc2b0dfac7
 ```
@@ -176,7 +176,7 @@ Adding 0987654321  as  0x295153b1a40cec2698cd2fb0d75c8137a5c43d67ed5e4b7abbd463b
 If you run the same program again, it will detect.
 
 ```
-$truffle exec scripts/repository.js -t confirmation -i input.txt
+$npm run truffle exec scripts/repository.js -t confirmation -i input.txt
 Using network 'development'.
 
 code 1234567890  is already registered. Claimed by  0x0000000000000000000000000000000000000000
@@ -186,7 +186,7 @@ code 0987654321  is already registered. Claimed by  0x00000000000000000000000000
 Pass the original confirmation ion codes to the participants. Once participants use the code to register, you can check who used the codes by running the script again.
 
 ```
-$truffle exec scripts/repository.js -t confirmation -i input.txt
+$npm run truffle exec scripts/repository.js -t confirmation -i input.txt
 Using network 'development'.
 
 code 1234567890  is already registered. Claimed by 0x12ff7cfb557a7d0404b694da8d6106e219306a93
