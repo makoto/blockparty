@@ -91,14 +91,15 @@ Real sites allows for participants to only `Register` and pay deposit to the sit
 
 ## Hacking guide
 
+If you are interested in contributing to blockparty, have a look into ["help wanted" tag on Github issues](https://github.com/makoto/blockparty/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22). They are relatively easy and does not require so much application specific knowledges.
+
 ### Prerequisite
 
 - [geth](https://github.com/ethereum/go-ethereum/wiki/geth)
 - [nodejs](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/)
 - [webpack](https://webpack.github.io/)
-- [truffle](http://truffle.readthedocs.org) = version 4.0.4
-- [ganache-cli](https://github.com/trufflesuite/ganache-cli) = v6.0.3 (ganache-core: 2.0.2)
+- [ganache-cli](https://github.com/trufflesuite/ganache-cli) = v6.0.3 (ganache-core: 2.0.2) for local use
 
 ### Installation
 
@@ -127,15 +128,17 @@ openssl rsa -pubout < test_private.key > test_public.key
 
 ### Running locally
 
-- Run `./node_modules/.bin/truffle truffle migrate`
+- Run local node (geth, ganache test rpc, etc)
+- Run `./node_modules/.bin/truffle migrate --network development`
 - Run `npm run dev`
 - Open `http://localhost:8080`
+
+NOTE: If you have metamask, your account on ganache will not have ether to register. Either send it via terminal, or open the browser in the incognite mode, so you use default account on local node.
 
 ### Building asset files to deploy
 
 - Run `npm run build`
 - Upload the content of files under `build` directory
-
 
 ### Confirmation repository code (experimental)
 
@@ -203,30 +206,3 @@ For `ropsten` and `mainnet` it now deploys via Infura. Pass the extra to set dep
 
 NOTE: `ropsten` and `mainnet` uses different gasPrice. Check `truffle.js` file and `scripts/util/set_gas.js` for the detail.
 
-### Essentials
-
-See [Issues](https://github.com/makoto/blockparty/issues)
-
-### Milestones
-
-#### Local meetups ready (~ 2017 September)
-
-- ~~Register with participant's real name
-- Add new event
-- ~~Allow other people to become the owner of the event
-- Dispute period (participants can demand to cancel the event to avoid event owners cheating)
-- ~~Test that it scales up to 200 people
-
-### Wishlists
-
-- Show who event owner is
-- Upload the deployed source code to `etherscan.io`
-- Add redux
-- Add testing for frontend
-- Change payback ratio (eg: first registered, more reward)
-- Let user to register by sending Ether (so that they could potentially register not via wallet but via exchange, etc)
-- Automatic check in
-- Waitlist
-- Transfer my spot
-- Refresh info when someone else register/attend
-- Sponsor slots (sponsors can register with ether but they have no right to get payout. This is to guarantee extra payout for promotion purpose).
