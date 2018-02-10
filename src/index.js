@@ -51,8 +51,6 @@ function setup(){
           url = 'https://mainnet.infura.io'
           read_only = true
         }
-      }).error(function(error){
-        console.log('Error', error)
       }).always(function(){
         console.log('url', url)
         provider = new Web3.providers.HttpProvider(url);

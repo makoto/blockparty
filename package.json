@@ -39,7 +39,7 @@
     "etherscan-api": "^3.0.11",
     "event-emitter": "^0.3.4",
     "file-loader": "^0.8.5",
-    "jquery": "^2.1.4",
+    "jquery": "^3.3.1",
     "json-loader": "^0.5.4",
     "material-ui": "^0.15.2",
     "mathjs": "^3.2.1",
@@ -58,8 +58,7 @@
     "truffle-hdwallet-provider": "0.0.3",
     "url-loader": "^0.5.7",
     "web3": "^0.20.2",
-    "yargs": "^9.0.1",
-    "zeppelin-solidity": "0.0.6"
+    "yargs": "^9.0.1"
   },
   "devDependencies": {
     "@digix/tempo": "^0.2.0",
