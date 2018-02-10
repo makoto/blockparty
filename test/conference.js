@@ -19,7 +19,7 @@ contract('Conference', function(accounts) {
   let conference, deposit;
 
   beforeEach(async function(){
-    conference = await Conference.new();
+    conference = await Conference.new('', 0, 0, 0, 0, '');
     deposit = (await conference.deposit.call()).toNumber();
   })
 

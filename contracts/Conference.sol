@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.19;
 
 import './ConfirmationRepository.sol';
 import './zeppelin/ownership/Ownable.sol';

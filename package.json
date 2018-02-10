@@ -9,6 +9,8 @@
   "scripts": {
     "lint": "eslint ./",
     "build": "webpack -p",
+    "truffle": "./node_modules/.bin/truffle",
+    "test": " ./node_modules/.bin/truffle test --network test",
     "dev": "webpack-dev-server -d --inline --hot",
     "coverage": "./node_modules/.bin/solidity-coverage",
     "build-contracts": "sol-merger './contracts/*.sol' ./build"
@@ -54,6 +56,7 @@
     "react-tap-event-plugin": "^1.0.0",
     "sol-merger": "^0.1.2",
     "style-loader": "^0.13.1",
+    "truffle": "^4.0.6",
     "truffle-contract": "^3.0.0",
     "truffle-hdwallet-provider": "0.0.3",
     "url-loader": "^0.5.7",
