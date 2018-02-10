@@ -32,16 +32,16 @@ module.exports = {
       gas: 0xfffffffffff, // <-- Use this high gas value
       gasPrice: 0x01      // <-- Use this low gas price
     },
+    rinkeby: {
+      host: "localhost",
+      network_id: 4,
+      port: 8545,
+      gasPrice: 50000000000 // 50 gwei,
+    },
     ropsten: {
       gasPrice: 50000000000, // 50 gwei,
       provider: provider,
       network_id: 3,
-      from: address
-    },
-    rinkeby: {
-      gasPrice: 50000000000, // 50 gwei,
-      provider: provider,
-      network_id: 4,
       from: address
     },
     mainnet: {

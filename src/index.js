@@ -75,6 +75,9 @@ window.onload = function() {
       case '3':
         env = 'ropsten';
         break;
+      case '4':
+        env = 'rinkeby';
+        break;
       default:
         env = 'development';
     }
