@@ -38,6 +38,12 @@ module.exports = {
       network_id: 3,
       from: address
     },
+    rinkeby: {
+      gasPrice: 50000000000, // 50 gwei,
+      provider: provider,
+      network_id: 4,
+      from: address
+    },
     mainnet: {
       gas: 2550000,
       gasPrice: 1000000000, // 1 gwei

@@ -18,6 +18,14 @@ module.exports = {
     name: 'ROPSTEN NET',
     etherscan_url: 'https://ropsten.etherscan.io'
   },
+  rinkeby: {
+    contract_addresses:{
+      'Conference': null,
+      'ConfirmationRepository': null
+    },
+    name: 'RINKEBY NET',
+    etherscan_url: 'https://rinkeby.etherscan.io'
+  },
   mainnet: {
     contract_addresses:{
       'Conference': null,
