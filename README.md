@@ -127,7 +127,7 @@ openssl rsa -pubout < test_private.key > test_public.key
 
 ### Running locally
 
-- Run `npm run truffle migrate`
+- Run `./node_modules/.bin/truffle truffle migrate`
 - Run `npm run dev`
 - Open `http://localhost:8080`
 
@@ -154,7 +154,7 @@ Event name is configurable as `name`
 First, deploy the contract.
 
 ```
-npm run truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key", "confirmation":true}'
+./node_modules/.bin/truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key", "confirmation":true}'
 ```
 
 As an example, assume you have the following two codes at `input.txt`
