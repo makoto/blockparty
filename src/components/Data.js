@@ -2,6 +2,15 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name: 'Ethereum London Feburary 2018',
+    address: null,
+    date:'Wednesday, Feburary 21, 2018 6:25 PM to 9:00 PM(UTC+0)',
+    map_url: 'https://www.google.com/maps?f=q&hl=en&q=Huxley+Building,+Imperial+College+,+London+SW7+2AZ,+gb',
+    location_text: 'Clore Lecture Theatre, Huxley Building, Imperial College , London SW7 2AZ',
+    description_text: '',
+    ether_price: 538,
+  },
+  {
     name: 'CodeUp #24',
     address: '0x19a61bf1436d6b8f6b918575583d4b0481cf3989',
     date:'Nov 28th (Tues) 6:30 PM(UTC)',
