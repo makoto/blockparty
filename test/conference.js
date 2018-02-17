@@ -51,7 +51,7 @@ contract('Conference', function(accounts) {
   describe('on creation', function(){
     it('has default values', async function(){
       assert.strictEqual(await conference.name.call(), 'Test');
-      assert.strictEqual((await conference.deposit.call()).toString(), web3.toWei(0.05, "ether"));
+      assert.strictEqual((await conference.deposit.call()).toString(), web3.toWei(0.02, "ether"));
       assert.strictEqual((await conference.limitOfParticipants.call()).toNumber(), 20);
       assert.strictEqual((await conference.registered.call()).toNumber(), 0);
       assert.strictEqual((await conference.attended.call()).toNumber(), 0);

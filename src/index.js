@@ -75,6 +75,9 @@ window.onload = function() {
       case '3':
         env = 'ropsten';
         break;
+      case '4':
+        env = 'rinkeby';
+        break;
       default:
         env = 'development';
     }
@@ -222,7 +225,7 @@ window.onload = function() {
         args = [];
       }
       if (name == "register" || name == "registerWithEncryption") {
-        options.value = Math.pow(10,18) / 20;
+        options.value = Math.pow(10,18) / 50; // 0.02 ETH deposit
       }
       args.push(options);
       contract.then(function(instance){

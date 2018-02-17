@@ -66,7 +66,7 @@ contract Conference is Destructible {
 		if(_deposit != 0){
 			deposit = _deposit;
 		}else{
-			deposit = 0.05 ether;
+			deposit = 0.02 ether;
 		}
 
 		if(_limitOfParticipants !=0){

@@ -5,6 +5,7 @@ package-lock.json
 node_modules
 yarn-error.log
 .DS_Store
+.vscode/*
 archive/*
 coverage
 coverageEnv
