@@ -7,8 +7,8 @@ const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol")
 
 const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
-const gasPrice = web3.toWei(20, 'gwei');
-const usd = 1200;
+const gasPrice = web3.toWei(1, 'gwei');
+const usd = 969;
 let deposit, conference, confirmation;
 let trx,trx2, gasUsed, gasUsed2, result, trxReceipt;
 
