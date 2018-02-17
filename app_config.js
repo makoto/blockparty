@@ -20,7 +20,7 @@ module.exports = {
   },
   rinkeby: {
     contract_addresses:{
-      'Conference': null,
+      'Conference': '0xDdDf97B54a515172AadD9590d5aBCE524683f390',
       'ConfirmationRepository': null
     },
     name: 'RINKEBY NET',
@@ -29,7 +29,7 @@ module.exports = {
   mainnet: {
     contract_addresses:{
       'Conference': null,
-      'ConfirmationRepository': '0xe0e0229484b1088e0a751ddffd05b2e6b833e3a2'
+      'ConfirmationRepository': null
     },
     name: 'MAINNET',
     etherscan_url: 'https://etherscan.io'
