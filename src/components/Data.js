@@ -2,9 +2,9 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
-    name: 'Ethereum London Feburary 2018',
+    name: 'Ethereum London February 2018',
     address: null,
-    date:'Wednesday, Feburary 21, 2018 6:25 PM to 9:00 PM(UTC+0)',
+    date:'Wednesday, February 21, 2018 6:25 PM to 9:00 PM(UTC+0)',
     map_url: 'https://www.google.com/maps?f=q&hl=en&q=Huxley+Building,+Imperial+College+,+London+SW7+2AZ,+gb',
     location_text: 'Clore Lecture Theatre, Huxley Building, Imperial College , London SW7 2AZ',
     description_text: '',
