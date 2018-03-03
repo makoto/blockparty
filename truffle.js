@@ -40,7 +40,6 @@ module.exports = {
       host: "localhost",
       network_id: 4,
       port: 8545,
-      from: "0xbfb142f5bc1d33b7e173acd77719375faf5c72c1", // default address to use for any transaction Truffle makes during migrations
       gasPrice: 50000000000 // 50 gwei,
     },
     ropsten: {
