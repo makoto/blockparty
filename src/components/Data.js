@@ -2,6 +2,16 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name: 'EthCC Post conference lunch',
+    address: null,
+    date:'Sunday, March 11, 2018 11am ~ 1pm (UTC+1)',
+    map_url: 'https://www.google.co.uk/maps/place/Restaurant+Le+Tr%C3%A9sor/@48.8570837,2.35761,15z/data=!4m5!3m4!1s0x0:0xe2358c4424d7c287!8m2!3d48.8570837!4d2.35761',
+    location_text: "Restaurant Le Trésor, 9 Rue du Trésor 75004 Paris.",
+    description_text: "<a target='_blank' href='https://m.lafourchette.com/fr_FR/restaurant/le-tresor/76107'>Restaurant Le Trésor</a> is an amazing french restaurant according to @jdetychey. Please be aware that you need to pay for your meal individually(or we split). Maximum delay time to be eligible for the deposit is 30 min.",
+    ether_price: 615,
+    name: ''
+  },
+  {
     name: 'Ethereum London February 2018',
     address: null,
     date:'Wednesday, February 21, 2018 6:25 PM to 9:00 PM(UTC+0)',
