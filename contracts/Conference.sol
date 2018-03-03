@@ -128,7 +128,7 @@ contract Conference is Destructible {
 		require(participant.paid == false);
 
 		participant.paid = true;
-		assert(participant.addr.send(payoutAmount));
+		participant.addr.transfer(payoutAmount);
 		WithdrawEvent(msg.sender, payoutAmount);
 	}
 
@@ -180,7 +180,7 @@ contract Conference is Destructible {
 		require(now > endedAt + coolingPeriod);
 		require(ended);
 		var leftOver = totalBalance();
-		require(owner.send(leftOver));
+		owner.transfer(leftOver);
 		ClearEvent(owner, leftOver);
 	}
 
