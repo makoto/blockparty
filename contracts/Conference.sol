@@ -1,6 +1,5 @@
 pragma solidity ^0.4.19;
 
-import './ConfirmationRepository.sol';
 import './zeppelin/ownership/Ownable.sol';
 import './zeppelin/lifecycle/Destructible.sol';
 
@@ -15,7 +14,6 @@ contract Conference is Destructible {
 	uint public endedAt;
 	uint public coolingPeriod;
 	uint256 public payoutAmount;
-	ConfirmationRepository public confirmationRepository;
 	string public encryption;
 
 	mapping (address => Participant) public participants;
@@ -54,7 +52,6 @@ contract Conference is Destructible {
 		uint256 _deposit,
 		uint _limitOfParticipants,
 		uint _coolingPeriod,
-		address _confirmation_repository_address,
 		string _encryption
 	) public {
 		if(bytes(_name).length != 0){
@@ -84,10 +81,6 @@ contract Conference is Destructible {
 		if (bytes(_encryption).length != 0) {
 			encryption = _encryption;
 		}
-
-		if (_confirmation_repository_address !=0) {
-			confirmationRepository = ConfirmationRepository(_confirmation_repository_address);
-		}
 	}
 
 	function registerWithEncryption(string _participant, string _encrypted) external payable onlyActive{
@@ -110,16 +103,6 @@ contract Conference is Destructible {
 		participants[msg.sender] = Participant(_participant, msg.sender, false, false);
 	}
 
-	function attendWithConfirmation(bytes32 _confirmation) external onlyActive{
-		require(isRegistered(msg.sender));
-		require(!isAttended(msg.sender));
-		require(confirmationRepository.claim(_confirmation, msg.sender));
-
-		participants[msg.sender].attended = true;
-		attended++;
-		AttendEvent(msg.sender);
-	}
-
 	function withdraw() external onlyEnded{
 		require(payoutAmount > 0);
 		Participant participant = participants[msg.sender];
@@ -135,10 +118,6 @@ contract Conference is Destructible {
 	/* Constants */
 	function totalBalance() constant public returns (uint256){
 		return this.balance;
-	}
-
-	function confirmation() constant public returns (bool){
-		return address(confirmationRepository) != address(0);
 	}
 
 	function isRegistered(address _addr) constant public returns (bool){

@@ -54,9 +54,6 @@ class FormInput extends React.Component {
       case 'attend':
         args.push(this.state.attendees);
         break;
-      case 'attendWithConfirmation':
-        args.push(this.state.confirmation_code);
-        break;
       case 'register':
         args.push(this.state.name);
         break;
@@ -111,10 +108,6 @@ class FormInput extends React.Component {
     return this.state.detail.canWithdraw && this.participantStatus() == 'Won';
   }
 
-  showAttendForAttendant(){
-    return this.state.detail.confirmation && this.state.detail.canAttend && this.participantStatus() == 'Registered';
-  }
-
   showPayback(){
     return this.state.detail.canPayback
   }
@@ -136,12 +129,6 @@ class FormInput extends React.Component {
   handleEncryptedField(e) {
     this.setState({
       full_name: e.target.value
-    });
-  }
-
-  handleConfirmationCode(e) {
-    this.setState({
-      confirmation_code: e.target.value
     });
   }
 
@@ -200,23 +187,6 @@ class FormInput extends React.Component {
       registerButton = <span>No account is set</span>
     }
 
-    if (this.state.detail.confirmation) {
-      if (this.showAttendForAttendant()) {
-        var confirmationField =  <TextField
-                    floatingLabelText="confirmation code"
-                    floatingLabelFixed={true}
-                    value={this.state.confirmation_code}
-                    onChange={this.handleConfirmationCode.bind(this)}
-                    style={{margin:'0 5px'}}
-        />
-      }
-      var action = 'attendWithConfirmation';
-      var attendWithConfirmationButton = <RaisedButton secondary={this.showAttendForAttendant()} disabled={!this.showAttendForAttendant()}
-        label="Confirm Attendance" style={styles}
-        onClick={this.handleAction.bind(this, action)}
-      />
-    }
-
     var withdrawButton = <RaisedButton secondary={this.showWithdraw()} disabled={!this.showWithdraw()}
       label="Withdraw" style={styles}
       onClick={this.handleAction.bind(this, 'withdraw')}
@@ -236,7 +206,6 @@ class FormInput extends React.Component {
     return (
       <Paper zDepth={1}>
         <form>
-          {confirmationField}
           {encryptionField}
           {nameField}
           <SelectField
@@ -253,7 +222,6 @@ class FormInput extends React.Component {
             }
           </SelectField>
           {registerButton}
-          {attendWithConfirmationButton}
           {withdrawButton}
           {adminButtons}
         </form>

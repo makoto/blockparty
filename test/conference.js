@@ -1,7 +1,5 @@
 require('babel-polyfill');
 const Conference = artifacts.require("Conference.sol");
-const InvitationRepository = artifacts.require("./InvitationRepository.sol");
-const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
 const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const twitterHandle = '@bighero6';
@@ -19,7 +17,7 @@ contract('Conference', function(accounts) {
   let conference, deposit;
 
   beforeEach(async function(){
-    conference = await Conference.new('', 0, 0, 0, 0, '');
+    conference = await Conference.new('', 0, 0, 0, '');
     deposit = (await conference.deposit.call()).toNumber();
   })
 
@@ -59,7 +57,7 @@ contract('Conference', function(accounts) {
     })
 
     it('can set config values', async function(){
-      conference = await Conference.new('Test 1', parseInt(web3.toWei(2, "ether")), 100, 2, 0, 'public key');
+      conference = await Conference.new('Test 1', parseInt(web3.toWei(2, "ether")), 100, 2, 'public key');
       assert.strictEqual(await conference.name.call(), 'Test 1');
       assert.strictEqual((await conference.deposit.call()).toString(), web3.toWei(2, "ether"));
       assert.strictEqual((await conference.limitOfParticipants.call()).toNumber(), 100);
@@ -146,63 +144,6 @@ contract('Conference', function(accounts) {
       await conference.attend([non_owner], {from:owner}).catch(function(){});
       assert.equal(await conference.isAttended.call(non_owner), true);
       assert.equal((await conference.attended.call()).toNumber(), 1);
-    })
-  })
-
-  describe('self attend with code', function(){
-    let confirmation, confirmation_code, encrypted_code, verified;
-    beforeEach(async function(){
-      confirmation = await ConfirmationRepository.new();
-      confirmation_code = web3.fromUtf8('1234567890');
-      encrypted_code = await confirmation.encrypt.call(confirmation_code);
-      await confirmation.add(encrypted_code, {from:owner});
-      verified = await confirmation.verify.call(confirmation_code);
-      assert.equal(verified, true);
-      conference = await Conference.new('', 0, 0, 600, confirmation.address, '');
-      deposit = (await conference.deposit.call()).toNumber();
-    })
-
-    it('confirmation is true', async function(){
-      assert.equal(await conference.confirmation.call(), true);
-    })
-
-    it('allows participant to attend with code', async function(){
-      await conference.register(twitterHandle, {from:non_owner, value:deposit})
-      await conference.attendWithConfirmation(confirmation_code, {from:non_owner})
-      assert.equal(await conference.attended.call(), 1);
-      assert.equal(await confirmation.report.call(confirmation_code), non_owner);
-    })
-
-    it('does not allow participants to attend with non confirmation code', async function(){
-      let non_confirmation_code = web3.fromUtf8('non_confirmation');
-      await conference.register(twitterHandle, {from:non_owner, value:deposit});
-      await conference.attendWithConfirmation(non_confirmation_code, {from:non_owner}).catch(function(){});
-      assert.equal(await conference.attended.call(), 0);
-      assert.equal(await confirmation.report.call(non_confirmation_code), 0);
-    })
-
-    it('does not allow participants to attend with same code', async function(){
-      let non_owner_2 = accounts[2];
-      await conference.register(twitterHandle, {from:non_owner, value:deposit});
-      await conference.register(twitterHandle, {from:non_owner_2, value:deposit});
-      await conference.attendWithConfirmation(confirmation_code, {from:non_owner});
-      await conference.attendWithConfirmation(confirmation_code, {from:non_owner_2}).catch(function(){});
-      assert.equal(await conference.attended.call(), 1);
-      assert.equal(await confirmation.report.call(confirmation_code), non_owner);
-    })
-
-    it('cannot be attended twice', async function(){
-      await conference.register(twitterHandle, {from:non_owner, value:deposit});
-      await conference.attend([non_owner], {from:owner});
-      await conference.attendWithConfirmation([non_owner], {from:non_owner}).catch(function(){});
-      assert.equal(await conference.isAttended.call(non_owner), true);
-      assert.equal((await conference.attended.call()).toNumber(), 1);
-    })
-
-    it('cannot be attended if not registered', async function(){
-      await conference.attendWithConfirmation([non_owner], {from:non_owner}).catch(function(){});
-      assert.equal(await conference.isAttended.call(non_owner), false);
-      assert.equal((await conference.attended.call()).toNumber(), 0);
     })
   })
 
@@ -357,12 +298,12 @@ contract('Conference', function(accounts) {
     })
 
     it('cooling period can be set', async function(){
-      conference = await Conference.new('', 0, 0, 10, 0, '');
+      conference = await Conference.new('', 0, 0, 10, '');
       assert.equal((await conference.coolingPeriod.call()).toNumber(), 10);
     })
 
     it('cannot be cleared by non owner', async function(){
-      conference = await Conference.new('', 0, 0, 10, 0, '');
+      conference = await Conference.new('', 0, 0, 10, '');
       deposit = (await conference.deposit.call()).toNumber();
       await conference.register('one', {value:deposit});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
@@ -388,7 +329,7 @@ contract('Conference', function(accounts) {
 
     it('owner receives the remaining if cooling period is passed', async function(){
       let tempo = await new Tempo(web3);
-      conference = await Conference.new('', 0, 0, 1, 0, '')
+      conference = await Conference.new('', 0, 0, 1, '')
       deposit = (await conference.deposit.call()).toNumber();
 
       await conference.register('one', {value:deposit});

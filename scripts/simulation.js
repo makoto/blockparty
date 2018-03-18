@@ -1,8 +1,7 @@
-// truffle migrate --config '{"name":"Test", "confirmation":false}' --network development
+// truffle migrate --config '{"name":"Test"}' --network development
 // for i in {1..100}; do echo $i; done > simulation.txt
 let fs = require('fs');
 let Conference = artifacts.require("./Conference.sol");
-let ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
 let arg = require('yargs').argv;
 
 if (!(arg.i)) {
@@ -11,7 +10,6 @@ if (!(arg.i)) {
 module.exports = async function(callback) {
   let file = arg.i;
   console.log('file', file)
-  // repository = await ConfirmationRepository.deployed();
   conference = await Conference.deployed();
   let codes = fs.readFileSync(file, 'utf8').trim().split('\n');
   await conference.setLimitOfParticipants(codes.length + 10, {from:web3.eth.accounts[0]});
