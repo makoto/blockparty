@@ -3,13 +3,12 @@ require('babel-polyfill');
 const moment = require('moment');
 const fs = require('fs');
 const Conference = artifacts.require("Conference.sol");
-const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
 
 const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const gasPrice = web3.toWei(1, 'gwei');
 const usd = 969;
-let deposit, conference, confirmation;
+let deposit, conference;
 let trx,trx2, gasUsed, gasUsed2, result, trxReceipt;
 
 const pad = function(n, width, z) {
@@ -42,20 +41,10 @@ const reportTest = async function (participants, accounts){
   const transactions = [];
   const encrypted_codes = [];
   const owner = accounts[0];
-  confirmation = await ConfirmationRepository.new();
-  conference = await Conference.new('Test', 0, participants, 0, confirmation.address, '', {gasPrice:gasPrice});
+  conference = await Conference.new('Test', 0, participants, 0, '', {gasPrice:gasPrice});
   transactions.push(getTransaction('create   ', conference.transactionHash))
   deposit = (await conference.deposit.call()).toNumber();
 
-  for (var i = 0; i < participants; i++) {
-    encrypted_codes.push(await confirmation.encrypt.call(accounts[i]));
-  }
-  var addMultipleTrx = await confirmation.addMultiple(encrypted_codes, {gasPrice:gasPrice}).catch(function(a){
-    console.log('error on addMultipleTrx', a);
-  });
-  if (addMultipleTrx) {
-    transactions.push(getTransaction('addConfirmation', addMultipleTrx.tx));
-  }
   for (var i = 0; i < participants; i++) {
     var registerTrx = await conference.register('test', {from:accounts[i], value:deposit, gasPrice:gasPrice});
     if ((i % 100) == 0 && i != 0) {

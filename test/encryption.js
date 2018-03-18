@@ -26,7 +26,7 @@ contract('Encryption', function(accounts) {
       var publicKey = fs.readFileSync('./tmp/test_public.key', {encoding: 'ascii'});
       var privateKey = fs.readFileSync('./tmp/test_private.key', {encoding: 'ascii'});
       var message = "マコト";
-      conference = await Conference.new('', 0, 0, 10, 0, publicKey);
+      conference = await Conference.new('', 0, 0, 10, publicKey);
       var publicKeyFromContract = await conference.encryption.call();
       var encrypted = cryptoBrowserify.publicEncrypt(publicKeyFromContract, new Buffer(message, 'utf-8'));
 

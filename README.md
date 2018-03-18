@@ -133,10 +133,6 @@ NOTE: If you have metamask, your account on ganache will not have ether to regis
 - Run `npm run build`
 - Upload the content of files under `build` directory
 
-### Confirmation repository code (experimental)
-
-By passing confirmation parameter of Conference during migration, it can allow user to claim attendance with confirmation code.
-
 ### Encryption (experimental)
 
 By passing public key file location to parameter of Conference during migration, it can allow user to register with their user name encrypted.
@@ -145,48 +141,10 @@ By passing public key file location to parameter of Conference during migration,
 
 Event name is configurable as `name`
 
-## Example
-
-First, deploy the contract.
+eg:
 
 ```
-./node_modules/.bin/truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key", "confirmation":true}'
-```
-
-As an example, assume you have the following two codes at `input.txt`
-
-```
-$ cat tmp/input.txt
-1234567890
-0987654321
-```
-
-Running `repository.js` will add these confirmation code into the ConfirmationRepository.
-
-```
-$npm run truffle exec scripts/repository.js -t confirmation -i tmp/input.txt
-Adding 1234567890  as  0xf654274a8983066b9f810ed158b3fa883c9d26553429193e4aba65b44b76c835
-Adding 0987654321  as  0x295153b1a40cec2698cd2fb0d75c8137a5c43d67ed5e4b7abbd463bc2b0dfac7
-```
-
-If you run the same program again, it will detect.
-
-```
-$npm run truffle exec scripts/repository.js -t confirmation -i input.txt
-Using network 'development'.
-
-code 1234567890  is already registered. Claimed by  0x0000000000000000000000000000000000000000
-code 0987654321  is already registered. Claimed by  0x0000000000000000000000000000000000000000
-```
-
-Pass the original confirmation ion codes to the participants. Once participants use the code to register, you can check who used the codes by running the script again.
-
-```
-$npm run truffle exec scripts/repository.js -t confirmation -i input.txt
-Using network 'development'.
-
-code 1234567890  is already registered. Claimed by 0x12ff7cfb557a7d0404b694da8d6106e219306a93
-code 0987654321  is already registered. Claimed by 0xc7ce74c8c7f2e7c5e6d039c5a48fae053ad5c952
+./node_modules/.bin/truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key"}'
 ```
 
 ## Deploying and running on real network

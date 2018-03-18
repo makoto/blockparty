@@ -1,5 +1,4 @@
 const Conference = artifacts.require("./Conference.sol");
-const ConfirmationRepository = artifacts.require("./ConfirmationRepository.sol");
 const coolingPeriod = 1 * 60 * 60 * 24 * 7;
 // this is already required by truffle;
 const yargs = require('yargs');
@@ -10,8 +9,7 @@ let config = {};
 let name = ''; // empty name falls back to the contract default
 let deposit = 0; // 0 falls back to the contract default
 let limitOfParticipants = 0; // 0 falls back to the contract default
-let confirmationAddress = 0;
-// eg: truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key", "confirmation":true}'
+// eg: truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key"}'
 if (yargs.argv.config) {
   config = JSON.parse(yargs.argv.config);
 }
@@ -30,19 +28,7 @@ module.exports = function(deployer) {
 
   deployer
     .then(() => {
-      if (config.confirmation) {
-        if (app_config && app_config.contract_addresses['ConfirmationRepository']) {
-            confirmationAddress = app_config.contract_addresses['ConfirmationRepository'];
-        }else{
-          return deployer.deploy(ConfirmationRepository)
-            .then(instance => {
-              confirmationAddress = ConfirmationRepository.address;
-            })
-        }
-      }
-    })
-    .then(() => {
-      console.log([name, deposit,limitOfParticipants, coolingPeriod, confirmationAddress, encryption].join(','));
-      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, confirmationAddress, encryption);
+      console.log([name, deposit,limitOfParticipants, coolingPeriod, encryption].join(','));
+      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, encryption);
     })
 };
