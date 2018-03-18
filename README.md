@@ -100,8 +100,6 @@ If you are interested in contributing to blockparty, have a look into ["help wan
 
 - Run `npm`
 
-NOTE: If it installs extra zeppilin contracts, do not commit, but remove them.
-
 ### Running test
 
 - Run `ganache-cli -a 300` in one console
