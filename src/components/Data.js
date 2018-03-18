@@ -2,6 +2,24 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name: 'Ethereum London March 2018',
+    address: '0xD2fDdAD19D6Fd3159fe2658030De2962871aa3Fc',
+    date:'Wednesday, March 14, 2018 6:25 PM to 9:00 PM(UTC+0)',
+    map_url: 'https://www.google.co.uk/maps/place/Blackett+Laboratory/@51.4990621,-0.1797274,18z/data=!4m8!1m2!2m1!1sBlackett+Laboratory,+Imperial+College+London!3m4!1s0x0:0xd04e1ad92205e646!8m2!3d51.4993979!4d-0.1791809?hl=en',
+    location_text: "Physics LT1, Blackett Laboratory, Imperial College London, corner of Prince Consort Road and Queen's Gate",
+    description_text: '',
+    ether_price: 615,
+  },
+  {
+    name: 'EthCC Post conference lunch',
+    address: '0x21b50df62c8c49db34f81afdd9bf2c612dac6a0e',
+    date:'Sunday, March 11, 2018 11am ~ 1pm (UTC+1)',
+    map_url: 'https://www.google.co.uk/maps/place/Restaurant+Le+Tr%C3%A9sor/@48.8570837,2.35761,15z/data=!4m5!3m4!1s0x0:0xe2358c4424d7c287!8m2!3d48.8570837!4d2.35761',
+    location_text: "Restaurant Le Trésor, 9 Rue du Trésor 75004 Paris.",
+    description_text: "<a target='_blank' href='https://m.lafourchette.com/fr_FR/restaurant/le-tresor/76107'>Restaurant Le Trésor</a> is an amazing french restaurant according to @jdetychey. Please pay for your meal individually(or we split). Maximum delay time to be eligible for the deposit is 30 min.",
+    ether_price: 615,
+  },
+  {
     name: 'Ethereum London February 2018',
     address: null,
     date:'Wednesday, February 21, 2018 6:25 PM to 9:00 PM(UTC+0)',
