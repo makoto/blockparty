@@ -108,7 +108,8 @@ contract('Conference', function(accounts) {
   })
 
   describe('on attend', function(){
-    var non_registered = accounts[4];
+    let non_registered = accounts[4];
+    let admin = accounts[5];
 
     beforeEach(async function(){
       await conference.register(twitterHandle, {value:deposit, from:non_owner});
@@ -116,6 +117,13 @@ contract('Conference', function(accounts) {
 
     it('can be called by owner', async function(){
       await conference.attend([non_owner], {from:owner});
+      assert.equal(await conference.isAttended.call(non_owner), true);
+      assert.equal((await conference.attended.call()).toNumber(), 1);
+    })
+
+    it('can be called by admin', async function(){
+      await conference.grant([admin], {from:owner});
+      await conference.attend([non_owner], {from:admin});
       assert.equal(await conference.isAttended.call(non_owner), true);
       assert.equal((await conference.attended.call()).toNumber(), 1);
     })
@@ -150,8 +158,8 @@ contract('Conference', function(accounts) {
   describe('on payback', function(){
     let previousBalance, currentRegistered, currentAttended;
     let attended = accounts[2];
-    var notAttended = accounts[3];
-    var notRegistered = accounts[4];
+    let notAttended = accounts[3];
+    let notRegistered = accounts[4];
 
     beforeEach(async function(){
       await conference.register(twitterHandle, {from:attended, value:deposit});
@@ -206,8 +214,8 @@ contract('Conference', function(accounts) {
   describe('on cancel', function(){
     let previousBalance, currentRegistered, currentAttended, diff, participant;
     let attended = accounts[2];
-    var notAttended = accounts[3];
-    var notRegistered = accounts[4];
+    let notAttended = accounts[3];
+    let notRegistered = accounts[4];
 
     beforeEach(async function(){
       await conference.register(twitterHandle, {from:attended, value:deposit});
