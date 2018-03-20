@@ -128,7 +128,7 @@ window.onload = function() {
 
       var values;
       contract.then(function(instance){
-        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'payoutAmount', 'encryption'].map(attributeName => {
+        Promise.all(['name', 'deposit', 'payout', 'totalBalance', 'registered', 'attended', 'owner', 'ended', 'limitOfParticipants', 'payoutAmount', 'encryption', 'getAdmins'].map(attributeName => {
           return instance[attributeName].call();
         })).then(_values => {
           values = _values;
@@ -146,6 +146,7 @@ window.onload = function() {
             'limitOfParticipants': values[8],
             'payoutAmount': values[9],
             'encryption': values[10],
+            'admins': values[11],
             'contractBalance': web3.fromWei(contractBalance, "ether").toNumber(),
             'date': metadata.date,
             'map_url': metadata.map_url,

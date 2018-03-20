@@ -96,6 +96,10 @@ class FormInput extends React.Component {
     return this.state.address == this.state.detail.owner;
   }
 
+  isAdmin(){
+    return this.state.detail.admins && this.state.detail.admins.includes(this.state.address) || (this.state.detail.owner == this.state.address);
+  }
+
   showRegister(){
     return this.state.detail.canRegister && this.participantStatus() == 'Not registered';
   }
@@ -133,14 +137,17 @@ class FormInput extends React.Component {
   }
 
   render() {
-    let adminButtons, registerButton, warningText;
+    let adminButtons, registerButton, attendButton, warningText;
+
+    if(this.isAdmin()){
+      attendButton = <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
+        label="Batch Attend" style={styles}
+        onClick={this.handleAction.bind(this, 'attend')}
+      />
+    }
+
     if(this.isOwner()){
       adminButtons = <div>
-
-        <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
-          label="Batch Attend" style={styles}
-          onClick={this.handleAction.bind(this, 'attend')}
-        />
         <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
           label="Payback" style={styles}
           onClick={this.handleAction.bind(this, 'payback')}
@@ -223,6 +230,7 @@ class FormInput extends React.Component {
           </SelectField>
           {registerButton}
           {withdrawButton}
+          {attendButton}
           {adminButtons}
         </form>
         {warningText}
