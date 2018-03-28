@@ -7,6 +7,7 @@ import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import math from 'mathjs';
 import participantStatus from '../util/participantStatus';
@@ -27,6 +28,7 @@ class Participants extends React.Component {
     super(props);
     this.state = {
       accounts:[],
+      keyword: null,
       address: null,
       participants:[],
       attendees:[],
@@ -84,8 +86,19 @@ class Participants extends React.Component {
     if(value) return value.toNumber();
   }
 
+  handleSearchField(event){
+    let keyword = null
+    if (event.target.value.length >= 3){
+      keyword = event.target.value;
+    }else{
+      keyword = null
+    }
+    this.setState({
+      keyword: keyword
+    });  
+  }
+
   handleAttendees(participantAddress, event, isInputChecked){
-    // console.log('isInputChecked', isInputChecked);
     if (isInputChecked) {
       this.state.attendees.push(participantAddress)
     }else{
@@ -161,7 +174,14 @@ class Participants extends React.Component {
       </TableRowColumn>
     )
     if(this.state.participants.length > 0){
-      return this.state.participants.map((participant) => {
+      var state = this.state;
+      return this.state.participants.filter((participant) => {
+        if(state.keyword){
+          return !!(participant.name.match(state.keyword)) || !!(participant.address.match(state.keyword))
+        }else{
+          return true
+        }
+      }).map((participant) => {
         var participantAddress;
         if (this.state.etherscan_url) {
           participantAddress = (
@@ -197,6 +217,14 @@ class Participants extends React.Component {
     return (
       <Paper zDepth={1} style={styles.paperRight}>
           <h4>Participants</h4>
+
+          <TextField
+            floatingLabelText="Search by name or address"
+            floatingLabelFixed={true}
+            onChange={this.handleSearchField.bind(this)}
+            style={{margin:'0 5px'}}
+          />
+
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
