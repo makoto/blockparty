@@ -87,14 +87,8 @@ class Participants extends React.Component {
   }
 
   handleSearchField(event){
-    let keyword = null
-    if (event.target.value.length >= 3){
-      keyword = event.target.value;
-    }else{
-      keyword = null
-    }
     this.setState({
-      keyword: keyword
+      keyword: event.target.value
     });  
   }
 
@@ -176,7 +170,7 @@ class Participants extends React.Component {
     if(this.state.participants.length > 0){
       var state = this.state;
       return this.state.participants.filter((participant) => {
-        if(state.keyword){
+        if(state.keyword && state.keyword.length >=3){
           return !!(participant.name.match(state.keyword)) || !!(participant.address.match(state.keyword))
         }else{
           return true
@@ -221,6 +215,7 @@ class Participants extends React.Component {
           <TextField
             floatingLabelText="Search by name or address"
             floatingLabelFixed={true}
+            value={this.state.keyword}
             onChange={this.handleSearchField.bind(this)}
             style={{margin:'0 5px'}}
           />
