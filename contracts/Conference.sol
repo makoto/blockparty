@@ -1,9 +1,9 @@
 pragma solidity ^0.4.19;
 
-import './zeppelin/ownership/Ownable.sol';
+import './GroupAdmin.sol';
 import './zeppelin/lifecycle/Destructible.sol';
 
-contract Conference is Destructible {
+contract Conference is Destructible, GroupAdmin {
 	string public name;
 	uint256 public deposit;
 	uint public limitOfParticipants;
@@ -167,7 +167,7 @@ contract Conference is Destructible {
 		limitOfParticipants = _limitOfParticipants;
 	}
 
-	function attend(address[] _addresses) external onlyOwner onlyActive{
+	function attend(address[] _addresses) external onlyAdmin onlyActive{
 		for(uint i=0;i<_addresses.length;i++){
 			var _addr = _addresses[i];
 			require(isRegistered(_addr));

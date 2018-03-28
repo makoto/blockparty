@@ -72,8 +72,8 @@ class Participants extends React.Component {
     });
   }
 
-  isOwner(){
-    return this.state.accounts.includes(this.state.detail.owner);
+  isAdmin(){
+    return this.state.detail.admins.includes(this.state.address) || (this.state.detail.owner == this.state.address);
   }
 
   isUser(participant){
@@ -101,7 +101,7 @@ class Participants extends React.Component {
     if(participant.attended) {
       return 'Yes';
     }else{
-      if(this.isOwner() && !this.state.detail.ended){
+      if(this.isAdmin() && !this.state.detail.ended){
         return (
           <Checkbox
             onCheck={this.handleAttendees.bind(this, participant.address)}
