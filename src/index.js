@@ -82,7 +82,6 @@ window.onload = function() {
         env = 'development';
     }
     var network_obj = require('../app_config.js')[env];
-
     var Conference  = TruffleContract(artifacts);
     let contract, contractAddress;
     Conference.setProvider(provider);
@@ -121,7 +120,6 @@ window.onload = function() {
         })
       });
     }
-
     // Functions to interact with contract
     function getDetail(){
       if (!contract) return false;
@@ -171,7 +169,8 @@ window.onload = function() {
             detail.canCancel = true
             detail.canWithdraw = false
           }
-          console.log('detail', detail)
+          detail.contractAddress = contract.address;
+          window.detail = detail
           eventEmitter.emit('detail', detail);
         })
       })
@@ -209,6 +208,7 @@ window.onload = function() {
           }).then(participant => {
             if(participant) {
               eventEmitter.emit('participants_updated', participant);
+              window.participants = true
               callback(participant);
             }
           })
@@ -266,6 +266,7 @@ window.onload = function() {
           eventEmitter.emit('notification', {status:'error', message:message});
           return;
         }
+        window.account = accs[0];
         eventEmitter.emit('accounts_received', accs)
       })
     }
@@ -319,6 +320,26 @@ window.onload = function() {
     // bignumber.js:1177 Uncaught BigNumber Error: new BigNumber() not a base 16 number:
     setTimeout(getAccounts, 100)
     setTimeout(getDetail, 100)
+    eventEmitter.on('logger', (obj)=>{
+      console.log('logger', obj)
+    })
+    let starTime = new Date()
+    let timer = setInterval(()=>{
+      if(window.detail && window.participants && window.account ) {
+        let obj = {
+          action:'load',
+          user:window.account,
+          contract:window.detail.contractAddress,
+          agent: navigator.userAgent,
+          duration: new Date() - starTime,
+          provider:web3.currentProvider.constructor.name
+        }  
+        eventEmitter.emit('logger',obj);
+        clearInterval(timer);
+      }else{
+        console.log('not ready', window.detail, window.account, window.participants)
+      }      
+    }, 1000)
     eventEmitter.emit('network', network_obj);
   })
 }

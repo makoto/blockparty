@@ -63,6 +63,17 @@ class FormInput extends React.Component {
         args.push(encryptedData.toString('hex'));
         break;
     }
+    if(actionName == 'register' || actionName == 'registerWithEncryption'){
+      let obj = {
+        action:'register',
+        user:this.state.address,
+        contract:this.state.detail.contractAddress,
+        agent: navigator.userAgent,
+        provider:web3.currentProvider.constructor.name
+      }
+      this.props.eventEmitter.emit('logger', obj);
+    }
+
     this.props.action(actionName, this.state.address.trim(), args)
     this.setState({
       name: null,
