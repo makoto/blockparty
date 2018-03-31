@@ -18,14 +18,12 @@ module.exports = {
   networks: {
     development: {
       host: "localhost",
-      port: 8545,
-      gas: 6712388,
-      // gasPrice: 2000000000, // 1 gwei
-      network_id: "*"
+      port: 7545,
+      network_id: "*" // Match any network id
     },
     test: {
       host: "localhost",
-      port: 8545,
+      port: 7545,
       network_id: "*",
       gasPrice: 0x01
     },

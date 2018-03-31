@@ -93,6 +93,10 @@ contract Conference is Destructible, GroupAdmin {
 		RegisterEvent(msg.sender, _participant, '');
 	}
 
+	function unregister() external payable onlyActive{
+		// TODO: implement me!
+	}
+
 	function registerInternal(string _participant) internal {
 		require(msg.value == deposit);
 		require(registered < limitOfParticipants);

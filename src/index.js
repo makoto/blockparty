@@ -227,15 +227,18 @@ window.onload = function() {
         options.value = Math.pow(10,18) / 50; // 0.02 ETH deposit
       }
       args.push(options);
+
       contract.then(function(instance){
         return instance[name].apply(this, args);
       })
       .then(function(trx) {
+        console.log('response', trx);
         eventEmitter.emit('notification', {status:'success', message:'Successfully Updated'});
         eventEmitter.emit('change');
         getDetail();
       }).catch(function(e) {
-        eventEmitter.emit('notification', {status:'error', message:'Error has occored'});
+        console.log(e);
+        eventEmitter.emit('notification', {status:'error', message:'Error has occurred'});
       });
     }
 
