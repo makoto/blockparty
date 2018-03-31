@@ -21,7 +21,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
 import $ from 'jquery';
-
+ 
 function setup(){
   return new Promise(function(resolve,reject){
     let provider;
@@ -216,6 +216,14 @@ window.onload = function() {
     }
     var gas = 1000000;
     var gasPrice = web3.toWei(2, 'gwei');
+
+    var logEvent = contract.Logger({_sender: web3.eth.coinbase});
+    logEvent.watch(function(err, result){ 
+      console.log('err', err);
+      console.log('result', result);
+      console.log('args', result.args); 
+    })
+
     window.eventEmitter = eventEmitter;
     function action(name, address, args) {
       var options = {from:address, gas:gas, gasPrice:gasPrice }
@@ -231,8 +239,8 @@ window.onload = function() {
       contract.then(function(instance){
         return instance[name].apply(this, args);
       })
-      .then(function(trx) {
-        console.log('response', trx);
+      .then(function(result) {
+        console.log('response', result);
         eventEmitter.emit('notification', {status:'success', message:'Successfully Updated'});
         eventEmitter.emit('change');
         getDetail();

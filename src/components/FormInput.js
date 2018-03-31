@@ -58,7 +58,7 @@ class FormInput extends React.Component {
         args.push(this.state.name);
         break;
       case 'unregister':
-        // args.push(this.state.name);
+        // No arguments
         break;
       case 'registerWithEncryption':
         args.push(this.state.name);

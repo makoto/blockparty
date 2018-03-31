@@ -28,11 +28,13 @@ contract Conference is Destructible, GroupAdmin {
 	}
 
 	event RegisterEvent(address addr, string participantName, string _encryption);
+	event UnregisterEvent(address addr);
 	event AttendEvent(address addr);
 	event PaybackEvent(uint256 _payout);
 	event WithdrawEvent(address addr, uint256 _payout);
 	event CancelEvent();
 	event ClearEvent(address addr, uint256 leftOver);
+	event Logger(address indexed _sender, bytes32 msg);
 
 	/* Modifiers */
 	modifier onlyActive {
@@ -89,12 +91,17 @@ contract Conference is Destructible, GroupAdmin {
 	}
 
 	function register(string _participant) external payable onlyActive{
+		Logger(msg.sender, 'Starting register');
+
 		registerInternal(_participant);
 		RegisterEvent(msg.sender, _participant, '');
 	}
 
 	function unregister() external payable onlyActive{
-		// TODO: implement me!
+		Logger(msg.sender, 'Starting unregister');
+
+		unregisterInternal();
+		UnregisterEvent(msg.sender);
 	}
 
 	function registerInternal(string _participant) internal {
@@ -105,6 +112,25 @@ contract Conference is Destructible, GroupAdmin {
 		registered++;
 		participantsIndex[registered] = msg.sender;
 		participants[msg.sender] = Participant(_participant, msg.sender, false, false);
+	}
+
+	function unregisterInternal() internal {
+		// require(msg.value == deposit);
+		require(isRegistered(msg.sender));
+
+		for(uint i=0;i<registered;i++){
+			delete participants[msg.sender];
+
+			if (participantsIndex[i] == msg.sender) {
+				participantsIndex[i] = participantsIndex[registered - 1];
+				delete participantsIndex[registered - 1];
+				break;
+			}
+		}
+
+		registered--;
+
+		// TODO: Refund!
 	}
 
 	function withdraw() external onlyEnded{
