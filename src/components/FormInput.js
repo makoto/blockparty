@@ -57,12 +57,16 @@ class FormInput extends React.Component {
       case 'register':
         args.push(this.state.name);
         break;
+      case 'unregister':
+        // No arguments
+        break;
       case 'registerWithEncryption':
         args.push(this.state.name);
         let encryptedData = cryptoBrowserify.publicEncrypt(this.state.detail.encryption, new Buffer(this.state.full_name, 'utf-8'));
         args.push(encryptedData.toString('hex'));
         break;
     }
+    
     this.props.action(actionName, this.state.address.trim(), args)
     this.setState({
       name: null,
@@ -104,6 +108,10 @@ class FormInput extends React.Component {
     return this.state.detail.canRegister && this.participantStatus() == 'Not registered';
   }
 
+  showUnregister(){
+    return this.state.detail.canRegister && this.participantStatus() == 'Registered';
+  }
+
   showAttend(){
     return this.state.detail.canAttend
   }
@@ -137,7 +145,7 @@ class FormInput extends React.Component {
   }
 
   render() {
-    let adminButtons, registerButton, attendButton, warningText;
+    let adminButtons, registerButton, unregisterButton, attendButton, warningText;
 
     if(this.isAdmin()){
       attendButton = <RaisedButton secondary={this.showAttend()} disabled={!this.showAttend()}
@@ -188,7 +196,13 @@ class FormInput extends React.Component {
           label="RSVP" style={styles}
           onClick={this.handleAction.bind(this, action)}
         />
-        warningText = <div style={{textAlign:'center', color:'red'}}>Please be aware that you <strong>cannot</strong> cancel once regiesterd. Please read FAQ section at ABOUT page on top right corner for more detail about this service.</div>
+
+        unregisterButton = <RaisedButton secondary={this.showUnregister()} disabled={!this.showUnregister()}
+          label="Cancel RSVP" style={styles}
+          onClick={this.handleAction.bind(this, 'unregister')}
+        />
+
+        warningText = <div style={{textAlign:'center', color:'red'}}>Please read FAQ section at ABOUT page on top right corner for more detail about this service.</div>
       }
     }else{
       registerButton = <span>No account is set</span>
@@ -229,6 +243,7 @@ class FormInput extends React.Component {
             }
           </SelectField>
           {registerButton}
+          {unregisterButton}
           {withdrawButton}
           {attendButton}
           {adminButtons}
