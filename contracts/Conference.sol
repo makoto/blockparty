@@ -116,7 +116,18 @@ contract Conference is Destructible, GroupAdmin {
 
 	function unregisterInternal() internal {
 		// require(msg.value == deposit);
-		require(isRegistered(msg.sender));
+		// require(isRegistered(msg.sender));
+
+		// Issue a refund
+
+		require(deposit > 0);
+		Participant participant = participants[msg.sender];
+		require(participant.addr == msg.sender);
+		require(participant.paid == false);
+
+		participant.paid = true;
+		participant.addr.transfer(deposit);
+		WithdrawEvent(msg.sender, deposit);
 
 		for(uint i=0;i<registered;i++){
 			delete participants[msg.sender];
@@ -130,7 +141,7 @@ contract Conference is Destructible, GroupAdmin {
 
 		registered--;
 
-		// TODO: Refund!
+		
 	}
 
 	function withdraw() external onlyEnded{

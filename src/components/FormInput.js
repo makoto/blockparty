@@ -202,7 +202,7 @@ class FormInput extends React.Component {
           onClick={this.handleAction.bind(this, 'unregister')}
         />
 
-        warningText = <div style={{textAlign:'center', color:'red'}}>Please be aware that you <strong>cannot</strong> cancel once regiesterd. Please read FAQ section at ABOUT page on top right corner for more detail about this service.</div>
+        warningText = <div style={{textAlign:'center', color:'red'}}>Please read FAQ section at ABOUT page on top right corner for more detail about this service.</div>
       }
     }else{
       registerButton = <span>No account is set</span>
