@@ -48,7 +48,7 @@ function setup(){
           console.log('Success')
         }else{
           console.log('The endspoint is not active. Falling back to read_only mode')
-          url = 'https://mainnet.infura.io'
+          url = 'https://rinkeby.infura.io'
           read_only = true
         }
       }).always(function(){
