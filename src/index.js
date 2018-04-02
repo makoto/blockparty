@@ -205,11 +205,11 @@ window.onload = function() {
               }
               return object
             })
-          }).then(participant => {
-            if(participant) {
-              eventEmitter.emit('participants_updated', participant);
-              window.participants = true
-              callback(participant);
+          }).then(participants => {
+            if(participants) {
+              eventEmitter.emit('participants_updated', participants);
+              window.participants = participants.length;
+              callback(participants);
             }
           })
         })
@@ -325,10 +325,11 @@ window.onload = function() {
     })
     let starTime = new Date()
     let timer = setInterval(()=>{
-      if(window.detail && window.participants && window.account ) {
+      if(window.detail && window.participants ) {
         let obj = {
           action:'load',
           user:window.account,
+          participants: window.participants,
           contract:window.detail.contractAddress,
           agent: navigator.userAgent,
           duration: new Date() - starTime,
