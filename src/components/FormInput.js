@@ -70,6 +70,7 @@ class FormInput extends React.Component {
         contract:this.state.detail.contractAddress,
         agent: navigator.userAgent,
         provider:web3.currentProvider.constructor.name,
+        hostname: window.location.hostname,
         created_at: new Date()
       }
       this.props.eventEmitter.emit('logger', obj);

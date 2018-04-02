@@ -344,6 +344,7 @@ window.onload = function() {
           agent: navigator.userAgent,
           duration: duration,
           provider:web3.currentProvider.constructor.name,
+          hostname: window.location.hostname,
           created_at: new Date()
         }  
         eventEmitter.emit('logger',obj);
