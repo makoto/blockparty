@@ -325,21 +325,22 @@ window.onload = function() {
     })
     let starTime = new Date()
     let timer = setInterval(()=>{
-      if(window.detail && window.participants ) {
+      let duration = new Date() - starTime;
+      if((window.detail && window.participants) || duration > 200000 ) {
         let obj = {
           action:'load',
           user:window.account,
           participants: window.participants,
-          contract:window.detail.contractAddress,
+          contract:window.detail && window.detail.contractAddress,
           agent: navigator.userAgent,
-          duration: new Date() - starTime,
+          duration: duration,
           provider:web3.currentProvider.constructor.name
         }  
         eventEmitter.emit('logger',obj);
         clearInterval(timer);
       }else{
         console.log('not ready', window.detail, window.account, window.participants)
-      }      
+      }
     }, 1000)
     eventEmitter.emit('network', network_obj);
   })
