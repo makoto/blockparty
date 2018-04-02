@@ -320,8 +320,17 @@ window.onload = function() {
     // bignumber.js:1177 Uncaught BigNumber Error: new BigNumber() not a base 16 number:
     setTimeout(getAccounts, 100)
     setTimeout(getDetail, 100)
-    eventEmitter.on('logger', (obj)=>{
-      console.log('logger', obj)
+    eventEmitter.on('logger', (payload)=>{
+      fetch("http://localhost:5000/log",
+      {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "POST",
+          body: JSON.stringify(payload)
+      })
+      console.log('logger', payload)
     })
     let starTime = new Date()
     let timer = setInterval(()=>{
@@ -334,7 +343,8 @@ window.onload = function() {
           contract:window.detail && window.detail.contractAddress,
           agent: navigator.userAgent,
           duration: duration,
-          provider:web3.currentProvider.constructor.name
+          provider:web3.currentProvider.constructor.name,
+          created_at: new Date()
         }  
         eventEmitter.emit('logger',obj);
         clearInterval(timer);
