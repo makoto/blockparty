@@ -6,12 +6,14 @@ import Subheader from 'material-ui/Subheader';
 import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar';
+import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import math from 'mathjs';
 import participantStatus from '../util/participantStatus';
 import NameSearch from './NameSearch';
+import QRCode from './QRCode';
 
 const getTwitterIcon = (name) =>(
   <Avatar style={{verticalAlign:'middle'}} src={`https://avatars.io/twitter/${name}`} size={26} />
@@ -217,10 +219,8 @@ class Participants extends React.Component {
       <Paper zDepth={1} style={styles.paperRight}>
           <h4>Participants</h4>
 
-          <NameSearch
-            eventEmitter={this.props.eventEmitter}
-            handleSearchField={this.handleSearchField.bind(this)}
-          />
+          <NameSearch  eventEmitter={this.props.eventEmitter} />
+          <QRCode  eventEmitter={this.props.eventEmitter} />
 
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
