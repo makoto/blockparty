@@ -11,6 +11,7 @@ import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import math from 'mathjs';
 import participantStatus from '../util/participantStatus';
+import NameSearch from './NameSearch';
 
 const getTwitterIcon = (name) =>(
   <Avatar style={{verticalAlign:'middle'}} src={`https://avatars.io/twitter/${name}`} size={26} />
@@ -41,6 +42,10 @@ class Participants extends React.Component {
     // Initialize
     this.props.getParticipants(participants =>{
       this.setState({participants});
+    });
+
+    this.props.eventEmitter.on('search', keyword => {
+      this.setState({ keyword: keyword });
     });
 
     this.props.eventEmitter.on('change', _ => {
@@ -212,12 +217,9 @@ class Participants extends React.Component {
       <Paper zDepth={1} style={styles.paperRight}>
           <h4>Participants</h4>
 
-          <TextField
-            floatingLabelText="Search by name or address"
-            floatingLabelFixed={true}
-            value={this.state.keyword}
-            onChange={this.handleSearchField.bind(this)}
-            style={{margin:'0 5px'}}
+          <NameSearch
+            eventEmitter={this.props.eventEmitter}
+            handleSearchField={this.handleSearchField.bind(this)}
           />
 
           <Table>
