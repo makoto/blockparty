@@ -2,6 +2,15 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name: 'Ethereum London April 2018',
+    address: '0xaeeef5cbaf25a1b344fbb12881c271ea47c609b43d83d78cd7a55d28cc9efb21',
+    date:'Wednesday, April 18, 2018 5 PM to 6:00 PM(UTC+0)',
+    map_url: '',
+    location_text: "",
+    description_text: 'This is a test',
+    ether_price: 615,
+  },
+  {
     name: 'Ethereum London March 2018',
     address: '0xD2fDdAD19D6Fd3159fe2658030De2962871aa3Fc',
     date:'Wednesday, March 14, 2018 6:25 PM to 9:00 PM(UTC+0)',

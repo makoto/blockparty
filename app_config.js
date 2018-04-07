@@ -18,7 +18,7 @@ module.exports = {
   },
   rinkeby: {
     contract_addresses:{
-      'Conference': '0xDdDf97B54a515172AadD9590d5aBCE524683f390'
+      'Conference': null
     },
     name: 'RINKEBY NET',
     etherscan_url: 'https://rinkeby.etherscan.io'

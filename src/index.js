@@ -48,7 +48,7 @@ function setup(){
           console.log('Success')
         }else{
           console.log('The endspoint is not active. Falling back to read_only mode')
-          url = 'https://mainnet.infura.io'
+          url = 'https://rinkeby.infura.io'
           read_only = true
         }
       }).always(function(){
@@ -82,7 +82,6 @@ window.onload = function() {
         env = 'development';
     }
     var network_obj = require('../app_config.js')[env];
-
     var Conference  = TruffleContract(artifacts);
     let contract, contractAddress;
     Conference.setProvider(provider);
@@ -121,7 +120,6 @@ window.onload = function() {
         })
       });
     }
-
     // Functions to interact with contract
     function getDetail(){
       if (!contract) return false;
@@ -171,7 +169,8 @@ window.onload = function() {
             detail.canCancel = true
             detail.canWithdraw = false
           }
-          console.log('detail', detail)
+          detail.contractAddress = contract.address;
+          window.detail = detail
           eventEmitter.emit('detail', detail);
         })
       })
@@ -206,10 +205,11 @@ window.onload = function() {
               }
               return object
             })
-          }).then(participant => {
-            if(participant) {
-              eventEmitter.emit('participants_updated', participant);
-              callback(participant);
+          }).then(participants => {
+            if(participants) {
+              eventEmitter.emit('participants_updated', participants);
+              window.participants = participants.length;
+              callback(participants);
             }
           })
         })
@@ -266,6 +266,7 @@ window.onload = function() {
           eventEmitter.emit('notification', {status:'error', message:message});
           return;
         }
+        window.account = accs[0];
         eventEmitter.emit('accounts_received', accs)
       })
     }
@@ -319,6 +320,39 @@ window.onload = function() {
     // bignumber.js:1177 Uncaught BigNumber Error: new BigNumber() not a base 16 number:
     setTimeout(getAccounts, 100)
     setTimeout(getDetail, 100)
+    eventEmitter.on('logger', (payload)=>{
+      fetch("http://localhost:5000/log",
+      {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "POST",
+          body: JSON.stringify(payload)
+      })
+      console.log('logger', payload)
+    })
+    let starTime = new Date()
+    let timer = setInterval(()=>{
+      let duration = new Date() - starTime;
+      if((window.detail && window.participants) || duration > 200000 ) {
+        let obj = {
+          action:'load',
+          user:window.account,
+          participants: window.participants,
+          contract:window.detail && window.detail.contractAddress,
+          agent: navigator.userAgent,
+          duration: duration,
+          provider:web3.currentProvider.constructor.name,
+          hostname: window.location.hostname,
+          created_at: new Date()
+        }  
+        eventEmitter.emit('logger',obj);
+        clearInterval(timer);
+      }else{
+        console.log('not ready', window.detail, window.account, window.participants)
+      }
+    }, 1000)
     eventEmitter.emit('network', network_obj);
   })
 }
