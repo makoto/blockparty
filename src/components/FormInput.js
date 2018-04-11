@@ -201,7 +201,7 @@ class FormInput extends React.Component {
           label="RSVP" style={styles}
           onClick={this.handleAction.bind(this, action)}
         />
-        warningText = <div style={{textAlign:'center', color:'red'}}>Please be aware that you <strong>cannot</strong> cancel once regiesterd. Please read FAQ section at ABOUT page on top right corner for more detail about this service.</div>
+        warningText = <div></div>
       }
     }else{
       registerButton = <span>No account is set</span>
