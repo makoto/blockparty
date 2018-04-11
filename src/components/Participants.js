@@ -178,7 +178,8 @@ class Participants extends React.Component {
       var state = this.state;
       return this.state.participants.filter((participant) => {
         if(state.keyword && state.keyword.length >=3){
-          return !!(participant.name.match(state.keyword)) || !!(participant.address.match(state.keyword))
+          let keyword = state.keyword.toLowerCase();
+          return !!(participant.name.match(keyword)) || !!(participant.address.match(keyword))
         }else{
           return true
         }
