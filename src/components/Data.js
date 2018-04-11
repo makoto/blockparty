@@ -2,13 +2,34 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
-    name: 'Ethereum London April 2018',
-    address: '0xaeeef5cbaf25a1b344fbb12881c271ea47c609b43d83d78cd7a55d28cc9efb21',
-    date:'Wednesday, April 18, 2018 5 PM to 6:00 PM(UTC+0)',
-    map_url: '',
-    location_text: "",
-    description_text: 'This is a test',
-    ether_price: 615,
+    name:"Ethereum London April 2018",
+    address:"0x5B0A85D249FF3143B933AcaE36B4C139833527f2",
+    date:"Wednesday, April 18, 2018 5 PM to 6 PM(UTC+0)",
+    map_url:"https://goo.gl/maps/jRUEfLboN7K2",
+    location_text:"Olympia, London Hammersmith Road, Kensington · London W14 8UX, 'Blockchain for Business' stage INSIDE the 'Blockchain Expo' show at the Olympia.",
+    description_text:"Note that it is FREE to attend the expo floor on the 18th however you MUST register to get a free pass at https://gateway.blockchain-expo.com/global/free-expo-pass/register",
+    ether_price:402,
+    testnet:true
+  },
+  {
+    name:"Simply business internal drinks",
+    address:"0x9834074c07c3584314b80FaA6f130fb98241071d",
+    date:"Thursday, April 12, 2018 5:15 PM(UTC+1)",
+    map_url:"https://goo.gl/maps/Jv6HywnnJ2p",
+    location_text:"Old Doctor Butler’s Head 2 Masons Ave, Moorgate, London EC2V 5BT",
+    description_text:"",
+    ether_price:402,
+    testnet:true
+  },
+  {
+    name:"CodeUp #26",
+    address:"0x48Fae9ef344c63a0D39566B0941F6eBf58Fa6Ed9",
+    date:"Tuesday, April 10, 2018 6:30 PM to 9:00 PM(UTC+1)",
+    map_url:"https://www.google.co.uk/maps/place/Simply+Business/@51.51528,-0.0904011,15z/data=!4m5!3m4!1s0x0:0x70f23f24baccffdc!8m2!3d51.51528!4d-0.0904011",
+    location_text:"Simply Business (99 Gresham St, London EC2V 7NG)",
+    description_text:"",
+    ether_price:402,
+    testnet:true
   },
   {
     name: 'Ethereum London March 2018',
