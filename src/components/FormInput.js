@@ -51,6 +51,9 @@ class FormInput extends React.Component {
   handleAction(actionName) {
     var args = [];
     switch (actionName) {
+      case 'grant':
+        args.push(this.state.attendees);
+        break;
       case 'attend':
         args.push(this.state.attendees);
         break;
@@ -161,6 +164,11 @@ class FormInput extends React.Component {
 
     if(this.isOwner()){
       adminButtons = <div>
+        <RaisedButton secondary={true}
+          label="Grant admin" style={styles}
+          onClick={this.handleAction.bind(this, 'grant')}
+        />
+
         <RaisedButton secondary={this.showPayback()} disabled={!this.showPayback()}
           label="Payback" style={styles}
           onClick={this.handleAction.bind(this, 'payback')}

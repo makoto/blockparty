@@ -183,6 +183,9 @@ class Participants extends React.Component {
         }else{
           participant.matched = true
         }
+        if (state.detail.admins.filter((admin)=>{return admin == participant.address || state.detail.owner == participant.address }).length > 0){
+          participant.role = '*';
+        }
 
         var participantAddress;
         if (this.state.etherscan_url) {
@@ -196,13 +199,13 @@ class Participants extends React.Component {
         }
         let rowStyle = {};
         if (!participant.matched){
-          rowStyle={display:'none'};
+          rowStyle.display ='none';
         }
         return (
           <TableRow  style={rowStyle} >
             <TableRowColumn width={50}>
               {getTwitterIcon(participant.name)}
-              <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
+              <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.role}{participant.name}</a> </span>
                 ({participantAddress})
               </TableRowColumn>
             <TableRowColumn width={10} >{this.yesNo(participant)}</TableRowColumn>
@@ -239,6 +242,7 @@ class Participants extends React.Component {
               {this.displayParticipants()}
             </TableBody>
           </Table>
+          <p style={{color:'grey', fontSize:'small'}}>Note: admins are marked as *</p>
       </Paper>
     );
   }
