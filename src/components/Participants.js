@@ -183,7 +183,8 @@ class Participants extends React.Component {
         }else{
           participant.matched = true
         }
-        if (state.detail.admins.filter((admin)=>{return admin == participant.address || state.detail.owner == participant.address }).length > 0){
+        let isAdmin = state.detail.admins.filter((admin)=>{ return admin == participant.address }).length > 0;
+        if ( isAdmin || state.detail.owner == participant.address ){
           participant.role = '*';
         }
 
