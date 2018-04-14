@@ -187,9 +187,6 @@ class Participants extends React.Component {
         if ( isAdmin || state.detail.owner == participant.address ){
           participant.role = '*';
         }
-        if (participant.name == '@makoto_inoue'){
-          debugger;
-        }
 
         var participantAddress;
         if (this.state.etherscan_url) {
