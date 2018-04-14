@@ -176,14 +176,14 @@ class Participants extends React.Component {
     )
     if(this.state.participants.length > 0){
       var state = this.state;
-      return this.state.participants.filter((participant) => {
+      return this.state.participants.map((participant) => {
         if(state.keyword && state.keyword.length >=3){
           let keyword = state.keyword.toLowerCase();
-          return !!(participant.name.match(keyword)) || !!(participant.address.match(keyword))
+          participant.matched = !!(participant.name.match(keyword)) || !!(participant.address.match(keyword))
         }else{
-          return true
+          participant.matched = true
         }
-      }).map((participant) => {
+
         var participantAddress;
         if (this.state.etherscan_url) {
           participantAddress = (
@@ -194,8 +194,12 @@ class Participants extends React.Component {
             `${participant.address.slice(0,5)}...`
           )
         }
+        let rowStyle = {};
+        if (!participant.matched){
+          rowStyle={display:'none'};
+        }
         return (
-          <TableRow>
+          <TableRow  style={rowStyle} >
             <TableRowColumn width={50}>
               {getTwitterIcon(participant.name)}
               <span style={{paddingLeft:'1em'}}><a target='_blank' href={ `https://twitter.com/${participant.name}` }>{participant.name}</a> </span>
