@@ -1,4 +1,4 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.23;
 import './zeppelin/ownership/Ownable.sol';
 
 /**
@@ -18,7 +18,7 @@ contract GroupAdmin is Ownable {
   function grant(address[] newAdmins) public onlyOwner{
     for(uint i=0;i<newAdmins.length;i++){
       admins.push(newAdmins[i]);
-      AdminGranted(newAdmins[i]);
+      emit AdminGranted(newAdmins[i]);
     }
   }
 
@@ -28,7 +28,7 @@ contract GroupAdmin is Ownable {
             if (admins[j] == oldAdmins[i]) {
                 admins[j] = admins[admins.length - 1];
                 admins.length--;
-                AdminRevoked(oldAdmins[i]);
+                emit AdminRevoked(oldAdmins[i]);
                 break;
             }
         }
@@ -43,7 +43,6 @@ contract GroupAdmin is Ownable {
   function numOfAdmins() view public returns(uint){
       return admins.length;
   }
-
 
   function isAdmin(address admin) public view returns(bool){
     if (admin == owner) return true;
