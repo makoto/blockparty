@@ -1,4 +1,4 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.23;
 
 import './GroupAdmin.sol';
 import './zeppelin/lifecycle/Destructible.sol';
@@ -47,7 +47,7 @@ contract Conference is Destructible, GroupAdmin {
 
 	/* Public functions */
 
-	function Conference (
+	constructor (
 		string _name,
 		uint256 _deposit,
 		uint _limitOfParticipants,
@@ -85,12 +85,12 @@ contract Conference is Destructible, GroupAdmin {
 
 	function registerWithEncryption(string _participant, string _encrypted) external payable onlyActive{
 		registerInternal(_participant);
-		RegisterEvent(msg.sender, _participant, _encrypted);
+		emit RegisterEvent(msg.sender, _participant, _encrypted);
 	}
 
 	function register(string _participant) external payable onlyActive{
 		registerInternal(_participant);
-		RegisterEvent(msg.sender, _participant, '');
+		emit RegisterEvent(msg.sender, _participant, '');
 	}
 
 	function registerInternal(string _participant) internal {
@@ -112,12 +112,12 @@ contract Conference is Destructible, GroupAdmin {
 
 		participant.paid = true;
 		participant.addr.transfer(payoutAmount);
-		WithdrawEvent(msg.sender, payoutAmount);
+		emit WithdrawEvent(msg.sender, payoutAmount);
 	}
 
 	/* Constants */
 	function totalBalance() constant public returns (uint256){
-		return this.balance;
+		return address(this).balance;
 	}
 
 	function isRegistered(address _addr) constant public returns (bool){
@@ -143,7 +143,7 @@ contract Conference is Destructible, GroupAdmin {
 		payoutAmount = payout();
 		ended = true;
 		endedAt = now;
-		PaybackEvent(payoutAmount);
+		emit PaybackEvent(payoutAmount);
 	}
 
 	function cancel() external onlyOwner onlyActive{
@@ -151,15 +151,20 @@ contract Conference is Destructible, GroupAdmin {
 		cancelled = true;
 		ended = true;
 		endedAt = now;
-		CancelEvent();
+		emit CancelEvent();
 	}
 
 	/* return the remaining of balance if there are any unclaimed after cooling period */
 	function clear() external onlyOwner onlyEnded{
 		require(now > endedAt + coolingPeriod);
+<<<<<<< HEAD
 		var leftOver = totalBalance();
+=======
+		require(ended);
+		uint leftOver = totalBalance();
+>>>>>>> Upgrade truffle to  4.1.7 and solc to 0.4.23
 		owner.transfer(leftOver);
-		ClearEvent(owner, leftOver);
+		emit ClearEvent(owner, leftOver);
 	}
 
 	function setLimitOfParticipants(uint _limitOfParticipants) external onlyOwner onlyActive{
@@ -168,10 +173,10 @@ contract Conference is Destructible, GroupAdmin {
 
 	function attend(address[] _addresses) external onlyAdmin onlyActive{
 		for(uint i=0;i<_addresses.length;i++){
-			var _addr = _addresses[i];
+			address _addr = _addresses[i];
 			require(isRegistered(_addr));
 			require(!isAttended(_addr));
-			AttendEvent(_addr);
+			emit AttendEvent(_addr);
 			participants[_addr].attended = true;
 			attended++;
 		}
