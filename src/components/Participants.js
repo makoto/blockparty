@@ -133,11 +133,16 @@ class Participants extends React.Component {
     let color, amount;
     switch(message) {
     case 'Won':
-    case 'Earned':
+    case 'Withdrawn':
       color = 'green';
       amount = web3.fromWei(this.state.detail.payoutAmount.toNumber());
       break;
-    case 'Lost':
+    case 'Cancelled':
+      color = 'red';
+      amount = 0;
+      break;
+
+      case 'Lost':
       color = 'red';
       amount = 0;
       break;
