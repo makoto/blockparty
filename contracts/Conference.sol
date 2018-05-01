@@ -157,12 +157,7 @@ contract Conference is Destructible, GroupAdmin {
 	/* return the remaining of balance if there are any unclaimed after cooling period */
 	function clear() external onlyOwner onlyEnded{
 		require(now > endedAt + coolingPeriod);
-<<<<<<< HEAD
-		var leftOver = totalBalance();
-=======
-		require(ended);
 		uint leftOver = totalBalance();
->>>>>>> Upgrade truffle to  4.1.7 and solc to 0.4.23
 		owner.transfer(leftOver);
 		emit ClearEvent(owner, leftOver);
 	}
