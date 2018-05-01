@@ -7,7 +7,7 @@ const Conference = artifacts.require("Conference.sol");
 const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const gasPrice = web3.toWei(1, 'gwei');
-const usd = 969;
+const usd = 658;
 let deposit, conference;
 let trx,trx2, gasUsed, gasUsed2, result, trxReceipt;
 
