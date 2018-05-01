@@ -157,7 +157,6 @@ contract Conference is Destructible, GroupAdmin {
 	/* return the remaining of balance if there are any unclaimed after cooling period */
 	function clear() external onlyOwner onlyEnded{
 		require(now > endedAt + coolingPeriod);
-		require(ended);
 		var leftOver = totalBalance();
 		owner.transfer(leftOver);
 		ClearEvent(owner, leftOver);
