@@ -125,7 +125,7 @@ class FormInput extends React.Component {
   }
 
   showWithdraw(){
-    return this.state.detail.canWithdraw && this.participantStatus() == 'Won';
+    return this.state.detail.canWithdraw && (this.participantStatus() == 'Won' || this.participantStatus() == 'Cancelled');
   }
 
   showPayback(){
