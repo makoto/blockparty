@@ -141,8 +141,7 @@ class Participants extends React.Component {
       color = 'red';
       amount = 0;
       break;
-
-      case 'Lost':
+    case 'Lost':
       color = 'red';
       amount = 0;
       break;
