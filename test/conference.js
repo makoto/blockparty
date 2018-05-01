@@ -155,6 +155,15 @@ contract('Conference', function(accounts) {
     })
   })
 
+  describe('on empty event', function(){
+    let notAttended = accounts[3];
+
+    it('nothing to withdraw if no one attend', async function(){
+      await conference.payback({from:owner});
+      assert.equal(await conference.payoutAmount.call(), 0);
+    })
+  })
+
   describe('on payback', function(){
     let previousBalance, currentRegistered, currentAttended;
     let attended = accounts[2];
@@ -172,6 +181,7 @@ contract('Conference', function(accounts) {
       await conference.withdraw({from:attended}).catch(function(){});
       // money is still left on contract
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+      assert.equal(await conference.isPaid.call(attended), false);
     })
 
     it('cannot withdraw if you did not attend', async function(){
@@ -179,6 +189,7 @@ contract('Conference', function(accounts) {
       await conference.withdraw({from:notAttended}).catch(function(){});
       // money is still left on contract
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * 2);
+      assert.equal(await conference.isPaid.call(notAttended), false);
     })
 
     it('can withdraw if you attend', async function(){
@@ -191,6 +202,7 @@ contract('Conference', function(accounts) {
       assert( diff > (deposit * 1.9));
       let participant = await conference.participants.call(attended);
       assert.equal(getParticipantDetail(participant, 'paid'), true);
+      assert.equal(await conference.isPaid.call(attended), true);
     })
 
     it('cannot register any more', async function(){

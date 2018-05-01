@@ -1,5 +1,5 @@
 const GroupAdmin = artifacts.require("GroupAdmin.sol");
-contract('GrupAdmin', function(accounts) {
+contract('GroupAdmin', function(accounts) {
     let admin, operator, owner;
     beforeEach(async function(){
         owner = accounts[0];
@@ -48,7 +48,10 @@ contract('GrupAdmin', function(accounts) {
         it('list number of admins', async function(){
             await admin.grant([operator], {from:owner})
             await admin.grant([non_operator], {from:owner})
-            console.log('admin', await admin.getAdmins.call());
+            let admins = await admin.getAdmins.call();
+            assert.strictEqual(admins[0], operator);
+            assert.strictEqual(admins[1], non_operator);
+            assert.strictEqual((await admin.numOfAdmins.call()).toNumber(), 2);
         })
     })
 })
