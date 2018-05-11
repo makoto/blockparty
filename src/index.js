@@ -216,10 +216,14 @@ window.onload = function() {
         })
     }
     var gas = 1000000;
-    var gasPrice = web3.toWei(2, 'gwei');
+    // default gas price
+    window.gasPrice = web3.toWei(3, 'gwei');
+    $.get('https://ethgasstation.info/json/ethgasAPI.json', function(res){
+      window.gasPrice = web3.toWei(res.safeLow / 10, 'gwei'); // for some reason the gast price is 10 times more expensive the one displayed on the web page.
+    })
     window.eventEmitter = eventEmitter;
     function action(name, address, args) {
-      var options = {from:address, gas:gas, gasPrice:gasPrice }
+      var options = {from:address, gas:gas, gasPrice:window.gasPrice }
       eventEmitter.emit('notification', {status:'info', message:'Requested'});
       if (!args) {
         args = [];
