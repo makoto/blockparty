@@ -49,6 +49,12 @@ function setup(){
         }else{
           console.log('The endspoint is not active. Falling back to read_only mode')
           url = 'https://rinkeby.infura.io'
+          //  This only allows to pickup preference on the event list on top.
+          if (Data[0].testnet){
+            url = 'https://rinkeby.infura.io'
+          }else{
+            url = 'https://mainnet.infura.io'
+          }
           read_only = true
         }
       }).always(function(){
