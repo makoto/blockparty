@@ -2,6 +2,15 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name:"CodeUp #27",
+    address:"0x83a0d3183df9B5a9a7A1ADa5034eE6881beF0e72",
+    date:"Wednesday, May 9, 2018 6:30 PM to 9:00 PM(UTC+1)",
+    map_url:"https://www.google.co.uk/maps/place/Simply+Business/@51.51528,-0.0904011,15z/data=!4m5!3m4!1s0x0:0x70f23f24baccffdc!8m2!3d51.51528!4d-0.0904011",
+    location_text:"Simply Business (99 Gresham St, London EC2V 7NG)",
+    description_text:"",
+    ether_price:402
+  },
+  {
     name:"Ethereum London April 2018",
     address:"0x5B0A85D249FF3143B933AcaE36B4C139833527f2",
     date:"Wednesday, April 18, 2018 5 PM to 6 PM(UTC+0)",
