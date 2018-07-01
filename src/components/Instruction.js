@@ -73,7 +73,7 @@ export default class Instruction extends React.Component {
           <h3>Option 1: access from mobile browser</h3>
           <p>This is the recommended way. The easier step by step guide is <a href='https://medium.com/@makoto_inoue/participating-blockparty-event-with-a-mobile-wallet-b6b9123246f7' >here</a></p>
           <ul>
-            <li>Step 1: Download <a href='https://www.cipherbrowser.com'>Cipher Browser</a> or <a href='https://trustwalletapp.com'>Trust Wallet</a> from App store/Google play</li>
+            <li>Step 1: Download <a href='http://status.im'>Status.im</a>,  <a href='https://www.cipherbrowser.com'>Cipher Browser</a> or <a href='https://trustwalletapp.com'>Trust Wallet</a> from App store/Google play</li>
             <li>Step 2: Create an account on your wallet, and make sure you have some Ether.</li>
             <li>Step 3: Type the event url on their built in browser </li>
           </ul>
