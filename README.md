@@ -14,6 +14,11 @@
   You go to party and may end up getting more money.
 </p>
 
+<h2>Targetted users</h2>
+<p>
+  The current users are mostly participants of Blockchain related events, such as conference pre/post dinner, meetups, and hackathons. The users are expected to own some Ether (a virtual currency, shorten for ETH), to pay the deposit of the event, as well as usage fee of its platform called [Ethereum](http://ethereum.org).
+</p>
+
 <div style:"text-align:center;">
   <img width='80%' style:"display:inline-block;" src="http://blockparty.io.s3-website-eu-west-1.amazonaws.com/images/diagram.png"></img>
 </div>

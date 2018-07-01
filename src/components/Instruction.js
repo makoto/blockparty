@@ -63,6 +63,11 @@ export default class Instruction extends React.Component {
 
           <div style={{textAlign:'center'}} class="video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/YkFGPokK0eQ" frameborder="0" allowfullscreen></iframe></div>
 
+          <h2>Targetted users</h2>
+          <p>
+            The current users are mostly participants of Blockchain related events, such as conference pre/post dinner, meetups, and hackathons. The users are expected to own some Ether (a virtual currency, shorten for ETH), to pay the deposit of the event, as well as usage fee of its platform called [Ethereum](http://ethereum.org).
+          </p>
+
           <h2>How to setup</h2>
 
           <h3>Option 1: access from mobile browser</h3>
