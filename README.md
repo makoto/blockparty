@@ -141,10 +141,16 @@ By passing public key file location to parameter of Conference during migration,
 
 Event name is configurable as `name`
 
-eg:
+eg: Encrypt participant name
 
 ```
-./node_modules/.bin/truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key"}'
+./node_modules/.bin/truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key"  }'
+```
+
+Changing number of participants
+
+```
+./node_modules/.bin/truffle migrate --config '{"name":"CodeUp No..", "limitOfParticipants":15}'
 ```
 
 ## Deploying and running on real network

@@ -9,7 +9,7 @@ let config = {};
 let name = ''; // empty name falls back to the contract default
 let deposit = 0; // 0 falls back to the contract default
 let limitOfParticipants = 0; // 0 falls back to the contract default
-// eg: truffle migrate --config '{"name":"CodeUp No..", "encryption":"./tmp/test_public.key"}'
+// eg: truffle migrate --config '{"name":"CodeUp No..", "limitOfParticipants":15}'
 if (yargs.argv.config) {
   config = JSON.parse(yargs.argv.config);
 }
@@ -20,6 +20,10 @@ module.exports = function(deployer) {
   if (deployer.network == 'test' || deployer.network == 'coverage') return 'no need to deploy contract';
   if (config.name){
     name = config.name;
+  }
+
+  if (config.limitOfParticipants){
+    limitOfParticipants = config.limitOfParticipants;
   }
 
   if (config.encryption) {
