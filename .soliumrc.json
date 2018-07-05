@@ -1,8 +1,9 @@
 {
-  "extends": "solium:all",
+  "extends": "solium:recommended",
   "rules": {
-    "quotes": ["error", "single"],
-    "arg-overflow": "off",
-    "blank-lines": "off"
+    "imports-on-top": 0,
+    "variable-declarations": 0,
+    "indentation": ["error", 4],
+    "quotes": ["error", "single"]
   }
 }
