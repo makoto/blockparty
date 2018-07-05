@@ -143,7 +143,7 @@ contract Conference is Destructible, GroupAdmin {
      * @dev Returns total balance of the contract. This function can be deprecated when refactroing front end code.
      * @return The total balance of the contract.
      */
-	function totalBalance() constant public returns (uint256){
+	function totalBalance() view public returns (uint256){
 		return address(this).balance;
 	}
 
@@ -152,7 +152,7 @@ contract Conference is Destructible, GroupAdmin {
      * @param _addr The address of a participant.
      * @return True if the address exists in the pariticipant list.
      */
-	function isRegistered(address _addr) constant public returns (bool){
+	function isRegistered(address _addr) view public returns (bool){
 		return participants[_addr].addr != address(0);
 	}
 
@@ -161,7 +161,7 @@ contract Conference is Destructible, GroupAdmin {
      * @param _addr The address of a participant.
      * @return True if the user is marked as attended by admin.
      */
-	function isAttended(address _addr) constant public returns (bool){
+	function isAttended(address _addr) view public returns (bool){
 		return isRegistered(_addr) && participants[_addr].attended;
 	}
 
@@ -170,7 +170,7 @@ contract Conference is Destructible, GroupAdmin {
      * @param _addr The address of a participant.
      * @return True if the attendee has withdrawn his/her deposit.
      */
-	function isPaid(address _addr) constant public returns (bool){
+	function isPaid(address _addr) view public returns (bool){
 		return isRegistered(_addr) && participants[_addr].paid;
 	}
 
@@ -178,7 +178,7 @@ contract Conference is Destructible, GroupAdmin {
      * @dev Show the payout amount each participant can withdraw.
      * @return The amount each participant can withdraw.
      */
-	function payout() constant public returns(uint256){
+	function payout() view public returns(uint256){
 		if (attended == 0) return 0;
 		return uint(totalBalance()) / uint(attended);
 	}
