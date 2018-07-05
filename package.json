@@ -10,7 +10,7 @@
     "lint": "eslint ./",
     "build": "webpack -p",
     "truffle": "./node_modules/.bin/truffle",
-    "test": " ./node_modules/.bin/truffle test --network test test/conference.js",
+    "test": " ./node_modules/.bin/truffle test --network test",
     "dev": "webpack-dev-server -d --inline --hot",
     "coverage": "./node_modules/.bin/solidity-coverage",
     "build-contracts": "sol-merger './contracts/*.sol' ./build"
@@ -84,6 +84,7 @@
     "eslint-plugin-import": "1.12.0",
     "eslint-plugin-jsx-a11y": "2.2.2",
     "eslint-plugin-react": "6.3.0",
+    "eth-gas-reporter": "^0.1.9",
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.9.0",
     "filesize": "3.3.0",

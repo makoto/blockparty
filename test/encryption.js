@@ -23,8 +23,8 @@ function awaitEvent(event, handler) {
 contract('Encryption', function(accounts) {
   describe('on registration', function(){
     it('increments registered', async function(){
-      var publicKey = fs.readFileSync('./tmp/test_public.key', {encoding: 'ascii'});
-      var privateKey = fs.readFileSync('./tmp/test_private.key', {encoding: 'ascii'});
+      var publicKey = fs.readFileSync('./test/fixtures/fixture_public.key', {encoding: 'ascii'});
+      var privateKey = fs.readFileSync('./test/fixtures/fixture_private.key', {encoding: 'ascii'});
       var message = "マコト";
       conference = await Conference.new('', 0, 0, 10, publicKey);
       var publicKeyFromContract = await conference.encryption.call();

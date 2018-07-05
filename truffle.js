@@ -58,6 +58,13 @@ module.exports = {
       from: "0x4b3a4f3f42ba61141a4f7101f77dc141ae15c59a",
       network_id: 1
     }
+  },
+  mocha: {
+    reporter: 'eth-gas-reporter',
+    reporterOptions : {
+      currency: 'USD',
+      gasPrice: 1
+    }
   }
 };
 

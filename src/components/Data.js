@@ -3,7 +3,7 @@
 let Data = [
   {
     name:"Ethereum London July 2018",
-    address: null,
+    address: "0x42d8242bb174a12b8ebceb2aeba09b1b15ceb1e6",
     date:"Wednesday, July 18, 2018 6:25 PM to 9:00 PM(UTC+1)",
     description_text:"",
     map_url: 'https://www.google.com/maps/place/Imperial+College+London/@51.4987997,-0.1770659,17z/data=!3m1!4b1!4m5!3m4!1s0x48760567da220a01:0x31911b371c692e86!8m2!3d51.4987997!4d-0.1748772?hl=en',

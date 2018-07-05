@@ -14,29 +14,34 @@
   You go to party and may end up getting more money.
 </p>
 
+<h2>Targetted users</h2>
+<p>
+  The current users are mostly participants of Blockchain related events, such as conference pre/post dinner, meetups, and hackathons. The users are expected to own some Ether (a virtual currency, shorten for ETH), to pay the deposit of the event, as well as usage fee of its platform called [Ethereum](http://ethereum.org).
+</p>
+
 <div style:"text-align:center;">
   <img width='80%' style:"display:inline-block;" src="http://blockparty.io.s3-website-eu-west-1.amazonaws.com/images/diagram.png"></img>
 </div>
 
 <h2>How to setup</h2>
 
-<h3>Option 1: access from Mist</h3>
-<p>This is the standard way of accessing Dapp</p>
+<h3>Option 1: access from mobile browser</h3>
+<p>This is the recommended way. The easier step by step guide is <a href='https://medium.com/@makoto_inoue/participating-blockparty-event-with-a-mobile-wallet-b6b9123246f7' >here</a></p>
 <ul>
-  <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>mainnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
+  <li>Step 1: Download <a href='http://status.im'>Status.im</a>,  <a href='https://www.cipherbrowser.com'>Cipher Browser</a> or <a href='https://trustwalletapp.com'>Trust Wallet</a> from App store/Google play</li>
   <li>Step 2: Create an account on your wallet, and make sure you have some Ether.</li>
-  <li>Step 3: Refresh the page </li>
+  <li>Step 3: Type the event url on their built in browser </li>
 </ul>
 
-<h3>Option 2: access from browser and <a href='https://metamask.io/'>Metamask</a> Chrome extension</h3>
-<p>For those of you who have problem installing the Mist browser, or no time to download big blockchain, why don't you try out via this browser based extension</p>
+<h3>Option 2: access from desktop browser with <a href='https://metamask.io/'>Metamask</a> Chrome extension</h3>
+<p>This is the most popular way right now.</p>
 <ul>
   <li>Step 1: Install <a href='https://metamask.io/'>Metamask</a> Chrome extension </li>
   <li>Step 2: Create an account on your metamask, and make sure you have some Ether.</li>
   <li>Step 3: Refresh the page </li>
 </ul>
 
-<h3>Option 3: access from normal browser</h3>
+<h3>Option 3: access from normal browser connecting to local node</h3>
 <p>This has been the standard way to access Dapp prior to Ethereum Wallet (lower than v 0.7)</p>
 <ul>
   <li>Step 1: Install <a href='https://github.com/ethereum/mist/releases'>Mist browser (v 0.8 or higher)</a>, and make sure you choose <em style={{fontWeight:'bold'}}>mainnet</em>. Here is <a href='https://www.youtube.com/watch?v=Y3JfLgjqNU4'>a quick video tutorial</a> </li>
@@ -53,9 +58,11 @@
 </p>
 
 <h2>How to play?</h2>
-<ul>
-  <li>Type your twitter account, pick one of your address, then press 'Register'. It will take 10 to 30 seconds to get verified and you will receive notification.</li>
-</ul>
+<p>
+  Type your twitter account, pick one of your address, then press 'RSVP'. It will take 10 to 30 seconds to get verified and you will receive notification.
+  Once registered, join the party! Your party host (the contract owner) will mark you as attend.
+  Once the host clicks `payout`, then you are entitled to `withdraw` your payout.
+</p>
 
 <h2>FAQ</h2>
 <h3>Can I cancel my registration?</h3>

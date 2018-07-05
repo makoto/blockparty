@@ -10,7 +10,7 @@ install:
 script:
   - npm test
 before_script:
-  - testrpc > /dev/null &
+  - testrpc -a 303 > /dev/null &
   - sleep 5
 after_script:
   - npm run coverage && cat coverage/lcov.info | coveralls
