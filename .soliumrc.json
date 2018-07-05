@@ -1,0 +1,8 @@
+{
+  "extends": "solium:all",
+  "rules": {
+    "quotes": ["error", "single"],
+    "arg-overflow": "off",
+    "blank-lines": "off"
+  }
+}
