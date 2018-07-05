@@ -2,6 +2,25 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name:"Ethereum London July 2018",
+    address: "0x42d8242bb174a12b8ebceb2aeba09b1b15ceb1e6",
+    date:"Wednesday, July 18, 2018 6:25 PM to 9:00 PM(UTC+1)",
+    description_text:"",
+    map_url: 'https://www.google.com/maps/place/Imperial+College+London/@51.4987997,-0.1770659,17z/data=!3m1!4b1!4m5!3m4!1s0x48760567da220a01:0x31911b371c692e86!8m2!3d51.4987997!4d-0.1748772?hl=en',
+    location_text: 'Sir Alexander Fleming Building (SAF) LT1 G16',
+    ether_price:400,
+    testnet:true
+  },
+  {
+    name:"CodeUp #28",
+    address:"0x83a0d3183df9B5a9a7A1ADa5034eE6881beF0e72",
+    date:"Tuesday, June 19, 2018 6:30 PM to 9:00 PM(UTC+1)",
+    map_url:"https://www.google.co.uk/maps/place/Simply+Business/@51.51528,-0.0904011,15z/data=!4m5!3m4!1s0x0:0x70f23f24baccffdc!8m2!3d51.51528!4d-0.0904011",
+    location_text:"Simply Business (99 Gresham St, London EC2V 7NG)",
+    description_text:"",
+    ether_price:402
+  },
+  {
     name:"CodeUp #27",
     address:"0x83a0d3183df9B5a9a7A1ADa5034eE6881beF0e72",
     date:"Wednesday, May 9, 2018 6:30 PM to 9:00 PM(UTC+1)",
