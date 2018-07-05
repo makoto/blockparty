@@ -28,7 +28,7 @@ contract GroupAdmin is Ownable {
 
   /**
   * @dev Revoke admin right from given addresses.
-  * @param newAdmins An array of addresses
+  * @param oldAdmins An array of addresses
   */
   function revoke(address[] oldAdmins) public onlyOwner{
     for(uint i=0;i<oldAdmins.length;i++){
@@ -62,7 +62,7 @@ contract GroupAdmin is Ownable {
 
   /**
   * @dev Returns if the given address is admin or not.
-  * @param An address.
+  * @param admin An address.
   * @return True if the given address is admin.
   */
   function isAdmin(address admin) public view returns(bool){
