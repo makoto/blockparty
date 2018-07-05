@@ -207,7 +207,7 @@ contract Conference is Destructible, GroupAdmin {
 	}
 
     /**
-     * @dev The event owner transfer the outstanding deposits  if there are any unclaimed deposits after cooling period
+    * @dev The event owner transfer the outstanding deposits  if there are any unclaimed deposits after cooling period
 	*/
 	function clear() external onlyOwner onlyEnded{
 		require(now > endedAt + coolingPeriod);

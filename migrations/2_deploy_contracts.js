@@ -9,7 +9,7 @@ let config = {};
 let name = ''; // empty name falls back to the contract default
 let deposit = 0; // 0 falls back to the contract default
 let limitOfParticipants = 0; // 0 falls back to the contract default
-// eg: truffle migrate --config '{"name":"CodeUp No..", "limitOfParticipants":15}'
+// eg: truffle migrate --config '{"name":"CodeUp No..", "limitOfParticipants":15, "encryption":"./tmp/test_public.key"}'
 if (yargs.argv.config) {
   config = JSON.parse(yargs.argv.config);
 }
