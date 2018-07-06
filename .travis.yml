@@ -7,8 +7,11 @@ install:
   - npm install -g truffle
   - npm install -g ethereumjs-testrpc
   - npm install
+env:
+  - TASK=test
+  - TASK=lint
 script:
-  - npm test
+  - npm run $TASK
 before_script:
   - testrpc -a 303 > /dev/null &
   - sleep 5
