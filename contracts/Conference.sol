@@ -225,6 +225,14 @@ contract Conference is Destructible, GroupAdmin {
     }
 
     /**
+     * @dev Change the name of the event. The owner can change it until event is over.
+     * @param _name the name of the event.
+     */
+    function changeName(string _name) external onlyOwner onlyActive{
+        name = _name;
+    }
+
+    /**
      * @dev Mark participants as attended. The attendance cannot be undone.
      * @param _addresses The list of participant's address.
      */

@@ -21,6 +21,18 @@ contract('Conference', function(accounts) {
     deposit = (await conference.deposit.call()).toNumber();
   })
 
+  describe.only('on changeName', function(){
+    it('owner can rename the event', async function(){
+      await conference.changeName('new name', {from:owner});
+      assert.strictEqual((await conference.name.call()), 'new name');
+    })
+
+    it('non owner cannot rename the event', async function(){
+      await conference.changeName('new name', {from:non_owner}).catch(function(){});
+      assert.notEqual((await conference.name.call()), 'new name');
+    })
+  })
+
   describe('on setLimitOfParticipants', function(){
     it('does not allow to register more than the limit', async function(){
       await conference.setLimitOfParticipants(1)
