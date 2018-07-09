@@ -40,6 +40,11 @@ contract Conference is Destructible, GroupAdmin {
         _;
     }
 
+    modifier noOneRegistered {
+        require(registered == 0);
+        _;
+    }
+
     modifier onlyEnded {
         require(ended);
         _;
@@ -222,6 +227,14 @@ contract Conference is Destructible, GroupAdmin {
      */
     function setLimitOfParticipants(uint _limitOfParticipants) external onlyOwner onlyActive{
         limitOfParticipants = _limitOfParticipants;
+    }
+
+    /**
+     * @dev Change the name of the event. The owner can change it as long as no one has registered yet.
+     * @param _name the name of the event.
+     */
+    function changeName(string _name) external onlyOwner noOneRegistered{
+        name = _name;
     }
 
     /**
