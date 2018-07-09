@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/makoto/blockparty.svg?branch=master)](https://travis-ci.org/makoto/blockparty)
+[![Coverage Status](https://coveralls.io/repos/github/makoto/blockparty/badge.svg?branch=master)](https://coveralls.io/github/makoto/blockparty?branch=master)
+
 <h2>What is this?</h2>
 
 <h3>Demo</h3>

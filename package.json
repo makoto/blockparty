@@ -102,7 +102,7 @@
     "react-dev-utils": "^0.2.1",
     "recursive-readdir": "2.1.0",
     "rimraf": "2.5.4",
-    "solidity-coverage": "^0.4.8",
+    "solidity-coverage": "^0.5.5",
     "solium": "^1.1.7",
     "strip-ansi": "3.0.1",
     "style-loader": "0.13.1",
