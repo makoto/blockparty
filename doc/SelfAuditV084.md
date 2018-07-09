@@ -180,6 +180,11 @@ It is very difficult to audit my own code as I have seen it many many times. I c
 - line 26: Marking each participant at `bool attended;` is not performant and can cost lots of gas if the number of participants is big. This is tracked at [github issue](https://github.com/makoto/blockparty/issues/160)
 - line 103: It allows people to register without an encrypted full name. It is a non-issue as event owner can reject people who did not provide the full name.
 
+### zeppelin/ownership/Ownable.sol
+
+- line 38: The owner can be transferred into wrong address or empty address by mistake = Tracked [here](https://github.com/makoto/blockparty/issues/162)
+
+
 ### Potential Logical flaws
 
 #### Twitter account can be faked
