@@ -13,7 +13,8 @@
     "test": " ./node_modules/.bin/truffle test --network test",
     "dev": "webpack-dev-server -d --inline --hot",
     "coverage": "./node_modules/.bin/solidity-coverage",
-    "build-contracts": "sol-merger './contracts/*.sol' ./build"
+    "build-contracts": "sol-merger './contracts/*.sol' ./build",
+    "solgraph": "solgraph contracts/Conference.sol  > doc/Conference.dot && dot -Tpng doc/Conference.dot -o doc/Conference.png"
   },
   "repository": {
     "type": "git",
@@ -103,6 +104,7 @@
     "react-dev-utils": "^0.2.1",
     "recursive-readdir": "2.1.0",
     "rimraf": "2.5.4",
+    "solgraph": "^0.3.2",
     "solidity-coverage": "^0.5.5",
     "solium": "^1.1.7",
     "strip-ansi": "3.0.1",
