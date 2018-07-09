@@ -21,7 +21,7 @@ contract('Conference', function(accounts) {
     deposit = (await conference.deposit.call()).toNumber();
   })
 
-  describe.only('on changeName', function(){
+  describe('on changeName', function(){
     it('owner can rename the event', async function(){
       await conference.changeName('new name', {from:owner});
       assert.strictEqual((await conference.name.call()), 'new name');
@@ -29,6 +29,12 @@ contract('Conference', function(accounts) {
 
     it('non owner cannot rename the event', async function(){
       await conference.changeName('new name', {from:non_owner}).catch(function(){});
+      assert.notEqual((await conference.name.call()), 'new name');
+    })
+
+    it('cannot rename the event once someone registered', async function(){
+      await conference.register(twitterHandle, {value:deposit});
+      await conference.changeName('new name', {from:owner}).catch(function(){});
       assert.notEqual((await conference.name.call()), 'new name');
     })
   })
