@@ -18,7 +18,6 @@ contract Conference is Destructible, GroupAdmin {
 
     mapping (address => Participant) public participants;
     mapping (uint => address) public participantsIndex;
-    bool paid;
 
     struct Participant {
         string participantName;
