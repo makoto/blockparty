@@ -7,6 +7,10 @@ This is a self-audit result of version [0.8.4](https://github.com/makoto/blockpa
 - Chapter 3: Static analysis
 - Chapter 4: Manual analysis
 
+## Disclaimer
+
+This self-audit is very subjective so please do not fully rely on the result of this report to assess the safety of the contract. The intention of this report is to give enough context to other smart contract developers so that they can look into the source code on their own critical eyes. If you find any critical vulnerabilities, please raise [a new issue](https://github.com/makoto/blockparty/issues/new) tagging `security` and `bug`.
+
 ## Chapter 1: About this contract
 
 BlockParty is an event management smart contract. You pay a small deposit when you register. You lose your deposit if you do not turn up. You will get your deposit back + we split the deposit of whom did not turn up.
