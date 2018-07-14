@@ -195,9 +195,10 @@ class FormInput extends React.Component {
       }else{
         if (this.state.detail.encryption && this.showRegister()) {
           var encryptionField =  <TextField
-                      floatingLabelText="Full name (to be encrypted)"
+                      floatingLabelText="Full name * (to be encrypted)"
                       floatingLabelFixed={true}
                       value={this.state.full_name}
+                      hintText="Full name (required)"
                       onChange={this.handleEncryptedField.bind(this)}
                       style={{margin:'0 5px'}}
           />
@@ -222,8 +223,8 @@ class FormInput extends React.Component {
 
     if (this.showRegister()) {
       var nameField = <TextField
-        hintText="@twitter_handle"
-        floatingLabelText="Twitter handle"
+        hintText="@twitter_handle (required)"
+        floatingLabelText="Twitter handle *"
         floatingLabelFixed={true}
         value={this.state.name}
         onChange={this.handleName.bind(this)}
