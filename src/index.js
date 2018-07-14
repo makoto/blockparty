@@ -20,6 +20,7 @@ import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
+import ENS from 'ethereum-ens';
 import $ from 'jquery';
 
 function setup(){
@@ -92,6 +93,8 @@ window.onload = function() {
     let contract, contractAddress;
     Conference.setProvider(provider);
     Conference.setNetwork(network_id);
+    window.ens = new ENS(provider);    
+
     try {
       if (network_obj.contract_addresses['Conference']) {
         contract = Conference.at(network_obj.contract_addresses['Conference']);
@@ -198,27 +201,36 @@ window.onload = function() {
           for (var i = 1; i <= value.toNumber(); i++) {
             participantsArray.push(i);
           }
-          Promise.all(participantsArray.map(index => {
-            return instance.participantsIndex.call(index).then(address => {
-              return instance.participants.call(address);
-            })
-          })).then(function(participants){
-            return participants.map(participant => {
-              var object =  {
-                name: participant[0],
-                address: participant[1],
-                attended: participant[2],
-                paid: participant[3]
-              }
-              return object
-            })
-          }).then(participants => {
-            if(participants) {
-              eventEmitter.emit('participants_updated', participants);
-              window.participants = participants.length;
-              callback(participants);
-            }
-          })
+          return Promise.all(participantsArray.map(index => {
+            let object;
+            return instance.participantsIndex.call(index)
+              .then(address => {
+                return instance.participants.call(address);
+              })
+              .then((participant)=>{
+                object = {
+                  name: participant[0],
+                  address: participant[1],
+                  attended: participant[2],
+                  paid: participant[3]
+                }
+                // return object;
+                return window.ens.reverse(participant[1]).name()
+              })
+              .then((name)=>{
+                object.ensname = name;
+              })
+              .catch(()=>{}) // ignore if ENS does not resolve.
+              .then(()=>{
+                return object;
+              })
+          }))
+        }).then(participants => {
+          if(participants) {
+            eventEmitter.emit('participants_updated', participants);
+            window.participants = participants.length;
+            callback(participants);
+          }
         })
     }
     var gas = 1000000;
