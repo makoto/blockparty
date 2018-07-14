@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import './GroupAdmin.sol';
 import './zeppelin/lifecycle/Destructible.sol';
@@ -18,7 +18,6 @@ contract Conference is Destructible, GroupAdmin {
 
     mapping (address => Participant) public participants;
     mapping (uint => address) public participantsIndex;
-    bool paid;
 
     struct Participant {
         string participantName;
