@@ -2,6 +2,15 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name:"CodeUp #29",
+    address:"0x742cd182c2e63b60ca2a13ed3095cccaac69e86c",
+    date:"Thursday, July 19, 2018 6:30 PM to 9:00 PM(UTC+1)",
+    map_url:"https://goo.gl/maps/TRC3K3Gxd6N2",
+    location_text:"Balderton Capital (The Stables, 28 Britannia St, Kings Cross, London  WC1X 9JF)",
+    description_text:"",
+    ether_price:468
+  },
+  {
     name:"Ethereum London July 2018",
     address: "0x42d8242bb174a12b8ebceb2aeba09b1b15ceb1e6",
     date:"Wednesday, July 18, 2018 6:25 PM to 9:00 PM(UTC+1)",
