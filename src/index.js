@@ -93,7 +93,7 @@ window.onload = function() {
     let contract, contractAddress;
     Conference.setProvider(provider);
     Conference.setNetwork(network_id);
-    window.ens = new ENS(provider);    
+    window.ens = new ENS(provider);
 
     try {
       if (network_obj.contract_addresses['Conference']) {
