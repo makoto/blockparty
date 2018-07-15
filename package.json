@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/makoto/blockparty#readme",
   "dependencies": {
+    "@ensdomains/ens": "github:ensdomains/ens",
     "axios": "^0.17.1",
     "babel-core": "^6.8.0",
     "babel-loader": "^6.2.4",
@@ -37,6 +38,7 @@
     "copy-webpack-plugin": "^3.0.0",
     "crypto-browserify": "^3.11.1",
     "css-loader": "^0.23.1",
+    "eth-ens-namehash": "^2.0.8",
     "ethereum-ens": "^0.7.4",
     "ethereum-input-data-decoder": "0.0.3",
     "etherscan-api": "^3.0.11",
