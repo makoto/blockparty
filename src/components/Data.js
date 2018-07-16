@@ -2,6 +2,15 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name:"ENS Hackathon 2018",
+    address:"0x742cd182c2e63b60ca2a13ed3095cccaac69e86c",
+    date:"11-12th(Sat/Sun) August 2018",
+    map_url:"https://goo.gl/maps/ywdQBuEAfns",
+    location_text:"King's college London at Strand London WC2R 2LS",
+    description_text:"Make sure you have applied via https://goo.gl/forms/jAnNEphhKFyi20eq1 filling in email detail so that we can send you any updates",
+    ether_price:453
+  },
+  {
     name:"CodeUp #29",
     address:"0x742cd182c2e63b60ca2a13ed3095cccaac69e86c",
     date:"Thursday, July 19, 2018 6:30 PM to 9:00 PM(UTC+1)",
