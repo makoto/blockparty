@@ -6,7 +6,8 @@ import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract'
-import artifacts from '../build/contracts/Conference.json'
+import artifacts from '../build/contracts/Conference.json';
+import ENSArtifacts from '../build/contracts/ENSRegistry.json';
 import ConferenceDetail from './components/ConferenceDetail';
 import FormInput from './components/FormInput';
 import Notification from './components/Notification';
@@ -90,11 +91,17 @@ window.onload = function() {
     }
     var network_obj = require('../app_config.js')[env];
     var Conference  = TruffleContract(artifacts);
+    var ENSContract = TruffleContract(ENSArtifacts);
     let contract, contractAddress;
     Conference.setProvider(provider);
     Conference.setNetwork(network_id);
-    window.ens = new ENS(provider);
-
+    ENSContract.setProvider(provider);
+    ENSContract.setNetwork(network_id);
+    if(parseInt(network_id) > 4){
+      window.ens = new ENS(provider, ENSContract.address);
+    }else{
+      window.ens = new ENS(provider);
+    }
     try {
       if (network_obj.contract_addresses['Conference']) {
         contract = Conference.at(network_obj.contract_addresses['Conference']);
@@ -214,7 +221,6 @@ window.onload = function() {
                   attended: participant[2],
                   paid: participant[3]
                 }
-                // return object;
                 return window.ens.reverse(participant[1]).name()
               })
               .then((name)=>{
