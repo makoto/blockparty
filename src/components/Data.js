@@ -7,7 +7,7 @@ let Data = [
     date:"11-12th(Sat/Sun) August 2018",
     map_url:"https://goo.gl/maps/ywdQBuEAfns",
     location_text:"King's college London at Strand London WC2R 2LS",
-    description_text:"To be qualifed for the payout, please PHYSICALLY be at the venue. No remote participation accepted.",
+    description_text:"To be qualifed for the payout, please PHYSICALLY come to the venue. No remote participation accepted.",
     ether_price:453
   },
   {
