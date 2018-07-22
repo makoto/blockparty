@@ -10,7 +10,7 @@
     "lint": "solium --dir ./contracts",
     "build": "webpack -p",
     "truffle": "./node_modules/.bin/truffle",
-    "test": " ./node_modules/.bin/truffle test --network test",
+    "test": "truffle migrate && truffle test --network test",
     "dev": "webpack-dev-server -d --inline --hot",
     "coverage": "./node_modules/.bin/solidity-coverage",
     "build-contracts": "sol-merger './contracts/*.sol' ./build"
