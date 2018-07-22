@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/makoto/blockparty#readme",
   "dependencies": {
-    "@ensdomains/ens": "github:ensdomains/ens",
+    "@ensdomains/ens": "^0.1.1",
     "axios": "^0.17.1",
     "babel-core": "^6.8.0",
     "babel-loader": "^6.2.4",
