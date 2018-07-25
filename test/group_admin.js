@@ -4,7 +4,9 @@ contract('GroupAdmin', function(accounts) {
     beforeEach(async function(){
         owner = accounts[0];
         operator = accounts[1];
-        non_operator = accounts[2];
+        another_operator = accounts[2];
+        one_more_operator = accounts[3];
+        non_operator = accounts[4];
         admin = await GroupAdmin.new();
     })
 
@@ -16,8 +18,9 @@ contract('GroupAdmin', function(accounts) {
     
     describe('on grant', function(){
         it('is added to admin', async function(){
-            await admin.grant([operator], {from:owner});
+            await admin.grant([operator, another_operator], {from:owner});
             assert.strictEqual(await admin.isAdmin.call(operator), true);
+            assert.strictEqual(await admin.isAdmin.call(another_operator), true);
             assert.strictEqual(await admin.isAdmin.call(non_operator), false);
         })
 
@@ -29,13 +32,19 @@ contract('GroupAdmin', function(accounts) {
 
     describe('on revoke', function(){
         beforeEach(async function(){
-            await admin.grant([operator], {from:owner});
+            await admin.grant([operator, another_operator, one_more_operator], {from:owner});
             assert.strictEqual(await admin.isAdmin.call(operator), true);
+            assert.strictEqual(await admin.isAdmin.call(another_operator), true);
+            assert.strictEqual(await admin.isAdmin.call(one_more_operator), true);
+            assert.strictEqual((await admin.numOfAdmins.call()).toNumber(), 3);
         })
     
         it('is revoked from admin', async function(){
-            await admin.revoke([operator], {from:owner});
+            await admin.revoke([operator, one_more_operator], {from:owner});
             assert.strictEqual(await admin.isAdmin.call(operator), false);
+            assert.strictEqual(await admin.isAdmin.call(another_operator), true);
+            assert.strictEqual(await admin.isAdmin.call(one_more_operator), false);
+            assert.strictEqual((await admin.numOfAdmins.call()).toNumber(), 1);
         })
 
         it('cannot be revoked by non owner', async function(){

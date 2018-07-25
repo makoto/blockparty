@@ -31,12 +31,12 @@ contract GroupAdmin is Ownable {
     * @param oldAdmins An array of addresses
     */
     function revoke(address[] oldAdmins) public onlyOwner{
-        for(uint i = 0; i < oldAdmins.length; i++){
-            for (uint j = 0; j < admins.length; ++i) {
-                if (admins[j] == oldAdmins[i]) {
-                    admins[j] = admins[admins.length - 1];
+        for(uint oldidx = 0; oldidx < oldAdmins.length; oldidx++){
+            for (uint idx = 0; idx < admins.length; idx++) {
+                if (admins[idx] == oldAdmins[oldidx]) {
+                    admins[idx] = admins[admins.length - 1];
                     admins.length--;
-                    emit AdminRevoked(oldAdmins[i]);
+                    emit AdminRevoked(oldAdmins[oldidx]);
                     break;
                 }
             }
