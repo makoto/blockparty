@@ -3,11 +3,11 @@
 let Data = [
   {
     name:"ENS Hackathon 2018",
-    address:"0x742cd182c2e63b60ca2a13ed3095cccaac69e86c",
+    address:"0x144db63041008faee3dde3623a54cc824f5bdd60",
     date:"11-12th(Sat/Sun) August 2018",
     map_url:"https://goo.gl/maps/ywdQBuEAfns",
     location_text:"King's college London at Strand London WC2R 2LS",
-    description_text:"To be qualifed for the payout, please PHYSICALLY be at the venue by 10am at the latest",
+    description_text:"To be qualifed for the payout, please PHYSICALLY come to the venue. No remote participation accepted.",
     ether_price:453
   },
   {

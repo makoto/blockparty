@@ -6,7 +6,8 @@ import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract'
-import artifacts from '../build/contracts/Conference.json'
+import artifacts from '../build/contracts/Conference.json';
+import ENSArtifacts from '../build/contracts/ENSRegistry.json';
 import ConferenceDetail from './components/ConferenceDetail';
 import FormInput from './components/FormInput';
 import Notification from './components/Notification';
@@ -20,6 +21,7 @@ import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
+import ENS from 'ethereum-ens';
 import $ from 'jquery';
 
 function setup(){
@@ -89,9 +91,17 @@ window.onload = function() {
     }
     var network_obj = require('../app_config.js')[env];
     var Conference  = TruffleContract(artifacts);
+    var ENSContract = TruffleContract(ENSArtifacts);
     let contract, contractAddress;
     Conference.setProvider(provider);
     Conference.setNetwork(network_id);
+    ENSContract.setProvider(provider);
+    ENSContract.setNetwork(network_id);
+    if(parseInt(network_id) > 4){
+      window.ens = new ENS(provider, ENSContract.address);
+    }else{
+      window.ens = new ENS(provider);
+    }
     try {
       if (network_obj.contract_addresses['Conference']) {
         contract = Conference.at(network_obj.contract_addresses['Conference']);
@@ -198,27 +208,35 @@ window.onload = function() {
           for (var i = 1; i <= value.toNumber(); i++) {
             participantsArray.push(i);
           }
-          Promise.all(participantsArray.map(index => {
-            return instance.participantsIndex.call(index).then(address => {
-              return instance.participants.call(address);
-            })
-          })).then(function(participants){
-            return participants.map(participant => {
-              var object =  {
-                name: participant[0],
-                address: participant[1],
-                attended: participant[2],
-                paid: participant[3]
-              }
-              return object
-            })
-          }).then(participants => {
-            if(participants) {
-              eventEmitter.emit('participants_updated', participants);
-              window.participants = participants.length;
-              callback(participants);
-            }
-          })
+          return Promise.all(participantsArray.map(index => {
+            let object;
+            return instance.participantsIndex.call(index)
+              .then(address => {
+                return instance.participants.call(address);
+              })
+              .then((participant)=>{
+                object = {
+                  name: participant[0],
+                  address: participant[1],
+                  attended: participant[2],
+                  paid: participant[3]
+                }
+                return window.ens.reverse(participant[1]).name()
+              })
+              .then((name)=>{
+                object.ensname = name;
+              })
+              .catch(()=>{}) // ignore if ENS does not resolve.
+              .then(()=>{
+                return object;
+              })
+          }))
+        }).then(participants => {
+          if(participants) {
+            eventEmitter.emit('participants_updated', participants);
+            window.participants = participants.length;
+            callback(participants);
+          }
         })
     }
     var gas = 1000000;

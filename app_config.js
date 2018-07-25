@@ -25,7 +25,7 @@ module.exports = {
   },
   mainnet: {
     contract_addresses:{
-      'Conference': "0x742cd182c2e63b60ca2a13ed3095cccaac69e86c"
+      'Conference': "0x144db63041008faee3dde3623a54cc824f5bdd60"
     },
     name: 'MAINNET',
     etherscan_url: 'https://etherscan.io'

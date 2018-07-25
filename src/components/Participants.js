@@ -194,8 +194,14 @@ class Participants extends React.Component {
 
         var participantAddress;
         if (this.state.etherscan_url) {
+          let display
+          if(participant.ensname){
+            display = participant.ensname;
+          }else{
+            display = participant.address.slice(0,5)
+          }
           participantAddress = (
-            (<a target='_blank' href={ `${this.state.etherscan_url}/address/${participant.address}` }>{participant.address.slice(0,5)}...</a>)
+            (<a target='_blank' href={ `${this.state.etherscan_url}/address/${participant.address}` }>{display}...</a>)
           )
         }else{
           participantAddress = (
