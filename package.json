@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/noblocknoparty/blockparty.git"
+    "url": "git+https://github.com/noblocknoparty/blockparty-contracts.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/noblocknoparty/blockparty/issues"
+    "url": "https://github.com/noblocknoparty/blockparty-contracts/issues"
   },
-  "homepage": "https://github.com/noblocknoparty/blockparty#readme",
+  "homepage": "https://github.com/noblocknoparty/blockparty-contracts#readme",
   "dependencies": {
     "@ensdomains/ens": "^0.1.1",
     "axios": "^0.17.1",
@@ -47,11 +47,5 @@
     "solium": "^1.1.7",
     "truffle-hdwallet-provider": "git+https://github.com/trufflesuite/truffle-hdwallet-provider.git#71520a2",
     "uuid": "^3.0.1"
-  },
-  "eslintConfig": {
-    "extends": "react-app",
-    "rules": {
-      "no-undef": "warn"
-    }
   }
 }
