@@ -1,12 +1,13 @@
 {
-  "name": "blockparty",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@noblocknoparty/blockparty-contracts",
+  "version": "0.9.0",
+  "description": "BlockParty smart contracts",
   "directories": {
     "doc": "doc",
     "test": "test"
   },
   "scripts": {
+    "prepublishOnly": "truffle compile && truffle networks --clean",
     "lint": "solium --dir ./contracts",
     "test": "truffle migrate && truffle test --network test",
     "coverage": "./node_modules/.bin/solidity-coverage",
