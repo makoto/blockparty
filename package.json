@@ -36,8 +36,7 @@
     "prompt": "^1.0.0",
     "sol-merger": "^0.1.2",
     "truffle": "^4.1.13",
-    "web3": "^0.20.2",
-    "yargs": "^9.0.1"
+    "web3": "^0.20.2"
   },
   "devDependencies": {
     "@digix/tempo": "^0.2.0",
@@ -47,6 +46,7 @@
     "solidity-coverage": "^0.5.5",
     "solium": "^1.1.7",
     "truffle-hdwallet-provider": "git+https://github.com/trufflesuite/truffle-hdwallet-provider.git#71520a2",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "yargs": "^9.0.1"
   }
 }
