@@ -1,19 +1,16 @@
-sudo: required
-dist: trusty
 language: node_js
-node_js:
-  - '7'
+node_js: lts/*
+cache: yarn
 install:
-  - npm install -g truffle
-  - npm install -g ethereumjs-testrpc
-  - npm install
-env:
-  - TASK=test
-  - TASK=lint
-script:
-  - npm run $TASK
+  - npm i -g truffle
+  - npm i -g ganache-cli
 before_script:
-  - testrpc -a 303 > /dev/null &
+  - ganache-cli --accounts 500
   - sleep 5
+script:
+  - yarn test
 after_script:
-  - npm run coverage && cat coverage/lcov.info | coveralls
+  - yarn coverage && cat coverage/lcov.info | coveralls
+notifications:
+  email:
+    - dev-notifications@noblockno.party

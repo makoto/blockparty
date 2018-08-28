@@ -10,7 +10,7 @@
     "prepublishOnly": "truffle compile && truffle networks --clean",
     "lint": "solium --dir ./contracts",
     "test": "truffle migrate && truffle test --network test",
-    "coverage": "./node_modules/.bin/solidity-coverage",
+    "coverage": "solidity-coverage",
     "build-contracts": "sol-merger './contracts/*.sol' ./build",
     "solgraph": "solgraph contracts/Conference.sol  > doc/Conference.dot && dot -Tpng doc/Conference.dot -o doc/Conference.png"
   },
