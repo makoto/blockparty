@@ -2,16 +2,18 @@ language: node_js
 git:
   depth: 1
 node_js: lts/*
+cache: yarn
 install:
-  - npm i -g truffle
-  - npm i -g ganache-cli
+  - yarn global add truffle
+  - yarn global add ganache-cli
+  - yarn
 before_script:
   - ganache-cli --accounts 500 >ganache.log 2>&1 &
   - sleep 5
 script:
-  - npm run test
+  - yarn test
 after_script:
-  - npm run coverage && cat coverage/lcov.info | coveralls
+  - yarn coverage && cat coverage/lcov.info | coveralls
 notifications:
   email:
     - dev-notifications@noblockno.party
