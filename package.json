@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/noblocknoparty/blockparty-contracts#readme",
   "dependencies": {
-    "@ensdomains/ens": "^0.1.1",
     "axios": "^0.17.1",
     "babel-polyfill": "^6.23.0",
     "eth-ens-namehash": "^2.0.8",
