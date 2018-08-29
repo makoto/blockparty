@@ -1,4 +1,3 @@
-const namehash = require('eth-ens-namehash');
 const Conference = artifacts.require("./Conference.sol");
 const coolingPeriod = 1 * 60 * 60 * 24 * 7;
 // this is already required by truffle;

@@ -10,7 +10,7 @@
     "prepublishOnly": "truffle compile && truffle networks --clean",
     "lint": "solium --dir ./contracts",
     "test": "truffle migrate && truffle test --network test",
-    "coverage": "./node_modules/.bin/solidity-coverage",
+    "coverage": "solidity-coverage",
     "build-contracts": "sol-merger './contracts/*.sol' ./build",
     "solgraph": "solgraph contracts/Conference.sol  > doc/Conference.dot && dot -Tpng doc/Conference.dot -o doc/Conference.png"
   },
@@ -27,16 +27,13 @@
   "dependencies": {
     "axios": "^0.17.1",
     "babel-polyfill": "^6.23.0",
-    "eth-ens-namehash": "^2.0.8",
-    "ethereum-ens": "^0.7.4",
     "ethereum-input-data-decoder": "0.0.3",
     "etherscan-api": "^3.0.11",
     "moment": "^2.18.1",
     "prompt": "^1.0.0",
     "sol-merger": "^0.1.2",
     "truffle": "^4.1.13",
-    "web3": "^0.20.2",
-    "yargs": "^9.0.1"
+    "web3": "^0.20.2"
   },
   "devDependencies": {
     "@digix/tempo": "^0.2.0",
@@ -46,6 +43,7 @@
     "solidity-coverage": "^0.5.5",
     "solium": "^1.1.7",
     "truffle-hdwallet-provider": "git+https://github.com/trufflesuite/truffle-hdwallet-provider.git#71520a2",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "yargs": "^9.0.1"
   }
 }
