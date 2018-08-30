@@ -26,7 +26,7 @@ contract ERC20Conference is AbstractConference {
     }
 
     function doDeposit(address participant, uint amount) internal {
-        token.transferFrom(participant, amount);
+        token.transferFrom(participant, address(this), amount);
     }
 
 }
