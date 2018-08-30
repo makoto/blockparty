@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/makoto/blockparty.svg?branch=master)](https://travis-ci.org/makoto/blockparty)
-[![Coverage Status](https://coveralls.io/repos/github/makoto/blockparty/badge.svg?branch=master)](https://coveralls.io/github/makoto/blockparty?branch=master)
+[![Build Status](https://api.travis-ci.org/noblocknoparty/blockparty-contracts.svg?branch=master)](https://travis-ci.org/noblocknoparty/blockparty-contracts)
+[![Coverage Status](https://coveralls.io/repos/github/noblocknoparty/blockparty-contracts/badge.svg?branch=master)](https://coveralls.io/github/noblocknoparty/blockparty-contracts?branch=master)
 
 <h2>What is this?</h2>
 
@@ -96,7 +96,7 @@
 
 ## Hacking guide
 
-If you are interested in contributing to blockparty, have a look into ["help wanted" tag on Github issues](https://github.com/makoto/blockparty/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22). They are relatively easy and does not require so much application specific knowledges.
+If you are interested in contributing to blockparty, have a look into ["help wanted" tag on Github issues](https://github.com/noblocknoparty/blockparty-contracts/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22). They are relatively easy and does not require so much application specific knowledges.
 
 ### Prerequisite
 
@@ -172,4 +172,3 @@ For `ropsten` and `mainnet` it now deploys via Infura. Pass the extra to set dep
 ```
 
 NOTE: `ropsten` and `mainnet` uses different gasPrice. Check `truffle.js` file and `scripts/util/set_gas.js` for the detail.
-

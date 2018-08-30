@@ -8,5 +8,4 @@ interface Conference {
     event WithdrawEvent(address addr, uint256 _payout);
     event CancelEvent();
     event ClearEvent(address addr, uint256 leftOver);
-
 }
