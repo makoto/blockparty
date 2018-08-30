@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
-import './GroupAdmin.sol';
-import './zeppelin/lifecycle/Destructible.sol';
+import "./GroupAdmin.sol";
+import "./zeppelin/lifecycle/Destructible.sol";
 
 contract Conference is Destructible, GroupAdmin {    
     string public name;
@@ -68,7 +68,7 @@ contract Conference is Destructible, GroupAdmin {
         if (bytes(_name).length != 0){
             name = _name;
         } else {
-            name = 'Test';
+            name = "Test";
         }
 
         if(_deposit != 0){
@@ -110,7 +110,7 @@ contract Conference is Destructible, GroupAdmin {
      */
     function register(string _participant) external payable onlyActive{
         registerInternal(_participant);
-        emit RegisterEvent(msg.sender, _participant, '');
+        emit RegisterEvent(msg.sender, _participant, "");
     }
 
     /**
@@ -238,7 +238,7 @@ contract Conference is Destructible, GroupAdmin {
 
     /**
      * @dev Mark participants as attended. The attendance cannot be undone.
-     * @param _addresses The list of participant's address.
+     * @param _addresses The list of participant"s address.
      */
     function attend(address[] _addresses) external onlyAdmin onlyActive{
         for( uint i = 0; i < _addresses.length; i++){
