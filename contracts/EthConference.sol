@@ -4,7 +4,6 @@ import "./AbstractConference.sol";
 
 contract EthConference is AbstractConference {
 
-
     function doWithdraw(address participant, uint amount) internal {
         participant.transfer(payoutAmount);
     }
