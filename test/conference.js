@@ -1,5 +1,5 @@
 require('babel-polyfill');
-const Conference = artifacts.require("Conference.sol");
+const Conference = artifacts.require("EthConference.sol");
 const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const twitterHandle = '@bighero6';
@@ -17,8 +17,25 @@ contract('Conference', function(accounts) {
   let conference, deposit;
 
   beforeEach(async function(){
-    conference = await Conference.new('', 0, 0, 0, '');
+    conference = await Conference.new('', 0, 0, 0, '', '0');
     deposit = (await conference.deposit.call()).toNumber();
+  })
+
+  describe('can override owner', function() {
+    it('unless given address is empty', async () => {
+      conference = await Conference.new('', 0, 0, 0, '', '0');
+
+      assert.strictEqual((await conference.owner.call()), owner);
+    })
+
+    it('if given address is valid', async () => {
+      conference = await Conference.new('', 0, 0, 0, '', non_owner);
+
+      assert.strictEqual((await conference.owner.call()), non_owner);
+
+      await conference.changeName('new name', {from:owner}).catch(function(){});
+      assert.notEqual((await conference.name.call()), 'new name');
+    })
   })
 
   describe('on changeName', function(){
@@ -75,7 +92,7 @@ contract('Conference', function(accounts) {
     })
 
     it('can set config values', async function(){
-      conference = await Conference.new('Test 1', parseInt(web3.toWei(2, "ether")), 100, 2, 'public key');
+      conference = await Conference.new('Test 1', parseInt(web3.toWei(2, "ether")), 100, 2, 'public key', '0');
       assert.strictEqual(await conference.name.call(), 'Test 1');
       assert.strictEqual((await conference.deposit.call()).toString(), web3.toWei(2, "ether"));
       assert.strictEqual((await conference.limitOfParticipants.call()).toNumber(), 100);
@@ -336,12 +353,12 @@ contract('Conference', function(accounts) {
     })
 
     it('cooling period can be set', async function(){
-      conference = await Conference.new('', 0, 0, 10, '');
+      conference = await Conference.new('', 0, 0, 10, '', '0');
       assert.equal((await conference.coolingPeriod.call()).toNumber(), 10);
     })
 
     it('cannot be cleared by non owner', async function(){
-      conference = await Conference.new('', 0, 0, 10, '');
+      conference = await Conference.new('', 0, 0, 10, '', '0');
       deposit = (await conference.deposit.call()).toNumber();
       await conference.register('one', {value:deposit});
       assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit);
@@ -367,7 +384,7 @@ contract('Conference', function(accounts) {
 
     it('owner receives the remaining if cooling period is passed', async function(){
       let tempo = await new Tempo(web3);
-      conference = await Conference.new('', 0, 0, 1, '')
+      conference = await Conference.new('', 0, 0, 1, '', '0')
       deposit = (await conference.deposit.call()).toNumber();
 
       await conference.register('one', {value:deposit});
