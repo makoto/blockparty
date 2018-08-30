@@ -112,7 +112,8 @@ contract AbstractConference is Conference, Destructible, GroupAdmin {
      * @param _participant The twitter address of the participant
      */
     function registerInternal(string _participant) internal {
-        require(msg.value == deposit);
+        doDeposit(msg.sender, deposit);
+
         require(registered < limitOfParticipants);
         require(!isRegistered(msg.sender));
 
@@ -248,4 +249,5 @@ contract AbstractConference is Conference, Destructible, GroupAdmin {
     }
 
     function doWithdraw(address participant, uint amount) internal;
+    function doDeposit(address participant, uint amount) internal;
 }

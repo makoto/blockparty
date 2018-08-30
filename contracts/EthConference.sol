@@ -8,4 +8,8 @@ contract EthConference is AbstractConference {
     function doWithdraw(address participant, uint amount) internal {
         participant.transfer(payoutAmount);
     }
+
+    function doDeposit(address, uint amount) internal {
+        require(msg.value == amount);
+    }
 }
