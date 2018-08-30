@@ -1,5 +1,5 @@
 require('babel-polyfill');
-const Conference = artifacts.require("Conference.sol");
+const Conference = artifacts.require("EthConference.sol");
 const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const twitterHandle = '@bighero6';
