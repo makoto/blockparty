@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 import './GroupAdmin.sol';
 import './zeppelin/lifecycle/Destructible.sol';
 
-contract Conference is Destructible, GroupAdmin {    
+contract Conference is Destructible, GroupAdmin {
     string public name;
     uint256 public deposit;
     uint public limitOfParticipants;
@@ -57,14 +57,20 @@ contract Conference is Destructible, GroupAdmin {
      * @param _limitOfParticipants The number of participant. The default is set to 20. The number can be changed by the owner of the event.
      * @param _coolingPeriod The period participants should withdraw their deposit after the event ends. After the cooling period, the event owner can claim the remining deposits.
      * @param _encryption A pubic key. The admin can use this public key to encrypt pariticipant username which is stored in event. The admin can later decrypt the name using his/her private key.
+     * @param _owner Who the owner of this contract should be
      */
     constructor (
         string _name,
         uint256 _deposit,
         uint _limitOfParticipants,
         uint _coolingPeriod,
-        string _encryption
+        string _encryption,
+        address _owner
     ) public {
+        if (_owner != address(0)) {
+            owner = _owner;
+        }
+
         if (bytes(_name).length != 0){
             name = _name;
         } else {

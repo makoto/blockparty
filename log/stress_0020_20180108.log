@@ -1,7 +1,0 @@
-type             	gasUsed       	gasPrice	1ETH*GBP	gasUsed*gasPrice(Ether)	gasUsed*gasPrice(GBP)
-create   		2393192		20		880		0.04786384		42.120179199999995
-addConfirmation		697359		20		880		0.01394718		12.2735184
-register		119911		20		880		0.00239822		2.1104336
-batchAttend  		329071		20		880		0.00658142		5.7916496
-payback 		84759		20		880		0.00169518		1.4917584
-withdraw		38156		20		880		0.00076312		0.6715456000000001
