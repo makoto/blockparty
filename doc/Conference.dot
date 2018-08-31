@@ -1,10 +1,9 @@
 strict digraph {
   constructor
-  registerWithEncryption [color=lilac]
+  registerWithEncryption [color=brown]
   registerInternal [color=gray]
   RegisterEvent
-  register [color=lilac]
-  require
+  register [color=brown]
   withdraw [color=purple]
   transfer
   WithdrawEvent
@@ -27,16 +26,12 @@ strict digraph {
   registerWithEncryption -> RegisterEvent
   register -> registerInternal
   register -> RegisterEvent
-  registerInternal -> require
-  withdraw -> require
   withdraw -> transfer
   withdraw -> WithdrawEvent
   payback -> PaybackEvent
   cancel -> CancelEvent
-  clear -> require
   clear -> transfer
   clear -> ClearEvent
-  attend -> require
   attend -> AttendEvent
 }
 
