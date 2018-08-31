@@ -4,7 +4,6 @@ git:
 node_js: lts/*
 cache: yarn
 install:
-  - yarn global add truffle
   - yarn global add ganache-cli
   - yarn
 before_script:
@@ -13,7 +12,6 @@ before_script:
 script:
   - yarn lint
   - yarn test
-after_script:
   - yarn coverage && cat coverage/lcov.info | coveralls
 notifications:
   email:

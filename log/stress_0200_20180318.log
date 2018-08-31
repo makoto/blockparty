@@ -1,6 +1,0 @@
-type             	gasUsed       	gasPrice	1ETH*USD	gasUsed*gasPrice(Ether)	gasUsed*gasPrice(USD)
-create   		2061895		1		969		0.002061895		1.9979762549999998
-register		119364		1		969		0.000119364		0.115663716
-batchAttend  		2947830		1		969		0.00294783		2.85644727
-payback 		84715		1		969		0.000084715		0.082088835
-withdraw		38134		1		969		0.000038134		0.036951845999999997

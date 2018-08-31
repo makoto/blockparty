@@ -1,5 +1,3 @@
-require('babel-polyfill');
-
 const moment = require('moment');
 const fs = require('fs');
 const Conference = artifacts.require("Conference.sol");

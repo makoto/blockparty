@@ -1,6 +1,7 @@
 const GroupAdmin = artifacts.require("GroupAdmin.sol");
 contract('GroupAdmin', function(accounts) {
-    let admin, operator, owner;
+    let admin, operator, owner, another_operator, one_more_operator, non_operator;
+
     beforeEach(async function(){
         owner = accounts[0];
         operator = accounts[1];
@@ -15,7 +16,7 @@ contract('GroupAdmin', function(accounts) {
             assert.strictEqual(await admin.isAdmin.call(owner), true);
         })
     })
-    
+
     describe('on grant', function(){
         it('is added to admin', async function(){
             await admin.grant([operator, another_operator], {from:owner});
@@ -38,7 +39,7 @@ contract('GroupAdmin', function(accounts) {
             assert.strictEqual(await admin.isAdmin.call(one_more_operator), true);
             assert.strictEqual((await admin.numOfAdmins.call()).toNumber(), 3);
         })
-    
+
         it('is revoked from admin', async function(){
             await admin.revoke([operator, one_more_operator], {from:owner});
             assert.strictEqual(await admin.isAdmin.call(operator), false);

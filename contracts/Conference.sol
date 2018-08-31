@@ -35,17 +35,17 @@ contract Conference is Destructible, GroupAdmin {
 
     /* Modifiers */
     modifier onlyActive {
-        require(!ended);
+        require(!ended, 'already ended');
         _;
     }
 
     modifier noOneRegistered {
-        require(registered == 0);
+        require(registered == 0, 'people have already registered');
         _;
     }
 
     modifier onlyEnded {
-        require(ended);
+        require(ended, 'not yet ended');
         _;
     }
 
@@ -124,9 +124,9 @@ contract Conference is Destructible, GroupAdmin {
      * @param _participant The twitter address of the participant
      */
     function registerInternal(string _participant) internal {
-        require(msg.value == deposit);
-        require(registered < limitOfParticipants);
-        require(!isRegistered(msg.sender));
+        require(msg.value == deposit, 'must send exact deposit amount');
+        require(registered < limitOfParticipants, 'participant limit reached');
+        require(!isRegistered(msg.sender), 'already registered');
 
         registered++;
         participantsIndex[registered] = msg.sender;
@@ -137,11 +137,11 @@ contract Conference is Destructible, GroupAdmin {
      * @dev Withdraws deposit after the event is over.
      */
     function withdraw() external onlyEnded{
-        require(payoutAmount > 0);
+        require(payoutAmount > 0, 'payout is 0');
         Participant participant = participants[msg.sender];
-        require(participant.addr == msg.sender);
-        require(cancelled || participant.attended);
-        require(participant.paid == false);
+        require(participant.addr == msg.sender, 'forbidden access');
+        require(cancelled || participant.attended, 'event still active or you did not attend');
+        require(participant.paid == false, 'already withdrawn');
 
         participant.paid = true;
         participant.addr.transfer(payoutAmount);
@@ -153,7 +153,7 @@ contract Conference is Destructible, GroupAdmin {
      * @dev Returns total balance of the contract. This function can be deprecated when refactroing front end code.
      * @return The total balance of the contract.
      */
-    function totalBalance() view public returns (uint256){
+    function totalBalance() public view returns (uint256){
         return address(this).balance;
     }
 
@@ -162,7 +162,7 @@ contract Conference is Destructible, GroupAdmin {
      * @param _addr The address of a participant.
      * @return True if the address exists in the pariticipant list.
      */
-    function isRegistered(address _addr) view public returns (bool){
+    function isRegistered(address _addr) public view returns (bool){
         return participants[_addr].addr != address(0);
     }
 
@@ -171,7 +171,7 @@ contract Conference is Destructible, GroupAdmin {
      * @param _addr The address of a participant.
      * @return True if the user is marked as attended by admin.
      */
-    function isAttended(address _addr) view public returns (bool){
+    function isAttended(address _addr) public view returns (bool){
         return isRegistered(_addr) && participants[_addr].attended;
     }
 
@@ -180,7 +180,7 @@ contract Conference is Destructible, GroupAdmin {
      * @param _addr The address of a participant.
      * @return True if the attendee has withdrawn his/her deposit.
      */
-    function isPaid(address _addr) view public returns (bool){
+    function isPaid(address _addr) public view returns (bool){
         return isRegistered(_addr) && participants[_addr].paid;
     }
 
@@ -188,7 +188,7 @@ contract Conference is Destructible, GroupAdmin {
      * @dev Show the payout amount each participant can withdraw.
      * @return The amount each participant can withdraw.
      */
-    function payout() view public returns(uint256){
+    function payout() public view returns(uint256){
         if (attended == 0) return 0;
         return uint(totalBalance()) / uint(attended);
     }
@@ -220,7 +220,7 @@ contract Conference is Destructible, GroupAdmin {
     * @dev The event owner transfer the outstanding deposits  if there are any unclaimed deposits after cooling period
     */
     function clear() external onlyOwner onlyEnded{
-        require(now > endedAt + coolingPeriod);
+        require(now > endedAt + coolingPeriod, 'still in cooling period');
         uint leftOver = totalBalance();
         owner.transfer(leftOver);
         emit ClearEvent(owner, leftOver);
@@ -249,8 +249,8 @@ contract Conference is Destructible, GroupAdmin {
     function attend(address[] _addresses) external onlyAdmin onlyActive{
         for( uint i = 0; i < _addresses.length; i++){
             address _addr = _addresses[i];
-            require(isRegistered(_addr));
-            require(!isAttended(_addr));
+            require(isRegistered(_addr), 'not registered to attend');
+            require(!isAttended(_addr), 'already marked as attended');
             emit AttendEvent(_addr);
             participants[_addr].attended = true;
             attended++;

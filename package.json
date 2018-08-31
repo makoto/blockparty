@@ -1,17 +1,22 @@
 {
   "name": "@noblocknoparty/blockparty-contracts",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "BlockParty smart contracts",
   "directories": {
     "doc": "doc",
     "test": "test"
   },
+  "files": [
+    "build/**",
+    "contracts/**"
+  ],
   "scripts": {
-    "prepublishOnly": "truffle compile && truffle networks --clean",
+    "truffle": "babel-node node_modules/.bin/truffle",
+    "prepublishOnly": "yarn truffle compile && yarn truffle networks --clean",
     "lint": "solium --dir ./contracts",
-    "test": "truffle migrate && truffle test --network test",
+    "test": "yarn truffle migrate && yarn truffle test --network test",
     "coverage": "solidity-coverage",
-    "build-contracts": "sol-merger './contracts/*.sol' ./build",
+    "sol-merger": "sol-merger './contracts/*.sol' ./build",
     "solgraph": "solgraph contracts/Conference.sol  > doc/Conference.dot && dot -Tpng doc/Conference.dot -o doc/Conference.png"
   },
   "repository": {
@@ -24,19 +29,18 @@
     "url": "https://github.com/noblocknoparty/blockparty-contracts/issues"
   },
   "homepage": "https://github.com/noblocknoparty/blockparty-contracts#readme",
-  "dependencies": {
+  "devDependencies": {
     "axios": "^0.17.1",
-    "babel-polyfill": "^6.23.0",
     "ethereum-input-data-decoder": "0.0.3",
     "etherscan-api": "^3.0.11",
     "moment": "^2.18.1",
     "prompt": "^1.0.0",
     "sol-merger": "^0.1.2",
     "truffle": "^4.1.13",
-    "web3": "^0.20.2"
-  },
-  "devDependencies": {
+    "web3": "^0.20.2",
     "@digix/tempo": "^0.2.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "coveralls": "^3.0.2",
     "eth-gas-reporter": "^0.1.9",
     "solgraph": "^0.3.2",

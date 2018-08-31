@@ -1,7 +1,6 @@
 build
 build*
 npm-debug.log
-package-lock.json
 node_modules
 yarn-error.log
 .DS_Store
@@ -12,3 +11,4 @@ coverage
 coverageEnv
 coverage.json
 tmp
+log/*.log

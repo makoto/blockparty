@@ -1,4 +1,4 @@
 module.exports = {
-  testCommand: 'truffle test --network coverage test/conference.js test/group_admin.js test/encryption.js',
+  testCommand: '../node_modules/.bin/babel-node ../node_modules/.bin/truffle test --network coverage test/conference.js test/group_admin.js test/encryption.js',
   skipFiles: ['zeppelin/lifecycle/Destructible.sol','zeppelin/ownership/Ownable.sol']
 };

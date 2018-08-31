@@ -11,7 +11,7 @@ contract GroupAdmin is Ownable {
     address[] public admins;
 
     modifier onlyAdmin() {
-        require(isAdmin(msg.sender));
+        require(isAdmin(msg.sender), 'must be admin');
         _;
     }
 
@@ -47,7 +47,7 @@ contract GroupAdmin is Ownable {
     * @dev Returns admin addresses
     * @return Admin addresses
     */
-    function getAdmins() view public returns(address[]){
+    function getAdmins() public view returns(address[]){
         // todo: include owner;
         return admins;
     }
@@ -56,7 +56,7 @@ contract GroupAdmin is Ownable {
     * @dev Returns number of admings.
     * @return Number of admings.
     */
-    function numOfAdmins() view public returns(uint){
+    function numOfAdmins() public view returns(uint){
         return admins.length;
     }
 
