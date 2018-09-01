@@ -1,10 +1,17 @@
+import { toWei, fromWei, toBN } from 'web3-utils'
+
 const moment = require('moment');
 const fs = require('fs');
 const Conference = artifacts.require("Conference.sol");
 
 const Tempo = require('@digix/tempo');
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
-const gasPrice = web3.toWei(1, 'gwei');
+
+
+const { getBalance, mulBN } = require('./utils')
+
+
+const gasPrice = toWei('1', 'gwei');
 const usd = 468;
 let deposit, conference;
 let trx,trx2, gasUsed, gasUsed2, result, trxReceipt;
@@ -15,17 +22,21 @@ const pad = function(n, width, z) {
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 };
 
-const getTransaction = function(type, transactionHash){
-  trx = web3.eth.getTransaction(transactionHash)
-  trxReceipt = web3.eth.getTransactionReceipt(transactionHash)
-  gasUsed = trxReceipt.gasUsed * trx.gasPrice;
+const getTransaction = async function(type, transactionHash){
+  trx = await web3.eth.getTransaction(transactionHash)
+  trxReceipt = await web3.eth.getTransactionReceipt(transactionHash)
+
+  const gasPrice = toBN(trx.gasPrice)
+  const gasUsed = toBN(trxReceipt.gasUsed)
+  const gasTotal = gasUsed.mul(gasPrice)
+
   result = {
     'type             ': type,
-    'gasUsed       ': trxReceipt.gasUsed,
-    'gasPrice': web3.fromWei(trx.gasPrice.toNumber(),'gwei'),
+    'gasUsed       ': gasUsed,
+    'gasPrice': fromWei(gasPrice,'gwei'),
     '1ETH*USD': usd,
-    'gasUsed*gasPrice(Ether)': web3.fromWei(gasUsed,'ether'),
-    'gasUsed*gasPrice(USD)': web3.fromWei(gasUsed,'ether') * usd,
+    'gasUsed*gasPrice(Ether)': fromWei(gasTotal,'ether'),
+    'gasUsed*gasPrice(USD)': fromWei(gasTotal,'ether') * usd,
   }
   return result;
 }
@@ -39,9 +50,9 @@ const reportTest = async function (participants, accounts){
   const transactions = [];
   const encrypted_codes = [];
   const owner = accounts[0];
-  conference = await Conference.new('Test', 0, participants, 0, '', '0', {gasPrice:gasPrice});
-  transactions.push(getTransaction('create   ', conference.transactionHash))
-  deposit = (await conference.deposit.call()).toNumber();
+  conference = await Conference.new('Test', '0', participants, '0', '', '0x0', {gasPrice:gasPrice});
+  transactions.push(await getTransaction('create   ', conference.transactionHash))
+  deposit = await conference.deposit()
 
   for (var i = 0; i < participants; i++) {
     var registerTrx = await conference.register('test', {from:accounts[i], value:deposit, gasPrice:gasPrice});
@@ -49,22 +60,22 @@ const reportTest = async function (participants, accounts){
       console.log('register', i)
     }
     if (i == 0) {
-      transactions.push(getTransaction('register', registerTrx.tx))
+      transactions.push(await getTransaction('register', registerTrx.tx))
     }
     addresses.push(accounts[i]);
   }
   var attendTrx = await conference.attend(addresses, {from:owner, gasPrice:gasPrice});
-  transactions.push(getTransaction('batchAttend  ', attendTrx.tx))
+  transactions.push(await getTransaction('batchAttend  ', attendTrx.tx))
 
-  assert.strictEqual((await conference.registered.call()).toNumber(), participants);
-  assert.strictEqual(web3.eth.getBalance(conference.address).toNumber(), deposit * participants)
+  await conference.registered().should.eventually.eq(participants)
+  await getBalance(conference.address).should.eventually.eq( mulBN(deposit, participants) )
 
   trx = await conference.payback({from:owner, gasPrice:gasPrice});
   transactions.push(getTransaction('payback ', trx.tx))
   for (var i = 0; i < participants; i++) {
     trx = await conference.withdraw({from:accounts[i], gasPrice:gasPrice});
     if (i == 0) {
-      transactions.push(getTransaction('withdraw', trx.tx))
+      transactions.push(await getTransaction('withdraw', trx.tx))
     }
   }
   var header = Object.keys(transactions[0]).join("\t");

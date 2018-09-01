@@ -12,3 +12,4 @@ coverageEnv
 coverage.json
 tmp
 log/*.log
+.deployment.js

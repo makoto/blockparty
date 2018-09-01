@@ -1,48 +1,44 @@
 const Conference = artifacts.require("Conference.sol");
 
-let deposit, conference;
 let twitterOne = '@twitter1';
-var crypto = require('crypto');
-var fs = require('fs');
+const crypto = require('crypto');
+const fs = require('fs');
 
-const getTransaction = function(type, transactionHash){
-  let trxReceipt = web3.eth.getTransactionReceipt(transactionHash)
-  return [type, trxReceipt.gasUsed].join('\t');
-}
+const { getEvents } = require('./utils')
 
-function awaitEvent(event, handler) {
-  return new Promise((resolve, reject) => {
-    function wrappedHandler(...args) {
-      Promise.resolve(handler(...args)).then(resolve).catch(reject);
-    }
-    event.watch(wrappedHandler);
-  });
+let deposit, conference;
+
+const getTransaction = async (type, transactionHash) => {
+  const { gasUsed } = await web3.eth.getTransactionReceipt(transactionHash)
+  return [type, gasUsed].join('\t');
 }
 
 contract('Encryption', function(accounts) {
   describe('on registration', function(){
     it('increments registered', async function(){
-      var publicKey = fs.readFileSync('./test/fixtures/fixture_public.key', {encoding: 'ascii'});
-      var privateKey = fs.readFileSync('./test/fixtures/fixture_private.key', {encoding: 'ascii'});
-      var message = "マコト";
-      conference = await Conference.new('', 0, 0, 10, publicKey, '0');
-      var publicKeyFromContract = await conference.encryption.call();
-      var encrypted = crypto.publicEncrypt(publicKeyFromContract, new Buffer(message, 'utf-8'));
+      const publicKey = fs.readFileSync('./test/fixtures/fixture_public.key', {encoding: 'ascii'});
+      const privateKey = fs.readFileSync('./test/fixtures/fixture_private.key', {encoding: 'ascii'});
+      const message = "マコト";
 
-      console.log(getTransaction('create   ', conference.transactionHash));
-      deposit = (await conference.deposit.call()).toNumber();
+      conference = await Conference.new('', 0, 0, 10, publicKey, '0x0');
 
-      let registered = await conference.registerWithEncryption.sendTransaction(twitterOne, encrypted.toString('hex'), {value:deposit});
-      console.log(getTransaction('register   ', registered));
+      const publicKeyFromContract = await conference.encryption();
+      const encrypted = crypto.publicEncrypt(publicKeyFromContract, new Buffer(message, 'utf-8'));
+
+      console.log(await getTransaction('create   ', conference.transactionHash));
+
+      deposit = await conference.deposit()
+
+      const registered = await conference.registerWithEncryption(twitterOne, encrypted.toString('hex'), {value:deposit});
+
+      console.log(await getTransaction('register   ', registered.tx));
+
       let decrypted;
-      let event = conference.RegisterEvent({});
-      let watcher = async function(err, result) {
-        event.stopWatching();
-        if (err) { throw err; }
-        decrypted = crypto.privateDecrypt(privateKey, new Buffer(result.args._encryption, 'hex'));
-        console.log('decrypted', decrypted.toString('utf8'));
-      };
-      await awaitEvent(event, watcher);
+
+      let [ event ] = await getEvents(registered, 'RegisterEvent')
+
+      decrypted = crypto.privateDecrypt(privateKey, new Buffer(event.args._encryption, 'hex'));
+      console.log('decrypted', decrypted.toString('utf8'));
     })
   })
 })

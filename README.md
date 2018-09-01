@@ -8,7 +8,7 @@ main branch, and contains the productions versions of the contracts.
 
 # Using the contracts
 
-To use the contracts in a Dapp please install our NPM org:
+To use these contracts in a Dapp first install our NPM org:
 
 ```
 TBC
@@ -21,20 +21,31 @@ Pre-requisites:
 * [Node 8.11.4+](https://nodejs.org/)
 * [Yarn](https://yarnpkg.com)
 
-Install the deps:
+**Setup Truffle config**
+
+Copy `.deployment-sample.js` to `.deployment.js` and edit the values
+accordingly.
+
+**Install dependencies**
 
 ```
 yarn
 ```
 
-Run a local dev chain:
+**Run local chain**
 
 ```
 npx ganache-cli --accounts 500
 ```
 
-To run tests:
+**Run tests**
 
 ```
 yarn test
+```
+
+**Run coverage tests**
+
+```
+yarn coverage
 ```
