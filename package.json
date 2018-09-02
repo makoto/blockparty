@@ -1,6 +1,6 @@
 {
-  "name": "@noblocknoparty/blockparty-contracts",
-  "version": "1.0.0",
+  "name": "@noblocknoparty/contracts",
+  "version": "0.10.0",
   "description": "BlockParty smart contracts",
   "directories": {
     "doc": "doc",
@@ -21,14 +21,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/noblocknoparty/blockparty-contracts.git"
+    "url": "git+https://github.com/noblocknoparty/contracts.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/noblocknoparty/blockparty-contracts/issues"
+    "url": "https://github.com/noblocknoparty/contracts/issues"
   },
-  "homepage": "https://github.com/noblocknoparty/blockparty-contracts#readme",
+  "homepage": "https://github.com/noblocknoparty/contracts#readme",
   "devDependencies": {
     "@digix/tempo": "^0.2.0",
     "axios": "^0.17.1",

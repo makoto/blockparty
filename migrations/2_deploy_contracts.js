@@ -1,9 +1,12 @@
+const Deployer = artifacts.require("./Deployer.sol");
 const Conference = artifacts.require("./Conference.sol");
 const coolingPeriod = 1 * 60 * 60 * 24 * 7;
 // this is already required by truffle;
 const yargs = require('yargs');
 const crypto = require('crypto');
 const fs = require('fs');
+const { sha3 }  = require('web3-utils')
+
 let encryption = '';
 let config = {};
 let name = ''; // empty name falls back to the contract default
@@ -29,7 +32,7 @@ module.exports = function(deployer) {
     encryption = fs.readFileSync(config.encryption, {encoding: 'ascii'});
   }
 
-  return deployer
+  return deployer.deploy(Deployer)
     .then(() => {
       console.log([name, deposit,limitOfParticipants, coolingPeriod, encryption].join(','));
       return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, encryption, '0x0');

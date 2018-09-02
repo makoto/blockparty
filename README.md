@@ -1,7 +1,7 @@
 # Contracts
 
-[![Build Status](https://api.travis-ci.org/noblocknoparty/blockparty-contracts.svg?branch=master)](https://travis-ci.org/noblocknoparty/blockparty-contracts)
-[![Coverage Status](https://coveralls.io/repos/github/noblocknoparty/blockparty-contracts/badge.svg?branch=master)](https://coveralls.io/github/noblocknoparty/blockparty-contracts?branch=master)
+[![Build Status](https://api.travis-ci.org/noblocknoparty/contracts.svg?branch=master)](https://travis-ci.org/noblocknoparty/contracts)
+[![Coverage Status](https://coveralls.io/repos/github/noblocknoparty/contracts/badge.svg?branch=master)](https://coveralls.io/github/noblocknoparty/contracts?branch=master)
 
 This repo contains all the BlockParty contracts. The `master` branch is the
 main branch, and contains the productions versions of the contracts.
