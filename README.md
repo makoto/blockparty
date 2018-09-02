@@ -11,7 +11,7 @@ main branch, and contains the productions versions of the contracts.
 To use these contracts in a Dapp first install our NPM org:
 
 ```
-TBC
+npm i @noblocknoparty/contracts
 ```
 
 ## Dev guide
