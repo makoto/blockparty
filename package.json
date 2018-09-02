@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "truffle": "babel-node node_modules/.bin/truffle",
-    "prepublishOnly": "yarn truffle compile && yarn truffle networks --clean",
+    "prepublishOnly": "rm -rf build && yarn truffle compile && yarn truffle networks --clean",
     "lint": "solium --dir ./contracts",
     "test": "yarn truffle migrate && yarn truffle test --network test",
     "coverage": "solidity-coverage",
