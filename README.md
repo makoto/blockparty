@@ -49,3 +49,12 @@ yarn test
 ```
 yarn coverage
 ```
+
+## Release guide
+
+Releases are done automatically via CI. To create a new release:
+
+1. Increment the `version` in `package.json` as required, as part of a new or existing Pull Request.
+3. Once the approved PR has been merged, run `git tag <version>` (where `<version>` is same as in `package.json`) on the merge commit.
+5. Run `git push --tags`
+6. The CI server will now do a build and deploy to NPM.
