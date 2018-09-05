@@ -4,16 +4,27 @@ git:
 node_js: lts/*
 cache: yarn
 install:
-  - yarn global add ganache-cli
-  - yarn
+- yarn global add ganache-cli
+- yarn
 before_script:
-  - cp .deployment-sample.js .deployment.js
-  - ganache-cli --accounts 500 >ganache.log 2>&1 &
-  - sleep 5
+- cp .deployment-sample.js .deployment.js
+- ganache-cli --accounts 500 >ganache.log 2>&1 &
+- sleep 5
 script:
-  - yarn lint
-  - yarn test
-  - yarn coverage && cat coverage/lcov.info | coveralls
+- yarn lint
+- yarn test
+- yarn coverage && cat coverage/lcov.info | coveralls
 notifications:
   email:
-    - dev-notifications@noblockno.party
+  - dev-notifications@noblockno.party
+npm:
+  api_key:
+    secure: aWA7WrgrM1Czskdx4/CBdihzhTsf1zNqb/brvcKK1SdTup/1T9Pu1GWQjbxk0oEBuYsilnQadinfC7q7gJmbi6gil1HJayxKlDfIX5A7Q8ZYLyV2HmY3dSpmm0VWUsLgRL4d4BUYGihOHImZMOgC4KrOXukvhMe1i5WHo0C2O0mOxX+BFAFFnY7BwqyOhDCNemDkQsamhU/7NPJrL8EtfenQfncc6vqVsSjB/Au4LNyFrQnhAwnwkvBb7yx4UXh5OXY3sGhU1XfCuql/Ch21KWaUaQdEyJtUYVZJ/a/zvOZluse1gXAcOw0RSJeDlO6xyAgMY8907NkzVFkRtVPIpJTMVTxxy+nXeREfQrQ2ynBAqvKaOxkPt1fjEiZFTUXnFvI4MZpUh4gGqZa7oNHiWSIYH+bGJnMqBPMfxLw5ACnxcyUrDlxKksgtO1SlZQzCw8IE5RIT2rWVX8VWC+XCaRmPmULGA+7IfydaQ5USVEsSapr8mtspSq/+cLRk82fj/lP9bq1uh/hs1I/nGKyLBbVk4swbiNyDJYKJ6EYtzPY96CH1Eow3RS6h0PCTjpSAL7mZY4nWdg9J628fojR5kQbazn6OP4yBsSSKhbrTJYu29gin8UNi//10nR0LD82fzOzLAtihw9XcR+2illubfT6LO2L0JktM1txvOBsj9sg=
+deploy:
+  provider: npm
+  email: dev@noblockno.party
+  api_key:
+    secure: XtD8diLR9YQA7SPM4rS6cgDWFqgcuHU0jGToHeOhI1KVpBoGdzNTN0n/0/2yrDaOBnrNE59J2TOnj5cjmMJ9qWDpqpZvmV/35ja9dJIFGu2cmC8qBxN92hgNyJuC8uWohkCuNSuBr3DuAviy8lwnCVM2B0R0ConY1QdK4lbFcLjV0G8jdVj2bAWJ2v/R74R1ha+YxL1rhX9voABzSQI4NOgo7/9TWXKGcRYnM9kE85P+gwndAm+h+UEXyh4mdhNZFBRszIw5XA8saQaUn3/ZINB+At4QhGeg46eDDpLBYUcjp38oK3Rr5bts4jGBwdlMMHP8bWXfAhtcWoNO5nETZYsBnMna3sQW8bLjTZLDaVq6zoWkmDdxD5iEG4ynCKFDYgmDZ5nxT6gPE3cBfJHLa6r3LBkLVc4uGxutOr54xe2+D/iswzMXTS8K3ZUKovis9G7MNhayED0DZVlR/q8CG2RplVFIIm9WJyHNqmWeI1RlCGqBQf3v9NaBnDvbnHD/SPu4Ot0UIfw9BGZ7+A24enFgeiaDnKpsOobr57wQKQKSLvH5xC9bvqYzpG1JosVbnLymUhMoZ0ydPBAnVuhzq1pS8AKGuFX/3RppJeKof+VSJgmgPDvqw5V5pEP9Cy9FsgMH4akOjrG6fZhEAqJKp2ESA+RujuP2zsIYNJJN6GI=
+  on:
+    tags: true
+    repo: noblocknoparty/contracts
