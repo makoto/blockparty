@@ -22,6 +22,8 @@ npm:
   api_key:
     secure: aWA7WrgrM1Czskdx4/CBdihzhTsf1zNqb/brvcKK1SdTup/1T9Pu1GWQjbxk0oEBuYsilnQadinfC7q7gJmbi6gil1HJayxKlDfIX5A7Q8ZYLyV2HmY3dSpmm0VWUsLgRL4d4BUYGihOHImZMOgC4KrOXukvhMe1i5WHo0C2O0mOxX+BFAFFnY7BwqyOhDCNemDkQsamhU/7NPJrL8EtfenQfncc6vqVsSjB/Au4LNyFrQnhAwnwkvBb7yx4UXh5OXY3sGhU1XfCuql/Ch21KWaUaQdEyJtUYVZJ/a/zvOZluse1gXAcOw0RSJeDlO6xyAgMY8907NkzVFkRtVPIpJTMVTxxy+nXeREfQrQ2ynBAqvKaOxkPt1fjEiZFTUXnFvI4MZpUh4gGqZa7oNHiWSIYH+bGJnMqBPMfxLw5ACnxcyUrDlxKksgtO1SlZQzCw8IE5RIT2rWVX8VWC+XCaRmPmULGA+7IfydaQ5USVEsSapr8mtspSq/+cLRk82fj/lP9bq1uh/hs1I/nGKyLBbVk4swbiNyDJYKJ6EYtzPY96CH1Eow3RS6h0PCTjpSAL7mZY4nWdg9J628fojR5kQbazn6OP4yBsSSKhbrTJYu29gin8UNi//10nR0LD82fzOzLAtihw9XcR+2illubfT6LO2L0JktM1txvOBsj9sg=
 deploy:
+  # important to have this, otherwise node_modules will be gone!
+  skip_cleanup: true
   provider: npm
   email: dev@noblockno.party
   api_key:
