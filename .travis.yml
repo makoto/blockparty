@@ -6,6 +6,7 @@ cache: yarn
 install:
 - yarn global add ganache-cli
 - yarn
+- npm install -g npm@6.2.0
 before_script:
 - cp .deployment-sample.js .deployment.js
 - ganache-cli --accounts 500 >ganache.log 2>&1 &

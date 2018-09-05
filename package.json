@@ -11,7 +11,7 @@
     "contracts/**"
   ],
   "scripts": {
-    "truffle": "node_modules/.bin/babel-node node_modules/.bin/truffle",
+    "truffle": "babel-node node_modules/.bin/truffle",
     "prepublishOnly": "rm -rf build && yarn truffle compile && yarn truffle networks --clean",
     "lint": "solium --dir ./contracts",
     "test": "yarn truffle migrate && yarn truffle test --network test",
