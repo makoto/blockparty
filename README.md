@@ -50,9 +50,24 @@ yarn test
 yarn coverage
 ```
 
-## Release guide
+## Contract deployment
 
-Releases are done automatically via CI. To create a new release:
+Edit `.deployment.js` and fill in the company mnemonic and Infura key (obtain from 1Password).
+
+Now run (for `ropsten` network):
+
+```
+yarn deploy:ropsten
+```
+
+_TODO: Mainnet deployment_
+
+## NPM publishing
+
+Releases are done automatically via CI. Prior to doing a release, ensure the
+latest compiled contracts have been deployed to both `ropsten` and `mainnet`.
+
+To create a new release:
 
 1. Increment the `version` in `package.json` as required, as part of a new or existing Pull Request.
 3. Once the approved PR has been merged, run `git tag <version>` (where `<version>` is same as in `package.json`) on the merge commit.

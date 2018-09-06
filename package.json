@@ -1,6 +1,6 @@
 {
   "name": "@noblocknoparty/contracts",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "description": "BlockParty smart contracts",
   "directories": {
     "doc": "doc",
@@ -12,7 +12,8 @@
   ],
   "scripts": {
     "truffle": "babel-node node_modules/.bin/truffle",
-    "prepublishOnly": "rm -rf build && yarn truffle compile && yarn truffle networks --clean",
+    "deploy:ropsten": "yarn truffle migrate --network ropsten",
+    "prepublishOnly": "yarn truffle compile && yarn truffle networks --clean",
     "lint": "solium --dir ./contracts",
     "test": "yarn truffle migrate && yarn truffle test --network test",
     "coverage": "solidity-coverage",
