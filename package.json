@@ -2,6 +2,7 @@
   "name": "@noblocknoparty/contracts",
   "version": "0.11.4",
   "description": "BlockParty smart contracts",
+  "main": "index.js",
   "directories": {
     "doc": "doc",
     "test": "test"

@@ -14,6 +14,34 @@ To use these contracts in a Dapp first install our NPM org:
 npm i @noblocknoparty/contracts
 ```
 
+Then, using [truffle-contract](https://github.com/trufflesuite/truffle/tree/develop/packages/truffle-contract) you can import and use the
+`Deployer` contract definition and use it as such:
+
+```js
+const promisify = require('es6-promisify')
+const TruffleContract = require('truffle-contract')
+const Web3 = require('web3')
+const { Deployer } = require('@noblocknoparty/contracts')
+
+async init = () => {
+  const web3 = new Web3(/* Ropsten or Mainnet HTTP RPC endpoint */)
+
+  const contract = TruffleContract(Deployer)
+  contract.setProvider(web3.currentProvider)
+
+  const deployer = await contract.deployed()
+
+  // deploy a new party (see Deployer.sol for parameter documentation)
+  await deployer.deploy('My event', 0, 0, 0, 'Encryption key')
+
+  const events = await promisify(deployer.contract.getPastEvents, deployer.contract)('NewParty')
+
+  const { returnValues: { deployedAddress } } = events.pop()
+  
+  console.log(`New party contract deployed at: ${deployedAddress}`)
+}
+```
+
 ## Dev guide
 
 Pre-requisites:
