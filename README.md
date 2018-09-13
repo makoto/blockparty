@@ -37,7 +37,7 @@ async init = () => {
   const events = await promisify(deployer.contract.getPastEvents, deployer.contract)('NewParty')
 
   const { returnValues: { deployedAddress } } = events.pop()
-  
+
   console.log(`New party contract deployed at: ${deployedAddress}`)
 }
 ```
@@ -82,13 +82,13 @@ yarn coverage
 
 Edit `.deployment.js` and fill in the company mnemonic and Infura key (obtain from 1Password).
 
-Now run (for `ropsten` network):
+Now run:
 
-```
-yarn deploy:ropsten
-```
+* `yarn deploy:local` - for deploying to local, private chain, e.g. Ganache
+* `yarn deploy:ropsten` - for deploying to Ropsten (`.deployment.js` must be accurately setup)
+* _TODO: mainnet_
 
-_TODO: Mainnet deployment_
+
 
 ## NPM publishing
 
