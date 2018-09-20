@@ -14,7 +14,8 @@
   "scripts": {
     "truffle": "babel-node node_modules/.bin/truffle",
     "deploy:ropsten": "yarn truffle migrate --network ropsten",
-    "deploy:local": "yarn truffle migrate && ./scripts/updateOtherReposWithDeployerAddress.js",
+    "deploy:local": "yarn truffle migrate && scripts/local/updateOtherReposWithDeployerAddress.js",
+    "seed:party": "scripts/local/deployNewParty.js",
     "prepublishOnly": "yarn truffle compile && yarn truffle networks --clean",
     "lint": "solium --dir ./contracts",
     "test": "yarn truffle migrate && yarn truffle test --network test",
