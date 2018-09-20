@@ -84,10 +84,10 @@ Edit `.deployment.js` and fill in the company mnemonic and Infura key (obtain fr
 
 Now run:
 
-* `yarn deploy:local` - for deploying to local, private chain, e.g. Ganache
+* `yarn deploy:local` - for deploying to local, private chain, e.g. Ganache. This will also call
+a script to update the `app` and `server` repo clones if you've checked them out as sibling folders.
 * `yarn deploy:ropsten` - for deploying to Ropsten (`.deployment.js` must be accurately setup)
 * _TODO: mainnet_
-
 
 
 ## NPM publishing
