@@ -9,42 +9,35 @@ const { toHex, toWei } = require('web3-utils')
 
 const { Deployer  } = require('../../')
 
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+async function init () {
+  const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
 
-const handler = cb => (err, result) => {
-  if (err) {
-    console.error(err)
-    process.exit(-1)
-  }
+  const networkId = await web3.eth.net.getId()
 
-  cb(result)
-}
-
-web3.version.getNetwork(handler(networkId => {
   const { address } = Deployer.networks[networkId] || {}
 
   console.log(`Deployer: ${address}`)
 
-  web3.eth.getAccounts(handler(accounts => {
-    const [ account ] = accounts
+  const accounts = await web3.eth.getAccounts()
 
-    console.log(`Account: ${account}`)
+  const [ account ] = accounts
 
-    const contract = web3.eth.contract(Deployer.abi)
-    const instance = contract.at(address)
+  console.log(`Account: ${account}`)
 
-    instance.NewParty(handler(result => {
-      console.log(`New party: ${result.args.deployedAddress}`)
-      process.exit(0)
-    }))
+  const instance = new web3.eth.Contract(Deployer.abi, address)
 
-    instance.deploy(
-      'test',
-      toHex(toWei('0.02')),
-      toHex(2),
-      toHex(60 * 60 * 24 * 7),
-      'encKey',
-      { from: account, gas: 4000000 }
-    )
-  }))
-}))
+  const tx = await instance.methods.deploy(
+    'test',
+    toHex(toWei('0.02')),
+    toHex(2),
+    toHex(60 * 60 * 24 * 7),
+    'encKey'
+  ).send({ from: account, gas: 4000000 })
+
+  console.log(`New party: ${tx.events.NewParty.returnValues.deployedAddress}`)
+}
+
+init().catch(err => {
+  console.error(err)
+  process.exit(-1)
+})

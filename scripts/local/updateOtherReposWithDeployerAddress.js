@@ -7,13 +7,10 @@ const Web3 = require('web3')
 
 const projectDir = path.join(__dirname, '..', '..')
 
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+async function init () {
+  const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
 
-web3.version.getNetwork((err, networkId) => {
-  if (err) {
-    console.error(err)
-    process.exit(-1)
-  }
+  const networkId = await web3.eth.net.getId()
 
   const { address } = Deployer.networks[networkId] || {}
 
@@ -45,4 +42,9 @@ web3.version.getNetwork((err, networkId) => {
   } else {
     console.warn('App folder not found, skipping ...')
   }
+}
+
+init().catch(err => {
+  console.error(err)
+  process.exit(-1)
 })

@@ -53,7 +53,7 @@
     "truffle": "^5.0.0-beta.0",
     "truffle-hdwallet-provider": "^1.0.0-web3one.0",
     "uuid": "^3.0.1",
-    "web3": "0.20.2",
+    "web3": "1.0.0-beta.33",
     "web3-utils": "^1.0.0-beta.36",
     "yargs": "^9.0.1"
   }
