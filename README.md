@@ -72,13 +72,21 @@ npx ganache-cli --accounts 500
 yarn test
 ```
 
-**Run coverage tests**
+## Simulation
+
+To deploy a new party onto the local test network:
+
+```shell
+yarn seed:party
+```
+
+## Tests
 
 ```
 yarn coverage
 ```
 
-## Contract deployment
+## Deployment to public networks
 
 Edit `.deployment.js` and fill in the company mnemonic and Infura key (obtain from 1Password).
 
