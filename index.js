@@ -13,11 +13,13 @@ module.exports = {
     Attend: Conference.abi.find(({ type, name }) => type === 'event' && name === 'AttendEvent'),
     /* when someone withdraws their payout */
     Withdraw: Conference.abi.find(({ type, name }) => type === 'event' && name === 'WithdrawEvent'),
-    /* when the party gets ended or cancelled */
-    EndParty: Conference.abi.find(({ type, name }) => type === 'event' && (name === 'PaybackEvent' || name === 'CancelEvent')),
+    /* when the party has ended */
+    EndParty: Conference.abi.find(({ type, name }) => type === 'event' && name === 'PaybackEvent'),
+    /* when the party gets cancelled */
+    CancelParty: Conference.abi.find(({ type, name }) => type === 'event' && name === 'CancelEvent'),
     /* when a new admin gets added */
-    AdminAdded: Conference.abi.find(({ type, name }) => type === 'event' && name === 'AdminGranted'),
+    AddAdmin: Conference.abi.find(({ type, name }) => type === 'event' && name === 'AdminGranted'),
     /* when an admin gets removed */
-    AdminRemoved: Conference.abi.find(({ type, name }) => type === 'event' && name === 'AdminRevoked'),
+    RemoveAdmin: Conference.abi.find(({ type, name }) => type === 'event' && name === 'AdminRevoked'),
   }
 }
