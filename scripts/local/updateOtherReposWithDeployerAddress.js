@@ -30,7 +30,7 @@ async function init () {
   if (fs.existsSync(appDir)) {
     console.log('Writing to app config ...')
 
-    const appConfigPath = path.join(appDir, 'src', 'config', 'env.js')
+    const appConfigPath = path.join(appDir, 'src', 'config', 'env.json')
     let appConfig = {}
     try {
       appConfig = require(appConfigPath)
