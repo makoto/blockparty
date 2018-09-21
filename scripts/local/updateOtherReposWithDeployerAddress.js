@@ -12,9 +12,9 @@ async function init () {
 
   const networkId = await web3.eth.net.getId()
 
-  const { address } = Deployer.networks[networkId] || {}
+  const { address, transactionHash } = Deployer.networks[networkId] || {}
 
-  console.log(`Deployer: ${address}`)
+  console.log(`Deployer: ${address}  (tx: ${transactionHash})`)
 
   const serverDir = path.join(projectDir, '..', 'server')
   if (fs.existsSync(serverDir)) {
@@ -22,6 +22,7 @@ async function init () {
 
     const serverEnvPath = path.join(serverDir, '.env')
     fs.appendFileSync(serverEnvPath, `\nDEPLOYER_CONTRACT_ADDRESS=${address}`)
+    fs.appendFileSync(serverEnvPath, `\nDEPLOYER_TRANSACTION=${transactionHash}`)
   } else {
     console.warn('Server folder not found, skipping ...')
   }
