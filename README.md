@@ -80,19 +80,34 @@ To deploy a new party onto the local test network:
 yarn seed:party
 ```
 
-To set the name and attendee limit for the party:
+This command has a number of options which allow you additionally simulate the
+full lifecycle of a party:
 
 ```shell
-yarn seed:party --name "My party" --attendees 20
+$ yarn seed:party --help
+
+Usage: deployNewParty [options]
+
+Options:
+
+  -a, --attendees         Number of registrants to mark as having attended
+  -c, --cancelled         Whether to mark the party as cancelled
+  -d, --deposit [n]       Amount of ETH attendees must deposit (default: 0.02)
+  -e, --ended             Whether to mark the party as having already ended
+  -n, --name [n]          Name of party (default: test)
+  -p, --participants <n>  Maximum number of participants
+  -r, --register <n>      Number of participants to register
+  -w, --withdraw <n>      Number of attendees to withdraw deposits for
+  -h, --help              output usage information
 ```
 
-To auto-register a certain no. of attendees at the party (note that your
-  local testnet will need to have as many generated accounts as you wish to register):
+So, for example, to create party with max. 100 participants, upto 50 actually
+registered, with 25 having actually attended, and 12 having withdrawn their
+payouts after the party has ended:
 
 ```shell
-yarn seed:party --name "My party" --attendees 20 --register 13
+yarn seed:party --
 ```
-
 
 ## Tests
 
