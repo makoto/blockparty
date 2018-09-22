@@ -21,7 +21,7 @@ async function init () {
     .option('-n, --name [n]', 'Name of party', 'test')
     .option('-p, --participants <n>', 'Maximum number of participants', parseInt)
     .option('-r, --register <n>', 'Number of participants to register', parseInt)
-    .option('-w, --withdraw <n>', 'Number of attendees to withdraw deposits for', parseInt)
+    .option('-w, --withdraw <n>', 'Number of attendees to withdraw payouts for', parseInt)
     .parse(process.argv)
 
   const name = program.name
@@ -44,7 +44,7 @@ Num to register:        ${numRegistrations}
 Num who attended:       ${numAttendees}
 Party ended:            ${ended ? 'yes' : 'no'}
 Party cancelled:        ${cancelled ? 'yes' : 'no'}
-Deposit withdrawals:    ${numWithdrawals}
+Payout withdrawals:     ${numWithdrawals}
 `
   )
 
