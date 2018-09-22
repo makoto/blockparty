@@ -45,6 +45,7 @@
     "eth-gas-reporter": "^0.1.9",
     "ethereum-input-data-decoder": "0.0.3",
     "etherscan-api": "^3.0.11",
+    "faker": "^4.1.0",
     "moment": "^2.18.1",
     "prompt": "^1.0.0",
     "sol-merger": "^0.1.2",

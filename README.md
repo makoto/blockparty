@@ -80,6 +80,20 @@ To deploy a new party onto the local test network:
 yarn seed:party
 ```
 
+To set the name and attendee limit for the party:
+
+```shell
+yarn seed:party --name "My party" --attendees 20
+```
+
+To auto-register a certain no. of attendees at the party (note that your
+  local testnet will need to have as many generated accounts as you wish to register):
+
+```shell
+yarn seed:party --name "My party" --attendees 20 --register 13
+```
+
+
 ## Tests
 
 ```
