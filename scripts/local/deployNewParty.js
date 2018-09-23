@@ -15,6 +15,7 @@ async function init () {
   program
     .usage('[options]')
     .option('-a, --attendees <n>', 'Number of registrants to mark as having attended', parseInt)
+    .option('--admins <n>', 'Number of additional party admins to have', parseInt)
     .option('-c, --cancelled', 'Whether to mark the party as cancelled')
     .option('-d, --deposit [n]', 'Amount of ETH attendees must deposit', 0.02)
     .option('-e, --ended', 'Whether to mark the party as having already ended')
@@ -27,6 +28,7 @@ async function init () {
   const name = program.name
   const ended = !!program.ended
   const cancelled = !!program.cancelled
+  const numAdmins = program.admins || 0
   const maxParticipants = program.participants || 2
   const numRegistrations = program.register || 0
   const numAttendees = program.attendees || 0
@@ -39,6 +41,7 @@ Config
 ------
 Party name:             ${name}
 Deposit level:          ${deposit}
+Extra admins:           ${numAdmins}
 Max. participants:      ${maxParticipants}
 Num to register:        ${numRegistrations}
 Num who attended:       ${numAttendees}
@@ -57,6 +60,10 @@ Payout withdrawals:     ${numWithdrawals}
   console.log(`Deployer: ${deployerAddress}`)
 
   const accounts = await web3.eth.getAccounts()
+
+  if ((numAdmins + 1) > accounts.length) {
+    throw new Error(`Not enough web3 accounts to register ${numAdmins} additional party admins!`)
+  }
 
   if (numRegistrations > accounts.length) {
     throw new Error(`Not enough web3 accounts to register ${numRegistrations} attendees!`)
@@ -97,6 +104,26 @@ Payout withdrawals:     ${numWithdrawals}
   console.log(`New party: ${partyAddress}`)
 
   const party = new web3.eth.Contract(Conference.abi, partyAddress)
+
+  if (numAdmins) {
+    console.log(
+`
+
+Register extra admins
+---------------------`
+    )
+
+    const promises = []
+    for (let i = 1 /* start at 1 since account 0 is already owner */; numAdmins >= i; i += 1) {
+      console.log(accounts[i])
+
+      promises.push(
+        party.methods.grant([ accounts[i] ]).send({ from: accounts[0], gas: 200000 })
+      )
+    }
+
+    await Promise.all(promises)
+  }
 
   if (numRegistrations) {
     console.log(
