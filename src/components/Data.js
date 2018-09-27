@@ -2,6 +2,24 @@
 // May be replaced with IPFS at some point.
 let Data = [
   {
+    name:"ETHBerlin Day 1: Super Mega Deep Dive Buidl Event",
+    address:'0x9724c73416e0bb753db7406b3427013a4b4ff057',
+    date:"14:30-21:00, 7th September 2018",
+    map_url:"https://goo.gl/maps/ZLqwKBSngKS2",
+    location_text:"Factory Görlitzer Park, Lohmühlenstraße 65, 12435 Berlin",
+    description_text:"The hackers’ conference: learn about languages, all about smart contracts, tooling and all you need to build your killer app.",
+    ether_price:214
+  },
+  {
+    name:"ETHBerlin Day 1: Conference community tickets",
+    address:'0x51aa39d3cd1be4b0b1ff01bb9a74de6786f0c4d5',
+    date:"12:00-21:00, 7th September 2018",
+    map_url:"https://goo.gl/maps/WDuUFUfjNpr",
+    location_text:"The Factory Mitte, Rheinsberger Str. 76/77, 10115 Berlin",
+    description_text:"ONLY THE DAY 1 CONFERENCE is opened to the community. You may follow us on Livepeer.tv, but you cannot access the hackathon.",
+    ether_price:214
+  },
+  {
     name:"ENS Hackathon 2018",
     address:"0x144db63041008faee3dde3623a54cc824f5bdd60",
     date:"11-12th(Sat/Sun) August 2018",
@@ -17,7 +35,7 @@ let Data = [
     map_url:"https://goo.gl/maps/TRC3K3Gxd6N2",
     location_text:"Balderton Capital (The Stables, 28 Britannia St, Kings Cross, London  WC1X 9JF)",
     description_text:"",
-    ether_price:468
+    ether_price:214
   },
   {
     name:"Ethereum London July 2018",
