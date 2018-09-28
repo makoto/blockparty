@@ -9,20 +9,41 @@ const program = require('commander')
 const { fromWei, toHex, toWei } = require('web3-utils')
 const faker = require('faker')
 
-const { Deployer, Conference  } = require('../../')
+const { Deployer, Conference } = require('../../')
 
-async function init () {
+async function init() {
   program
     .usage('[options]')
-    .option('-a, --attendees <n>', 'Number of registrants to mark as having attended', parseInt)
-    .option('--admins <n>', 'Number of additional party admins to have', parseInt)
+    .option(
+      '-a, --attendees <n>',
+      'Number of registrants to mark as having attended',
+      parseInt
+    )
+    .option(
+      '--admins <n>',
+      'Number of additional party admins to have',
+      parseInt
+    )
     .option('-c, --cancelled', 'Whether to mark the party as cancelled')
+    .option('-t, --coolingPeriod [n]', 'How long the cooling period is')
     .option('-d, --deposit [n]', 'Amount of ETH attendees must deposit', 0.02)
     .option('-e, --ended', 'Whether to mark the party as having already ended')
     .option('-n, --name [n]', 'Name of party', 'test')
-    .option('-p, --participants <n>', 'Maximum number of participants', parseInt)
-    .option('-r, --register <n>', 'Number of participants to register', parseInt)
-    .option('-w, --withdraw <n>', 'Number of attendees to withdraw payouts for', parseInt)
+    .option(
+      '-p, --participants <n>',
+      'Maximum number of participants',
+      parseInt
+    )
+    .option(
+      '-r, --register <n>',
+      'Number of participants to register',
+      parseInt
+    )
+    .option(
+      '-w, --withdraw <n>',
+      'Number of attendees to withdraw payouts for',
+      parseInt
+    )
     .parse(process.argv)
 
   const name = program.name
@@ -34,9 +55,10 @@ async function init () {
   const numAttendees = program.attendees || 0
   const numWithdrawals = program.withdraw || 0
   const deposit = `${program.deposit}`
+  const coolingPeriod = program.coolingPeriod || 60 * 60 * 24 * 7
 
   console.log(
-`
+    `
 Config
 ------
 Party name:             ${name}
@@ -48,10 +70,13 @@ Num who attended:       ${numAttendees}
 Party ended:            ${ended ? 'yes' : 'no'}
 Party cancelled:        ${cancelled ? 'yes' : 'no'}
 Payout withdrawals:     ${numWithdrawals}
+Cooling Period:         ${coolingPeriod}
 `
   )
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider('http://localhost:8545')
+  )
 
   const networkId = await web3.eth.net.getId()
 
@@ -61,12 +86,16 @@ Payout withdrawals:     ${numWithdrawals}
 
   const accounts = await web3.eth.getAccounts()
 
-  if ((numAdmins + 1) > accounts.length) {
-    throw new Error(`Not enough web3 accounts to register ${numAdmins} additional party admins!`)
+  if (numAdmins + 1 > accounts.length) {
+    throw new Error(
+      `Not enough web3 accounts to register ${numAdmins} additional party admins!`
+    )
   }
 
   if (numRegistrations > accounts.length) {
-    throw new Error(`Not enough web3 accounts to register ${numRegistrations} attendees!`)
+    throw new Error(
+      `Not enough web3 accounts to register ${numRegistrations} attendees!`
+    )
   }
 
   if (numRegistrations > maxParticipants) {
@@ -78,26 +107,32 @@ Payout withdrawals:     ${numWithdrawals}
   }
 
   if (numWithdrawals > numAttendees) {
-    throw new Error(`Cannot have more deposits withdrawn than there are attendees!`)
+    throw new Error(
+      `Cannot have more deposits withdrawn than there are attendees!`
+    )
   }
 
   if (numWithdrawals && !(ended || cancelled)) {
-    throw new Error(`Cannot withdraw deposits unless party is ended or cancelled!`)
+    throw new Error(
+      `Cannot withdraw deposits unless party is ended or cancelled!`
+    )
   }
 
-  const [ account ] = accounts
+  const [account] = accounts
 
   console.log(`Account: ${account}`)
 
   const deployer = new web3.eth.Contract(Deployer.abi, deployerAddress)
 
-  const tx = await deployer.methods.deploy(
-    name,
-    toHex(toWei(deposit)),
-    toHex(maxParticipants),
-    toHex(60 * 60 * 24 * 7),
-    'encKey'
-  ).send({ from: account, gas: 4000000 })
+  const tx = await deployer.methods
+    .deploy(
+      name,
+      toHex(toWei(deposit)),
+      toHex(maxParticipants),
+      toHex(coolingPeriod),
+      'encKey'
+    )
+    .send({ from: account, gas: 4000000 })
 
   const { deployedAddress: partyAddress } = tx.events.NewParty.returnValues
 
@@ -107,18 +142,24 @@ Payout withdrawals:     ${numWithdrawals}
 
   if (numAdmins) {
     console.log(
-`
+      `
 
 Register extra admins
 ---------------------`
     )
 
     const promises = []
-    for (let i = 1 /* start at 1 since account 0 is already owner */; numAdmins >= i; i += 1) {
+    for (
+      let i = 1 /* start at 1 since account 0 is already owner */;
+      numAdmins >= i;
+      i += 1
+    ) {
       console.log(accounts[i])
 
       promises.push(
-        party.methods.grant([ accounts[i] ]).send({ from: accounts[0], gas: 200000 })
+        party.methods
+          .grant([accounts[i]])
+          .send({ from: accounts[0], gas: 200000 })
       )
     }
 
@@ -127,7 +168,7 @@ Register extra admins
 
   if (numRegistrations) {
     console.log(
-`
+      `
 
 Register participants
 -----------------------`
@@ -140,7 +181,11 @@ Register participants
       console.log(`${accounts[i]} - ${twitterId}`)
 
       promises.push(
-        party.methods.register(twitterId).send({ value: toHex(toWei(deposit)), from: accounts[i], gas: 200000 })
+        party.methods.register(twitterId).send({
+          value: toHex(toWei(deposit)),
+          from: accounts[i],
+          gas: 200000
+        })
       )
     }
 
@@ -149,7 +194,7 @@ Register participants
 
   if (numAttendees) {
     console.log(
-`
+      `
 
 Mark as attended
 ----------------`
@@ -160,7 +205,9 @@ Mark as attended
       console.log(accounts[i])
 
       promises.push(
-        party.methods.attend([ accounts[i] ]).send({ from: accounts[0], gas: 200000 })
+        party.methods
+          .attend([accounts[i]])
+          .send({ from: accounts[0], gas: 200000 })
       )
     }
 
@@ -181,7 +228,7 @@ Mark as attended
     const payout = await party.methods.payout().call()
 
     console.log(
-`
+      `
 
 Withdraw payout - ${fromWei(payout, 'ether')} ETH
 -----------------------------`

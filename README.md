@@ -46,8 +46,8 @@ async init = () => {
 
 Pre-requisites:
 
-* [Node 8.11.4+](https://nodejs.org/)
-* [Yarn](https://yarnpkg.com)
+- [Node 8.11.4+](https://nodejs.org/)
+- [Yarn](https://yarnpkg.com)
 
 **Setup Truffle config**
 
@@ -103,10 +103,10 @@ Options:
 
 So, for example, to create party with max. 100 participants, upto 50 actually
 registered, with 25 having actually attended, and 12 having withdrawn their
-payouts after the party has ended:
+payouts after the party has ended. With an added cooling period of 1 millisecond to allow your to test the clear functionality immediately.
 
 ```shell
-yarn seed:party -p 100  -r 50 -a 25 -w 12 -e
+yarn seed:party -p 100  -r 50 -a 25 -w 12 -e -t 1
 ```
 
 ## Tests
@@ -121,11 +121,10 @@ Edit `.deployment.js` and fill in the company mnemonic and Infura key (obtain fr
 
 Now run:
 
-* `yarn deploy:local` - for deploying to local, private chain, e.g. Ganache. This will also call
-a script to update the `app` and `server` repo clones if you've checked them out as sibling folders.
-* `yarn deploy:ropsten` - for deploying to Ropsten (`.deployment.js` must be accurately setup)
-* _TODO: mainnet_
-
+- `yarn deploy:local` - for deploying to local, private chain, e.g. Ganache. This will also call
+  a script to update the `app` and `server` repo clones if you've checked them out as sibling folders.
+- `yarn deploy:ropsten` - for deploying to Ropsten (`.deployment.js` must be accurately setup)
+- _TODO: mainnet_
 
 ## NPM publishing
 
@@ -135,6 +134,6 @@ latest compiled contracts have been deployed to both `ropsten` and `mainnet`.
 To create a new release:
 
 1. Increment the `version` in `package.json` as required, as part of a new or existing Pull Request.
-3. Once the approved PR has been merged, run `git tag <version>` (where `<version>` is same as in `package.json`) on the merge commit.
-5. Run `git push --tags`
-6. The CI server will now do a build and deploy to NPM.
+2. Once the approved PR has been merged, run `git tag <version>` (where `<version>` is same as in `package.json`) on the merge commit.
+3. Run `git push --tags`
+4. The CI server will now do a build and deploy to NPM.
