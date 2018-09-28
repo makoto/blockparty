@@ -25,7 +25,7 @@ async function init() {
       parseInt
     )
     .option('-c, --cancelled', 'Whether to mark the party as cancelled')
-    .option('-t, --coolingPeriod [n]', 'How long the cooling period is')
+    .option('-t, --coolingPeriod [n]', 'How long the cooling period is in seconds', 60 * 60 * 24 * 7)
     .option('-d, --deposit [n]', 'Amount of ETH attendees must deposit', 0.02)
     .option('-e, --ended', 'Whether to mark the party as having already ended')
     .option('-n, --name [n]', 'Name of party', 'test')
@@ -55,7 +55,7 @@ async function init() {
   const numAttendees = program.attendees || 0
   const numWithdrawals = program.withdraw || 0
   const deposit = `${program.deposit}`
-  const coolingPeriod = program.coolingPeriod || 60 * 60 * 24 * 7
+  const coolingPeriod = program.coolingPeriod
 
   console.log(
     `
@@ -63,6 +63,7 @@ Config
 ------
 Party name:             ${name}
 Deposit level:          ${deposit}
+Cooling Period:         ${coolingPeriod} seconds
 Extra admins:           ${numAdmins}
 Max. participants:      ${maxParticipants}
 Num to register:        ${numRegistrations}
@@ -70,7 +71,6 @@ Num who attended:       ${numAttendees}
 Party ended:            ${ended ? 'yes' : 'no'}
 Party cancelled:        ${cancelled ? 'yes' : 'no'}
 Payout withdrawals:     ${numWithdrawals}
-Cooling Period:         ${coolingPeriod}
 `
   )
 
