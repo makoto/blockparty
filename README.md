@@ -106,7 +106,7 @@ registered, with 25 having actually attended, and 12 having withdrawn their
 payouts after the party has ended:
 
 ```shell
-yarn seed:party --
+yarn seed:party -p 100  -r 50 -a 25 -w 12 -e
 ```
 
 ## Tests
