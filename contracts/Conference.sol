@@ -138,7 +138,7 @@ contract Conference is Destructible, GroupAdmin {
      */
     function withdraw() external onlyEnded{
         require(payoutAmount > 0, 'payout is 0');
-        Participant participant = participants[msg.sender];
+        Participant storage participant = participants[msg.sender];
         require(participant.addr == msg.sender, 'forbidden access');
         require(cancelled || participant.attended, 'event still active or you did not attend');
         require(participant.paid == false, 'already withdrawn');
@@ -246,14 +246,21 @@ contract Conference is Destructible, GroupAdmin {
      * @dev Mark participants as attended. The attendance cannot be undone.
      * @param _addresses The list of participant's address.
      */
-    function attend(address[] _addresses) external onlyAdmin onlyActive{
-        for( uint i = 0; i < _addresses.length; i++){
-            address _addr = _addresses[i];
-            require(isRegistered(_addr), 'not registered to attend');
-            require(!isAttended(_addr), 'already marked as attended');
-            emit AttendEvent(_addr);
-            participants[_addr].attended = true;
-            attended++;
+    function attend(address[] _addresses) external onlyAdmin onlyActive {
+        for (uint i = 0; i < _addresses.length; i++) {
+            markAsAttended(_addresses[i]);
         }
+    }
+
+    /**
+     * @dev Mark participant as attended. The attendance cannot be undone.
+     * @param _addr The participant's address.
+     */
+    function markAsAttended(address _addr) internal {
+        require(isRegistered(_addr), 'not registered to attend');
+        require(!isAttended(_addr), 'already marked as attended');
+        emit AttendEvent(_addr);
+        participants[_addr].attended = true;
+        attended++;
     }
 }

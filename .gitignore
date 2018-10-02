@@ -5,6 +5,7 @@ yarn-error.log
 .vscode/*
 .node*
 archive/*
+build/
 coverage
 coverageEnv
 coverage.json

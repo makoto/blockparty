@@ -13,11 +13,11 @@
   ],
   "scripts": {
     "truffle": "babel-node node_modules/.bin/truffle",
-    "deploy:ropsten": "yarn truffle migrate --network ropsten",
+    "deploy:ropsten": "yarn truffle migrate --network ropsten && scripts/local/extractDeployedAddresses.js",
     "deploy:local": "yarn truffle migrate && scripts/local/updateOtherReposWithDeployerAddress.js",
     "cleanup": "yarn truffle networks --clean",
     "seed:party": "scripts/local/deployNewParty.js",
-    "prepublishOnly": "yarn truffle compile && yarn cleanup",
+    "prepublishOnly": "yarn truffle compile && yarn cleanup && scripts/local/injectDeployedAddresses.js",
     "lint": "solium --dir ./contracts",
     "test": "yarn truffle migrate && yarn truffle test --network test",
     "coverage": "solidity-coverage",
