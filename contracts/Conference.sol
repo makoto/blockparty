@@ -1,9 +1,8 @@
 pragma solidity 0.4.24;
 
 import './GroupAdmin.sol';
-import './zeppelin/lifecycle/Destructible.sol';
 
-contract Conference is Destructible, GroupAdmin {
+contract Conference is GroupAdmin {
     string public name;
     uint256 public deposit;
     uint public limitOfParticipants;
