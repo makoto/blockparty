@@ -45,7 +45,7 @@ const formatArray = function(array){
   return array.join("\t\t")
 }
 
-const reportTest = async function (participants, accounts){
+const reportTest = async function (participants, accounts, finalize){
   const addresses = [];
   const transactions = [];
   const encrypted_codes = [];
@@ -64,14 +64,14 @@ const reportTest = async function (participants, accounts){
     }
     addresses.push(accounts[i]);
   }
-  var attendTrx = await conference.attend(addresses, {from:owner, gasPrice:gasPrice});
-  transactions.push(await getTransaction('batchAttend  ', attendTrx.tx))
 
   await conference.registered().should.eventually.eq(participants)
   await getBalance(conference.address).should.eventually.eq( mulBN(deposit, participants) )
 
-  trx = await conference.payback({from:owner, gasPrice:gasPrice});
-  transactions.push(getTransaction('payback ', trx.tx))
+  await finalize({
+    deposit, conference, owner, addresses, transactions
+  })
+
   for (var i = 0; i < participants; i++) {
     trx = await conference.withdraw({from:accounts[i], gasPrice:gasPrice});
     if (i == 0) {
@@ -91,26 +91,91 @@ const reportTest = async function (participants, accounts){
   fs.writeFileSync(`./log/stress_${pad(participants, 4)}_${date}.log`, bodies.join('\n') + '\n');
 }
 
+const reportBatchAttend = async (participants, accounts) => (
+  await reportTest(participants, accounts, async ({ deposit, conference, owner, addresses, transactions }) => {
+    const attendTrx = await conference.attend(addresses, {from:owner, gasPrice});
+    transactions.push(await getTransaction('batchAttend  ', attendTrx.tx))
+
+    trx = await conference.payback({from:owner, gasPrice});
+    transactions.push(await getTransaction('payback  ', trx.tx))
+  })
+)
+
+const reportFinalize = async (participants, accounts) => (
+  reportTest(participants, accounts, async ({ deposit, conference, owner, addresses, transactions }) => {
+    // build bitmaps
+    const numRegistered = addresses.length;
+    let num = toBN(0);
+    for (let i = 0; i < 256; i++) {
+      num = num.bincn(i)
+    }
+    const maps = [];
+    for (let i = 0; i < Math.ceil(numRegistered / 256); i++) {
+      maps.push(num.toString(16))
+    }
+    const finalizeTx = await conference.finalize(maps, { from:owner, gasPrice })
+    transactions.push(await getTransaction('finalize  ', finalizeTx.tx))
+  })
+)
+
 contract('Stress test', function(accounts) {
-  describe('stress test', function(){
-    it('can handle 2 participants', async function(){
-      await reportTest(2, accounts)
+  describe('2 participants', function() {
+    const num = 2
+
+    it('batch attend', async function(){
+      await reportBatchAttend(num, accounts)
     })
 
-    it('can handle 20 participants', async function(){
-      await reportTest(20, accounts)
+    it('finalize', async function(){
+      await reportFinalize(num, accounts)
+    })
+  })
+
+  describe('20 participants', function() {
+    const num = 20
+
+    it('batch attend', async function(){
+      await reportBatchAttend(num, accounts)
     })
 
-    it('can handle 100 participants', async function(){
-      await reportTest(100, accounts)
+    it('finalize', async function(){
+      await reportFinalize(num, accounts)
+    })
+  })
+
+  describe('100 participants', function() {
+    const num = 100
+
+    it('batch attend', async function(){
+      await reportBatchAttend(num, accounts)
     })
 
-    it('can handle 200 participants', async function(){
-      await reportTest(200, accounts)
+    it('finalize', async function(){
+      await reportFinalize(num, accounts)
+    })
+  })
+
+  describe('200 participants', function() {
+    const num = 200
+
+    it('batch attend', async function(){
+      await reportBatchAttend(num, accounts)
     })
 
-    it('can handle 300 participants', async function(){
-      await reportTest(300, accounts)
+    it('finalize', async function(){
+      await reportFinalize(num, accounts)
+    })
+  })
+
+  describe('300 participants', function() {
+    const num = 300
+
+    it('batch attend', async function(){
+      await reportBatchAttend(num, accounts)
+    })
+
+    it('finalize', async function(){
+      await reportFinalize(num, accounts)
     })
   })
 })

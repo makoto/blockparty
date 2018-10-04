@@ -46,3 +46,10 @@ export const getEvents = async (result, eventName) => {
 
   return events
 }
+
+export const outputBNs = bn => {
+  console.log('BNs: ');
+  Object.keys(bn).forEach(k => {
+    console.log(`   ${bn[k].toString(10)} => ${bn[k].toString(2)}`)
+  })
+}

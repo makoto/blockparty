@@ -15,19 +15,22 @@ contract Conference is Destructible, GroupAdmin {
     uint public coolingPeriod;
     uint256 public payoutAmount;
     string public encryption;
+    uint[] public attendanceMaps;
 
     mapping (address => Participant) public participants;
     mapping (uint => address) public participantsIndex;
 
     struct Participant {
+        uint participantIndex;
         string participantName;
         address addr;
         bool attended;
         bool paid;
     }
 
-    event RegisterEvent(address addr, string participantName, string _encryption);
+    event RegisterEvent(address addr, string participantName, uint participantIndex, string _encryption);
     event AttendEvent(address addr);
+    event FinalizeEvent(uint[] maps);
     event PaybackEvent(uint256 _payout);
     event WithdrawEvent(address addr, uint256 _payout);
     event CancelEvent();
@@ -106,8 +109,8 @@ contract Conference is Destructible, GroupAdmin {
      * @param _encrypted The encrypted participant name
      */
     function registerWithEncryption(string _participant, string _encrypted) external payable onlyActive{
-        registerInternal(_participant);
-        emit RegisterEvent(msg.sender, _participant, _encrypted);
+        uint index = registerInternal(_participant);
+        emit RegisterEvent(msg.sender, _participant, index, _encrypted);
     }
 
     /**
@@ -115,22 +118,24 @@ contract Conference is Destructible, GroupAdmin {
      * @param _participant The twitter address of the participant
      */
     function register(string _participant) external payable onlyActive{
-        registerInternal(_participant);
-        emit RegisterEvent(msg.sender, _participant, '');
+        uint index = registerInternal(_participant);
+        emit RegisterEvent(msg.sender, _participant, index, '');
     }
 
     /**
      * @dev The internal function to register participant
      * @param _participant The twitter address of the participant
      */
-    function registerInternal(string _participant) internal {
+    function registerInternal(string _participant) internal returns (uint) {
         require(msg.value == deposit, 'must send exact deposit amount');
         require(registered < limitOfParticipants, 'participant limit reached');
         require(!isRegistered(msg.sender), 'already registered');
 
         registered++;
         participantsIndex[registered] = msg.sender;
-        participants[msg.sender] = Participant(_participant, msg.sender, false, false);
+        participants[msg.sender] = Participant(registered, _participant, msg.sender, false, false);
+
+        return registered;
     }
 
     /**
@@ -140,7 +145,7 @@ contract Conference is Destructible, GroupAdmin {
         require(payoutAmount > 0, 'payout is 0');
         Participant storage participant = participants[msg.sender];
         require(participant.addr == msg.sender, 'forbidden access');
-        require(cancelled || participant.attended, 'event still active or you did not attend');
+        require(cancelled || isAttended(msg.sender), 'event still active or you did not attend');
         require(participant.paid == false, 'already withdrawn');
 
         participant.paid = true;
@@ -172,8 +177,45 @@ contract Conference is Destructible, GroupAdmin {
      * @return True if the user is marked as attended by admin.
      */
     function isAttended(address _addr) public view returns (bool){
-        return isRegistered(_addr) && participants[_addr].attended;
+        if (!isRegistered(_addr)) {
+            return false;
+        }
+
+        // check the attendance maps
+        if (0 < attendanceMaps.length) {
+            Participant storage p = participants[_addr];
+            uint pIndex = p.participantIndex - 1;
+            uint map = attendanceMaps[uint(pIndex / 256)];
+            return (0 < (map & (2 ** (pIndex % 256))));
+        }
+
+        return participants[_addr].attended;
     }
+
+
+    /**
+     * @dev Returns total no. of attendees.
+     */
+    function totalAttended() public view returns (uint) {
+        // if using maps then calculate based on them
+        if (0 < attendanceMaps.length) {
+            uint sum = 0;
+            for (uint i = 0; i < attendanceMaps.length; i++) {
+                uint map = attendanceMaps[i];
+                // brian kerninghan bit-counting method - O(log(n))
+                while (map != 0) {
+                    map &= (map - 1);
+                    sum++;
+                }
+            }
+            // since maps can contain more bits than there are registrants, we cap the value!
+            return sum < registered ? sum : registered;
+        } else {
+            // old way!
+            return attended;
+        }
+    }
+
 
     /**
      * @dev Returns true if the given user has withdrawn his/her deposit.
@@ -189,8 +231,9 @@ contract Conference is Destructible, GroupAdmin {
      * @return The amount each participant can withdraw.
      */
     function payout() public view returns(uint256){
-        if (attended == 0) return 0;
-        return uint(totalBalance()) / uint(attended);
+        uint totalAttendees = totalAttended();
+        if (totalAttendees == 0) return 0;
+        return uint(totalBalance()) / uint(totalAttendees);
     }
 
     /* Admin only functions */
@@ -198,7 +241,7 @@ contract Conference is Destructible, GroupAdmin {
     /**
      * @dev Ends the event by owner
      */
-    function payback() external onlyOwner onlyActive{
+    function payback() public onlyAdmin onlyActive{
         payoutAmount = payout();
         ended = true;
         endedAt = now;
@@ -248,19 +291,24 @@ contract Conference is Destructible, GroupAdmin {
      */
     function attend(address[] _addresses) external onlyAdmin onlyActive {
         for (uint i = 0; i < _addresses.length; i++) {
-            markAsAttended(_addresses[i]);
+            address addr = _addresses[i];
+            require(isRegistered(addr), 'not registered to attend');
+            require(!isAttended(addr), 'already marked as attended');
+            emit AttendEvent(addr);
+            participants[addr].attended = true;
+            attended++;
         }
     }
 
     /**
-     * @dev Mark participant as attended. The attendance cannot be undone.
-     * @param _addr The participant's address.
+     * @dev Mark participants as attended and enable payouts. The attendance cannot be undone.
+     * @param _maps The attendance status of participants represented by uint256 values.
      */
-    function markAsAttended(address _addr) internal {
-        require(isRegistered(_addr), 'not registered to attend');
-        require(!isAttended(_addr), 'already marked as attended');
-        emit AttendEvent(_addr);
-        participants[_addr].attended = true;
-        attended++;
+    function finalize(uint[] _maps) external onlyAdmin onlyActive {
+        uint totalBits = _maps.length * 256;
+        require(totalBits >= registered && totalBits - registered < 256, 'incorrect no. of bitmaps provided');
+        attendanceMaps = _maps;
+        emit FinalizeEvent(attendanceMaps);
+        payback();
     }
 }

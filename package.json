@@ -9,7 +9,8 @@
   },
   "files": [
     "build/**",
-    "contracts/**"
+    "contracts/**",
+    "deployedAddresses.json"
   ],
   "scripts": {
     "truffle": "babel-node node_modules/.bin/truffle",
