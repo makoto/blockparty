@@ -123,15 +123,19 @@ Now run:
 
 - `yarn deploy:local` - for deploying to local, private chain, e.g. Ganache. This will also call
   a script to update the `app` and `server` repo clones if you've checked them out as sibling folders.
-- `yarn deploy:ropsten` - for deploying to Ropsten (`.deployment.js` must be accurately setup)
-- _TODO: mainnet_
 
 ## NPM publishing
 
 Releases are done automatically via CI. Prior to doing a release, ensure the
-latest compiled contracts have been deployed to both `ropsten` and `mainnet`.
+latest compiled contracts have been deployed to both `ropsten` and `mainnet`:
 
-To create a new release:
+```
+yarn deploy:ropsten
+```
+
+_Note: ensure `.deployment.js` is accurately setup for the above to work_.
+
+Then create a new release:
 
 1. Increment the `version` in `package.json` as required, as part of a new or existing Pull Request.
 2. Once the approved PR has been merged, run `git tag <version>` (where `<version>` is same as in `package.json`) on the merge commit.
