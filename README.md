@@ -90,15 +90,16 @@ Usage: deployNewParty [options]
 
 Options:
 
-  -a, --attendees         Number of registrants to mark as having attended
-  -c, --cancelled         Whether to mark the party as cancelled
-  -d, --deposit [n]       Amount of ETH attendees must deposit (default: 0.02)
-  -e, --ended             Whether to mark the party as having already ended
-  -n, --name [n]          Name of party (default: test)
-  -p, --participants <n>  Maximum number of participants
-  -r, --register <n>      Number of participants to register
-  -w, --withdraw <n>      Number of attendees to withdraw deposits for
-  -h, --help              output usage information
+  --admins <n>             Number of additional party admins to have
+  -c, --cancelled          Whether to mark the party as cancelled
+  -t, --coolingPeriod [n]  How long the cooling period is in seconds (default: 604800)
+  -d, --deposit [n]        Amount of ETH attendees must deposit (default: 0.02)
+  -f, --finalize <n>       Finalize the party with the given no. of attendees
+  -n, --name [n]           Name of party (default: test)
+  -p, --participants <n>   Maximum number of participants
+  -r, --register <n>       Number of participants to register
+  -w, --withdraw <n>       Number of attendees to withdraw payouts for
+  -h, --help               output usage information
 ```
 
 So, for example, to create party with max. 100 participants, upto 50 actually
