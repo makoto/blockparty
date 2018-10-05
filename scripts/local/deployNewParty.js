@@ -6,7 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const Web3 = require('web3')
 const program = require('commander')
-const { fromWei, toHex, toWei } = require('web3-utils')
+const { toBN, fromWei, toHex, toWei } = require('web3-utils')
 const faker = require('faker')
 
 const { Deployer, Conference } = require('../../')
@@ -15,11 +15,6 @@ async function init() {
   program
     .usage('[options]')
     .option(
-      '-a, --attendees <n>',
-      'Number of registrants to mark as having attended',
-      parseInt
-    )
-    .option(
       '--admins <n>',
       'Number of additional party admins to have',
       parseInt
@@ -27,7 +22,7 @@ async function init() {
     .option('-c, --cancelled', 'Whether to mark the party as cancelled')
     .option('-t, --coolingPeriod [n]', 'How long the cooling period is in seconds', 60 * 60 * 24 * 7)
     .option('-d, --deposit [n]', 'Amount of ETH attendees must deposit', 0.02)
-    .option('-e, --ended', 'Whether to mark the party as having already ended')
+    .option('-f, --finalize <n>', 'Finalize the party with the given no. of attendees', parseInt)
     .option('-n, --name [n]', 'Name of party', 'test')
     .option(
       '-p, --participants <n>',
@@ -47,12 +42,11 @@ async function init() {
     .parse(process.argv)
 
   const name = program.name
-  const ended = !!program.ended
   const cancelled = !!program.cancelled
   const numAdmins = program.admins || 0
   const maxParticipants = program.participants || 2
   const numRegistrations = program.register || 0
-  const numAttendees = program.attendees || 0
+  const numFinalized = program.finalize || 0
   const numWithdrawals = program.withdraw || 0
   const deposit = `${program.deposit}`
   const coolingPeriod = program.coolingPeriod
@@ -67,8 +61,7 @@ Cooling Period:         ${coolingPeriod} seconds
 Extra admins:           ${numAdmins}
 Max. participants:      ${maxParticipants}
 Num to register:        ${numRegistrations}
-Num who attended:       ${numAttendees}
-Party ended:            ${ended ? 'yes' : 'no'}
+Party finalized:        ${numFinalized ? `yes - ${numFinalized} attendees` : 'no'}
 Party cancelled:        ${cancelled ? 'yes' : 'no'}
 Payout withdrawals:     ${numWithdrawals}
 `
@@ -102,19 +95,19 @@ Payout withdrawals:     ${numWithdrawals}
     throw new Error(`Cannot register more attendees than the limit!`)
   }
 
-  if (numAttendees > numRegistrations) {
+  if (numFinalized > numRegistrations) {
     throw new Error(`Cannot have more attendees than there are registrations!`)
   }
 
-  if (numWithdrawals > numAttendees) {
+  if (numWithdrawals > numFinalized) {
     throw new Error(
-      `Cannot have more deposits withdrawn than there are attendees!`
+      `Cannot have more deposits withdrawn than there are people who showed up!`
     )
   }
 
-  if (numWithdrawals && !(ended || cancelled)) {
+  if (numWithdrawals && !(numFinalized || cancelled)) {
     throw new Error(
-      `Cannot withdraw deposits unless party is ended or cancelled!`
+      `Cannot withdraw deposits unless party is finalized or cancelled!`
     )
   }
 
@@ -192,33 +185,30 @@ Register participants
     await Promise.all(promises)
   }
 
-  if (numAttendees) {
+  if (numFinalized) {
     console.log(
       `
 
-Mark as attended
-----------------`
+Mark as finalized (${numFinalized} attendees)
+------------------------------`
     )
 
-    const promises = []
-    for (let i = 0; numAttendees > i; i += 1) {
+    const maps = []
+    let currentMap = toBN(0)
+    for (let i = 0; numFinalized > i; i += 1) {
       console.log(accounts[i])
 
-      promises.push(
-        party.methods
-          .attend([accounts[i]])
-          .send({ from: accounts[0], gas: 200000 })
-      )
+      if (i % 256 === 0) {
+        maps.push(toBN(0))
+      }
+
+      maps[maps.length - 1] = maps[maps.length - 1].bincn(i)
     }
 
-    await Promise.all(promises)
+    await party.methods.finalize(maps).send({ from: accounts[0], gas: 200000 })
   }
 
-  if (ended) {
-    console.log(`\nMarking party as having already ended`)
-
-    await party.methods.payback().send({ from: accounts[0], gas: 200000 })
-  } else if (cancelled) {
+  if (cancelled) {
     console.log(`\nMarking party as cancelled`)
 
     await party.methods.cancel().send({ from: accounts[0], gas: 200000 })
