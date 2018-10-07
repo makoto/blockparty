@@ -60,6 +60,12 @@ accordingly.
 yarn
 ```
 
+Setup parameters for Truffle config:
+
+```
+cp .deployment-sample.js .deployment.js
+```
+
 **Run local chain**
 
 ```
