@@ -2047,6 +2047,10 @@ decamelize@^1.0.0, decamelize@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
+decimal.js@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.0.1.tgz#d04b16b277f0f9af09671cee225c4882e8857c58"
+
 decode-uri-component@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
@@ -2650,6 +2654,13 @@ ethjs-util@^0.1.3:
   dependencies:
     is-hex-prefixed "1.0.0"
     strip-hex-prefix "1.0.0"
+
+ethval@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/ethval/-/ethval-1.2.0.tgz#e820398e554bcd47653c75b7645dc8f0d65cb1d9"
+  dependencies:
+    decimal.js "^10.0.1"
+    web3-utils "^1.0.0-beta.36"
 
 event-emitter@^0.3.5:
   version "0.3.5"

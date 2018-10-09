@@ -47,6 +47,7 @@
     "eth-gas-reporter": "^0.1.9",
     "ethereum-input-data-decoder": "0.0.3",
     "etherscan-api": "^3.0.11",
+    "ethval": "^1.2.0",
     "faker": "^4.1.0",
     "moment": "^2.18.1",
     "prompt": "^1.0.0",
@@ -60,5 +61,6 @@
     "web3": "1.0.0-beta.33",
     "web3-utils": "^1.0.0-beta.36",
     "yargs": "^9.0.1"
-  }
+  },
+  "dependencies": {}
 }

@@ -5,15 +5,18 @@
 const fs = require('fs')
 const path = require('path')
 const Web3 = require('web3')
+const EthVal = require('ethval')
 const program = require('commander')
 const { toBN, fromWei, toHex, toWei } = require('web3-utils')
 const faker = require('faker')
 
 const { Deployer, Conference } = require('../../')
+const { networks } = require('../../truffle-config.js')
 
 async function init() {
   program
     .usage('[options]')
+    .option('--ropsten', 'Use Ropsten instead of local development network')
     .option(
       '--admins <n>',
       'Number of additional party admins to have',
@@ -48,15 +51,17 @@ async function init() {
   const numRegistrations = program.register || 0
   const numFinalized = program.finalize || 0
   const numWithdrawals = program.withdraw || 0
-  const deposit = `${program.deposit}`
+  const deposit = new EthVal(program.deposit, 'eth')
   const coolingPeriod = program.coolingPeriod
+  const ropsten = program.ropsten
 
   console.log(
     `
 Config
 ------
+Network:                ${ropsten ? 'ropsten' : 'development'}
 Party name:             ${name}
-Deposit level:          ${deposit}
+Deposit level:          ${deposit.toFixed(3)} ETH
 Cooling Period:         ${coolingPeriod} seconds
 Extra admins:           ${numAdmins}
 Max. participants:      ${maxParticipants}
@@ -67,9 +72,17 @@ Payout withdrawals:     ${numWithdrawals}
 `
   )
 
-  const web3 = new Web3(
-    new Web3.providers.HttpProvider('http://localhost:8545')
+  const maxAccountsNeeded = parseInt(Math.max(numRegistrations, numAdmins + 1), 10)
+
+  let provider = new Web3.providers.HttpProvider(
+    `http://${networks.development.host}:${networks.development.port}`
   )
+
+  if (ropsten) {
+    provider = networks.ropsten.provider(maxAccountsNeeded)
+  }
+
+  const web3 = new Web3(provider)
 
   const networkId = await web3.eth.net.getId()
 
@@ -113,14 +126,14 @@ Payout withdrawals:     ${numWithdrawals}
 
   const [account] = accounts
 
-  console.log(`Account: ${account}`)
+  console.log(`Owner: ${account}`)
 
   const deployer = new web3.eth.Contract(Deployer.abi, deployerAddress)
 
   const tx = await deployer.methods
     .deploy(
       name,
-      toHex(toWei(deposit)),
+      deposit.toWei().toString(16),
       toHex(maxParticipants),
       toHex(coolingPeriod),
       'encKey'
@@ -132,6 +145,39 @@ Payout withdrawals:     ${numWithdrawals}
   console.log(`New party: ${partyAddress}`)
 
   const party = new web3.eth.Contract(Conference.abi, partyAddress)
+
+  console.log(`
+
+Ensuring accounts have enough ETH in them
+------------------------------------------`
+)
+
+  const minEthNeededPerAccount = deposit.toWei().add(new EthVal(0.1, 'eth') /* assume 0.1 ETH for total gas cost */)
+  // check main account
+  const ownerBalance = new EthVal(await web3.eth.getBalance(accounts[0]))
+  if (ownerBalance.lt(minEthNeededPerAccount)) {
+    throw new Error(`Main account ${owner} only has ${ownerBalance.toEth().toFixed(4)} ETH but ${minEthNeededPerAccount.toFixed(4)} is needed.` )
+  }
+  for (let i = 1; maxAccountsNeeded > i; ++i) {
+    const balance = new EthVal(await web3.eth.getBalance(accounts[i]))
+
+    if (balance.lt(minEthNeededPerAccount)) {
+      const rem = minEthNeededPerAccount.sub(balance)
+      if (ownerBalance.sub(rem).lt(minEthNeededPerAccount)) {
+        throw new Error(`Main account ${owner} does not enough ETH to share with ${accounts[i]}.` )
+      }
+
+      console.log(`${accounts[0]} -> ${accounts[1]}: ${rem.toEth().toFixed(4)} ETH`)
+
+      await web3.eth.sendTransaction({
+        from: accounts[0],
+        to: accounts[i],
+        value: rem.toWei().toString(16)
+      })
+    }
+  }
+  console.log('Done.')
+
 
   if (numAdmins) {
     console.log(
@@ -157,6 +203,7 @@ Register extra admins
     }
 
     await Promise.all(promises)
+    console.log('Done.')
   }
 
   if (numRegistrations) {
@@ -175,14 +222,15 @@ Register participants
 
       promises.push(
         party.methods.register(twitterId).send({
-          value: toHex(toWei(deposit)),
+          value: deposit.toWei().toString(16),
           from: accounts[i],
           gas: 200000
         })
       )
     }
 
-    await Promise.all(promises)
+    const tx = await Promise.all(promises)
+    console.log('Done.')
   }
 
   if (numFinalized) {
@@ -206,13 +254,20 @@ Mark as finalized (${numFinalized} attendees)
     }
 
     await party.methods.finalize(maps).send({ from: accounts[0], gas: 200000 })
+    console.log('Done.')
   }
 
   if (cancelled) {
-    console.log(`\nMarking party as cancelled`)
+    console.log(
+      `
+
+Mark party as cancelled
+------------------------------`
+    )
 
     await party.methods.cancel().send({ from: accounts[0], gas: 200000 })
-  }
+    console.log('Done.')
+}
 
   if (numWithdrawals) {
     const payout = await party.methods.payout().call()
@@ -234,6 +289,7 @@ Withdraw payout - ${fromWei(payout, 'ether')} ETH
     }
 
     await Promise.all(promises)
+    console.log('Done.')
   }
 }
 
