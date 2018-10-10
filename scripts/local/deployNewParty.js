@@ -130,6 +130,12 @@ Payout withdrawals:     ${numWithdrawals}
 
   const deployer = new web3.eth.Contract(Deployer.abi, deployerAddress)
 
+  console.log(`
+
+Deploying new party
+-------------------`
+)
+
   const tx = await deployer.methods
     .deploy(
       name,
@@ -293,7 +299,11 @@ Withdraw payout - ${fromWei(payout, 'ether')} ETH
   }
 }
 
-init().catch(err => {
-  console.error(err)
-  process.exit(-1)
-})
+init()
+  .then(() => {
+    process.exit(0)
+  })
+  .catch(err => {
+    console.error(err)
+    process.exit(-1)
+  })
