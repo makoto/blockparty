@@ -74,7 +74,7 @@ async function init() {
 Config
 ------
 Network:                ${ropsten ? 'ropsten' : 'development'}
-Party id:             ${id}
+Party id:               ${id}
 Deposit level:          ${deposit.toFixed(3)} ETH
 Cooling Period:         ${coolingPeriod} seconds
 Extra admins:           ${numAdmins}
