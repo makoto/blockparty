@@ -11,6 +11,7 @@ const { toBN, fromWei, toHex, toWei } = require('web3-utils')
 const faker = require('faker')
 
 const { Deployer, Conference } = require('../../')
+const deployedAddresses = require('../../deployedAddresses.json')
 const { networks } = require('../../truffle-config.js')
 
 async function waitTx (promise) {
@@ -94,7 +95,10 @@ Payout withdrawals:     ${numWithdrawals}
 
   const networkId = await web3.eth.net.getId()
 
-  const { address: deployerAddress } = Deployer.networks[networkId] || {}
+  const { address: deployerAddress } = Deployer.networks[networkId] || deployedAddresses[networkId]
+  if (!deployerAddress) {
+    throw new Error('Unable to find address of Deployer contract on this network!')
+  }
 
   console.log(`Deployer: ${deployerAddress}`)
 
