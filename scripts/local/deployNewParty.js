@@ -13,6 +13,14 @@ const faker = require('faker')
 const { Deployer, Conference } = require('../../')
 const { networks } = require('../../truffle-config.js')
 
+async function waitTx (promise) {
+  const txReceipt = await promise
+  if (txReceipt.status !== '0x1') {
+    throw new Error('transaction failed')
+  }
+  return txReceipt
+}
+
 async function init() {
   program
     .usage('[options]')
@@ -136,7 +144,7 @@ Deploying new party
 -------------------`
 )
 
-  const tx = await deployer.methods
+  const tx = await waitTx(deployer.methods
     .deploy(
       name,
       deposit.toWei().toString(16),
@@ -144,7 +152,7 @@ Deploying new party
       toHex(coolingPeriod),
       'encKey'
     )
-    .send({ from: account, gas: 4000000 })
+    .send({ from: account, gas: 4000000 }))
 
   const { deployedAddress: partyAddress } = tx.events.NewParty.returnValues
 
@@ -175,11 +183,11 @@ Ensuring accounts have enough ETH in them
 
       console.log(`${accounts[0]} -> ${accounts[1]}: ${rem.toEth().toFixed(4)} ETH`)
 
-      await web3.eth.sendTransaction({
+      await waitTx(web3.eth.sendTransaction({
         from: accounts[0],
         to: accounts[i],
         value: rem.toWei().toString(16)
-      })
+      }))
     }
   }
   console.log('Done.')
@@ -202,9 +210,9 @@ Register extra admins
       console.log(accounts[i])
 
       promises.push(
-        party.methods
+        waitTx(party.methods
           .grant([accounts[i]])
-          .send({ from: accounts[0], gas: 200000 })
+          .send({ from: accounts[0], gas: 200000 }))
       )
     }
 
@@ -227,11 +235,11 @@ Register participants
       console.log(`${accounts[i]} - ${twitterId}`)
 
       promises.push(
-        party.methods.register(twitterId).send({
+        waitTx(party.methods.register(twitterId).send({
           value: deposit.toWei().toString(16),
           from: accounts[i],
           gas: 200000
-        })
+        }))
       )
     }
 
@@ -259,7 +267,7 @@ Mark as finalized (${numFinalized} attendees)
       maps[maps.length - 1] = maps[maps.length - 1].bincn(i)
     }
 
-    await party.methods.finalize(maps).send({ from: accounts[0], gas: 200000 })
+    await waitTx(party.methods.finalize(maps).send({ from: accounts[0], gas: 200000 }))
     console.log('Done.')
   }
 
@@ -271,7 +279,7 @@ Mark party as cancelled
 ------------------------------`
     )
 
-    await party.methods.cancel().send({ from: accounts[0], gas: 200000 })
+    await waitTx(party.methods.cancel().send({ from: accounts[0], gas: 200000 }))
     console.log('Done.')
 }
 
@@ -290,7 +298,7 @@ Withdraw payout - ${fromWei(payout, 'ether')} ETH
       console.log(accounts[i])
 
       promises.push(
-        party.methods.withdraw().send({ from: accounts[i], gas: 200000 })
+        waitTx(party.methods.withdraw().send({ from: accounts[i], gas: 200000 }))
       )
     }
 
