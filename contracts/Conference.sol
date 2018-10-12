@@ -168,15 +168,6 @@ contract Conference is GroupAdmin {
         return isRegistered(_addr) && participants[_addr].paid;
     }
 
-    /**
-     * @dev Show the payout amount each participant can withdraw.
-     * @return The amount each participant can withdraw.
-     */
-    function payout() public view returns(uint256){
-        if (totalAttended == 0) return 0;
-        return uint(totalBalance()) / totalAttended;
-    }
-
     /* Admin only functions */
 
     /**
@@ -228,7 +219,6 @@ contract Conference is GroupAdmin {
         endedAt = now;
 
         // calculate total attended
-        totalAttended = 0;
         for (uint i = 0; i < attendanceMaps.length; i++) {
             uint map = attendanceMaps[i];
             // brian kerninghan bit-counting method - O(log(n))
@@ -240,7 +230,10 @@ contract Conference is GroupAdmin {
         // since maps can contain more bits than there are registrants, we cap the value!
         totalAttended = totalAttended < registered ? totalAttended : registered;
 
-        payoutAmount = payout();
+        if (totalAttended > 0) {
+          payoutAmount = uint(totalBalance()) / totalAttended;
+        }
+
         emit FinalizeEvent(attendanceMaps, payoutAmount);
     }
 }

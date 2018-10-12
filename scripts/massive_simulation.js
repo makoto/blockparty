@@ -41,12 +41,12 @@ module.exports = async function(callback) {
     try{
         await conference.setLimitOfParticipants(limit, {from:web3.eth.accounts[0], gasPrice:gasPrice});
     }catch(err){
-        console.log('err', err);        
+        console.log('err', err);
     }
     console.log('the current limit is', await conference.limitOfParticipants.call())
     Conference.setProvider(provider);
     conference = await Conference.deployed();
-  
+
     for (var i = 0; i < accounts.length; i++) {
       var deposit = await conference.deposit.call();
       var registered = await conference.participants.call(accounts[i])
@@ -69,7 +69,7 @@ module.exports = async function(callback) {
         let user = 'user' + i;
         console.log('registering', user, accounts[i]);
         try{
-            await conference.register(user, {from:accounts[i], value:deposit, gasPrice:gasPrice})
+            await conference.register({from:accounts[i], value:deposit, gasPrice:gasPrice})
         }catch(err){
             console.log('err', err);
         }

@@ -292,7 +292,7 @@ Mark party as cancelled
 }
 
   if (numWithdrawals) {
-    const payout = await party.methods.payout().call()
+    const payout = await party.payoutAmount().call()
 
     console.log(
       `

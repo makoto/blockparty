@@ -223,7 +223,7 @@ contract('Conference', function(accounts) {
       await conference.finalize([1], {from:owner});
 
       await conference.ended().should.eventually.eq(true)
-      await conference.payoutAmount().should.eventually.eq(await conference.payout())
+      await conference.payoutAmount().should.eventually.eq(mulBN(deposit, 4))
     })
 
     it('correctly calculates total attended even if more 1 bits are set than there are registrations', async function() {
@@ -304,10 +304,20 @@ contract('Conference', function(accounts) {
     })
   })
 
-  describe('on empty event', function(){
+  describe('empty events', function(){
     it('nothing to withdraw if no one registered', async function(){
       await conference.finalize([], { from: owner });
+      await conference.ended().should.eventually.eq(true);
       await conference.payoutAmount().should.eventually.eq(0);
+      await conference.withdraw({ from: owner }).should.be.rejected;
+    })
+
+    it('nothing to withdraw if no one showed up', async function(){
+      await conference.register({ from: owner, value: deposit });
+      await conference.finalize([0], { from: owner });
+      await conference.ended().should.eventually.eq(true);
+      await conference.payoutAmount().should.eventually.eq(0);
+      await conference.withdraw({ from: owner }).should.be.rejected;
     })
   })
 
