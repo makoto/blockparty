@@ -9,11 +9,6 @@ const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const twitterHandle = '@bighero6';
 const gas = 1000000;
 const gasPrice = 1;
-const participantAttributes = ['participantIndex', 'participantName', 'addr', 'attended', 'paid'];
-
-const getParticipantDetail = function(participant, detail){
-  return participant[participantAttributes.indexOf(detail)];
-}
 
 contract('Conference - large party', function(accounts) {
   const owner = accounts[0];
@@ -32,7 +27,7 @@ contract('Conference - large party', function(accounts) {
       conference = await Conference.new('', 0, 500, 0, '0x0');
 
       for (let i = 0; i < numRegistered; ++i) {
-        await conference.register(`p${i}`, {value:deposit, from:accounts[10 + i]});
+        await conference.register({value:deposit, from:accounts[10 + i]});
       }
     })
 

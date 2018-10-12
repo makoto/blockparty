@@ -10,7 +10,7 @@ const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const twitterHandle = '@bighero6';
 const gas = 1000000;
 const gasPrice = 1;
-const participantAttributes = ['participantIndex', 'participantName', 'addr', 'paid'];
+const participantAttributes = ['index', 'addr', 'paid'];
 
 const getParticipantDetail = function(participant, detail){
   return participant[participantAttributes.indexOf(detail)];
@@ -58,7 +58,7 @@ contract('Conference', function(accounts) {
     })
 
     it('cannot rename the event once someone registered', async function(){
-      await conference.register(twitterHandle, {value:deposit});
+      await conference.register({value:deposit});
       await conference.changeName('new name', {from:owner}).should.be.rejected;
 
       await conference.name().should.not.eventually.eq('new name')
@@ -68,19 +68,19 @@ contract('Conference', function(accounts) {
   describe('on setLimitOfParticipants', function(){
     it('does not allow to register more than the limit', async function(){
       await conference.setLimitOfParticipants(1)
-      await conference.register(twitterHandle, {value:deposit});
+      await conference.register({value:deposit});
 
       await conference.registered().should.eventually.eq(1)
 
-      await conference.register('anotherName', {from: non_owner, value:deposit}).should.be.rejected;
+      await conference.register({from: non_owner, value:deposit}).should.be.rejected;
 
       await conference.registered().should.eventually.eq(1)
     })
 
     it('returns only your deposit for multiple invalidations', async function(){
       await conference.setLimitOfParticipants(2);
-      await conference.register(twitterHandle, {value:deposit});
-      await conference.register('anotherName', {from: accounts[1], value:deposit});
+      await conference.register({value:deposit});
+      await conference.register({from: accounts[1], value:deposit});
 
       await conference.registered().should.eventually.eq(2)
 
@@ -88,7 +88,7 @@ contract('Conference', function(accounts) {
       const beforeAccountBalance = await getBalance(accounts[2])
 
       // Over capacity as well as wrong deposit value.
-      await conference.register('anotherName', {from: accounts[2], value:invalidTransaction}).should.be.rejected;
+      await conference.register({from: accounts[2], value:invalidTransaction}).should.be.rejected;
 
       await conference.registered().should.eventually.eq(2)
 
@@ -124,7 +124,7 @@ contract('Conference', function(accounts) {
     beforeEach(async function(){
       beforeContractBalance = await getBalance(conference.address);
 
-      await conference.register(twitterHandle, {value:deposit});
+      await conference.register({value:deposit});
     })
 
     it('increments registered', async function(){
@@ -153,15 +153,15 @@ contract('Conference', function(accounts) {
       let wrongDeposit = 5;
       let beforeContractBalance = await getBalance(conference.address);
 
-      await conference.register(twitterHandle, {from:owner, value:wrongDeposit}).should.be.rejected;
+      await conference.register({from:owner, value:wrongDeposit}).should.be.rejected;
 
       await getBalance(conference.address).should.eventually.eq(beforeContractBalance)
       await conference.isRegistered(owner).should.eventually.eq(false)
     })
 
     it('cannot register twice with same address', async function(){
-      await conference.register(twitterHandle, {from:owner, value:deposit});
-      await conference.register(twitterHandle, {from:owner, value:deposit}).should.be.rejected;
+      await conference.register({from:owner, value:deposit});
+      await conference.register({from:owner, value:deposit}).should.be.rejected;
 
       await getBalance(conference.address).should.eventually.eq(deposit)
 
@@ -175,10 +175,10 @@ contract('Conference', function(accounts) {
     let admin = accounts[5];
 
     beforeEach(async function(){
-      await conference.register(twitterHandle, {value:deposit, from:non_owner});
-      await conference.register(twitterHandle, {value:deposit, from:accounts[6]});
-      await conference.register(twitterHandle, {value:deposit, from:accounts[7]});
-      await conference.register(twitterHandle, {value:deposit, from:accounts[8]});
+      await conference.register({value:deposit, from:non_owner});
+      await conference.register({value:deposit, from:accounts[6]});
+      await conference.register({value:deposit, from:accounts[7]});
+      await conference.register({value:deposit, from:accounts[8]});
     })
 
     it('can be called by owner', async function(){
@@ -224,6 +224,17 @@ contract('Conference', function(accounts) {
 
       await conference.ended().should.eventually.eq(true)
       await conference.payoutAmount().should.eventually.eq(await conference.payout())
+    })
+
+    it('correctly calculates total attended even if more 1 bits are set than there are registrations', async function() {
+      // all attended
+      let n = toBN(0)
+      for (let i = 0; i < 256; i++) {
+        n = n.bincn(i)
+      }
+      await conference.finalize([n], {from:owner});
+
+      await conference.totalAttended().should.eventually.eq(4)
     })
 
     it('correctly updates attendee records', async function() {
@@ -307,8 +318,8 @@ contract('Conference', function(accounts) {
     let notRegistered = accounts[4];
 
     beforeEach(async function(){
-      await conference.register(twitterHandle, {from:attended, value:deposit});
-      await conference.register(twitterHandle, {from:notAttended, value:deposit});
+      await conference.register({from:attended, value:deposit});
+      await conference.register({from:notAttended, value:deposit});
     })
 
     it('cannot cancel if non owner calls', async function(){
@@ -352,7 +363,7 @@ contract('Conference', function(accounts) {
       await conference.cancel();
       currentRegistered = await conference.registered();
 
-      await conference.register('some handler', {from:notRegistered, value:deposit}).should.be.rejected;
+      await conference.register({from:notRegistered, value:deposit}).should.be.rejected;
 
       await conference.registered().should.eventually.eq(currentRegistered)
       await conference.ended().should.eventually.eq(true)
@@ -383,8 +394,8 @@ contract('Conference', function(accounts) {
     let notRegistered = accounts[2];
 
     beforeEach(async function(){
-      await conference.register(twitterHandle, {from:owner, value:deposit});
-      await conference.register(twitterHandle, {from:registered, value:deposit});
+      await conference.register({from:owner, value:deposit});
+      await conference.register({from:registered, value:deposit});
 
       await getBalance(conference.address).should.eventually.eq( mulBN(deposit, 2) )
     })
@@ -429,7 +440,7 @@ contract('Conference', function(accounts) {
 
       deposit = await conference.deposit()
 
-      await conference.register('one', {value:deposit});
+      await conference.register({value:deposit});
 
       await getBalance(conference.address).should.eventually.eq(deposit)
 
@@ -439,7 +450,7 @@ contract('Conference', function(accounts) {
     })
 
     it('cannot be cleared if event is not ended', async function(){
-      await conference.register('one', {value:deposit});
+      await conference.register({value:deposit});
 
       await getBalance(conference.address).should.eventually.eq(deposit)
 
@@ -449,7 +460,7 @@ contract('Conference', function(accounts) {
     })
 
     it('cannot be cleared if cooling period is not passed', async function(){
-      await conference.register('one', {value:deposit});
+      await conference.register({value:deposit});
       await conference.cancel({from:owner});
 
       await conference.ended().should.eventually.eq(true)
@@ -464,7 +475,7 @@ contract('Conference', function(accounts) {
       conference = await Conference.new('', 0, 0, 1, '0x0')
       deposit = await conference.deposit()
 
-      await conference.register('one', {value:deposit});
+      await conference.register({value:deposit});
       await conference.cancel({from:owner});
 
       await conference.ended().should.eventually.eq(true)

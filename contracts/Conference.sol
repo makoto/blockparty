@@ -10,6 +10,7 @@ contract Conference is GroupAdmin {
     bool public ended;
     bool public cancelled;
     uint public endedAt;
+    uint public totalAttended;
     uint public coolingPeriod;
     uint256 public payoutAmount;
     uint[] public attendanceMaps;
@@ -18,15 +19,14 @@ contract Conference is GroupAdmin {
     mapping (uint => address) public participantsIndex;
 
     struct Participant {
-        uint participantIndex;
-        string participantName;
+        uint index;
         address addr;
         bool paid;
     }
 
-    event RegisterEvent(address addr, string participantName, uint participantIndex);
-    event FinalizeEvent(uint[] maps, uint256 _payout);
-    event WithdrawEvent(address addr, uint256 _payout);
+    event RegisterEvent(address addr, uint index);
+    event FinalizeEvent(uint[] maps, uint256 payout);
+    event WithdrawEvent(address addr, uint256 payout);
     event CancelEvent();
     event ClearEvent(address addr, uint256 leftOver);
 
@@ -92,19 +92,18 @@ contract Conference is GroupAdmin {
     }
 
     /**
-     * @dev Registers with twitter name.
-     * @param _participant The twitter address of the participant
+     * @dev Register for the event
      */
-    function register(string _participant) external payable onlyActive{
+    function register() external payable onlyActive{
         require(msg.value == deposit, 'must send exact deposit amount');
         require(registered < limitOfParticipants, 'participant limit reached');
         require(!isRegistered(msg.sender), 'already registered');
 
         registered++;
         participantsIndex[registered] = msg.sender;
-        participants[msg.sender] = Participant(registered, _participant, msg.sender, false);
+        participants[msg.sender] = Participant(registered, msg.sender, false);
 
-        emit RegisterEvent(msg.sender, _participant, registered);
+        emit RegisterEvent(msg.sender, registered);
     }
 
 
@@ -153,34 +152,10 @@ contract Conference is GroupAdmin {
         // check the attendance maps
         else {
             Participant storage p = participants[_addr];
-            uint pIndex = p.participantIndex - 1;
+            uint pIndex = p.index - 1;
             uint map = attendanceMaps[uint(pIndex / 256)];
             return (0 < (map & (2 ** (pIndex % 256))));
         }
-    }
-
-
-    /**
-     * @dev Returns total no. of attendees.
-     */
-    function totalAttended() public view returns (uint) {
-        if (!ended) {
-            return 0;
-        }
-
-        // if using maps then calculate based on them
-        uint sum = 0;
-        for (uint i = 0; i < attendanceMaps.length; i++) {
-            uint map = attendanceMaps[i];
-            // brian kerninghan bit-counting method - O(log(n))
-            while (map != 0) {
-                map &= (map - 1);
-                sum++;
-            }
-        }
-        
-        // since maps can contain more bits than there are registrants, we cap the value!
-        return sum < registered ? sum : registered;
     }
 
 
@@ -198,9 +173,8 @@ contract Conference is GroupAdmin {
      * @return The amount each participant can withdraw.
      */
     function payout() public view returns(uint256){
-        uint totalAttendees = totalAttended();
-        if (totalAttendees == 0) return 0;
-        return uint(totalBalance()) / uint(totalAttendees);
+        if (totalAttended == 0) return 0;
+        return uint(totalBalance()) / totalAttended;
     }
 
     /* Admin only functions */
@@ -252,6 +226,20 @@ contract Conference is GroupAdmin {
         attendanceMaps = _maps;
         ended = true;
         endedAt = now;
+
+        // calculate total attended
+        totalAttended = 0;
+        for (uint i = 0; i < attendanceMaps.length; i++) {
+            uint map = attendanceMaps[i];
+            // brian kerninghan bit-counting method - O(log(n))
+            while (map != 0) {
+                map &= (map - 1);
+                totalAttended++;
+            }
+        }
+        // since maps can contain more bits than there are registrants, we cap the value!
+        totalAttended = totalAttended < registered ? totalAttended : registered;
+
         payoutAmount = payout();
         emit FinalizeEvent(attendanceMaps, payoutAmount);
     }
