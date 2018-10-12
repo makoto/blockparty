@@ -231,7 +231,7 @@ contract Conference is GroupAdmin {
         totalAttended = totalAttended < registered ? totalAttended : registered;
 
         if (totalAttended > 0) {
-          payoutAmount = uint(totalBalance()) / totalAttended;
+            payoutAmount = uint(totalBalance()) / totalAttended;
         }
 
         emit FinalizeEvent(attendanceMaps, payoutAmount);
