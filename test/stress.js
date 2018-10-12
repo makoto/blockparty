@@ -50,7 +50,7 @@ const reportTest = async function (participants, accounts, finalize){
   const transactions = [];
   const encrypted_codes = [];
   const owner = accounts[0];
-  conference = await Conference.new('Test', '0', participants, '0', '', '0x0', {from: accounts[0], gasPrice:gasPrice});
+  conference = await Conference.new('Test', '0', participants, '0', '0x0', {from: accounts[0], gasPrice:gasPrice});
   transactions.push(await getTransaction('create   ', conference.transactionHash))
   deposit = await conference.deposit()
 
@@ -91,16 +91,6 @@ const reportTest = async function (participants, accounts, finalize){
   fs.writeFileSync(`./log/stress_${pad(participants, 4)}_${date}.log`, bodies.join('\n') + '\n');
 }
 
-const reportBatchAttend = async (participants, accounts) => (
-  await reportTest(participants, accounts, async ({ deposit, conference, owner, addresses, transactions }) => {
-    const attendTrx = await conference.attend(addresses, {from:owner, gasPrice});
-    transactions.push(await getTransaction('batchAttend  ', attendTrx.tx))
-
-    trx = await conference.payback({from:owner, gasPrice});
-    transactions.push(await getTransaction('payback  ', trx.tx))
-  })
-)
-
 const reportFinalize = async (participants, accounts) => (
   reportTest(participants, accounts, async ({ deposit, conference, owner, addresses, transactions }) => {
     // build bitmaps
@@ -122,10 +112,6 @@ contract('Stress test', function(accounts) {
   describe('2 participants', function() {
     const num = 2
 
-    it('batch attend', async function(){
-      await reportBatchAttend(num, accounts)
-    })
-
     it('finalize', async function(){
       await reportFinalize(num, accounts)
     })
@@ -133,10 +119,6 @@ contract('Stress test', function(accounts) {
 
   describe('20 participants', function() {
     const num = 20
-
-    it('batch attend', async function(){
-      await reportBatchAttend(num, accounts)
-    })
 
     it('finalize', async function(){
       await reportFinalize(num, accounts)
@@ -146,10 +128,6 @@ contract('Stress test', function(accounts) {
   describe('100 participants', function() {
     const num = 100
 
-    it('batch attend', async function(){
-      await reportBatchAttend(num, accounts)
-    })
-
     it('finalize', async function(){
       await reportFinalize(num, accounts)
     })
@@ -158,10 +136,6 @@ contract('Stress test', function(accounts) {
   describe('200 participants', function() {
     const num = 200
 
-    it('batch attend', async function(){
-      await reportBatchAttend(num, accounts)
-    })
-
     it('finalize', async function(){
       await reportFinalize(num, accounts)
     })
@@ -169,10 +143,6 @@ contract('Stress test', function(accounts) {
 
   describe('300 participants', function() {
     const num = 300
-
-    it('batch attend', async function(){
-      await reportBatchAttend(num, accounts)
-    })
 
     it('finalize', async function(){
       await reportFinalize(num, accounts)

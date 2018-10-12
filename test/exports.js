@@ -9,9 +9,8 @@ contract('NPM exports', () => {
   it('exports valid events', () => {
     assert.isOk(packageExport.events.NewParty.name)
     assert.isOk(packageExport.events.Register.name)
-    assert.isOk(packageExport.events.Attend.name)
+    assert.isOk(packageExport.events.Finalize.name)
     assert.isOk(packageExport.events.Withdraw.name)
-    assert.isOk(packageExport.events.EndParty.name)
     assert.isOk(packageExport.events.CancelParty.name)
     assert.isOk(packageExport.events.AddAdmin.name)
     assert.isOk(packageExport.events.RemoveAdmin.name)

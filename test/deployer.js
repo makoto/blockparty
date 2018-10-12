@@ -34,8 +34,7 @@ contract('Deployer', accounts => {
       'test',
       toHex(toWei('0.02')),
       toHex(2),
-      toHex(60 * 60 * 24 * 7),
-      'encKey'
+      toHex(60 * 60 * 24 * 7)
     )
 
     const events = await getEvents(result, 'NewParty')
@@ -60,8 +59,7 @@ contract('Deployer', accounts => {
       'test',
       toHex(toWei('0.02')),
       toHex(2),
-      toHex(60 * 60 * 24 * 7),
-      'encKey'
+      toHex(60 * 60 * 24 * 7)
     )
 
     const [ { args: { deployedAddress} } ] = (await getEvents(result, 'NewParty'))

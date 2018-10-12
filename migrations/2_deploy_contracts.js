@@ -7,13 +7,12 @@ const crypto = require('crypto');
 const fs = require('fs');
 const { sha3 }  = require('web3-utils')
 
-let encryption = '';
 let config = {};
 let name = ''; // empty name falls back to the contract default
 let deposit = 0; // 0 falls back to the contract default
 let tld = 'eth';
 let limitOfParticipants = 0; // 0 falls back to the contract default
-// eg: truffle migrate --config '{"name":"CodeUp No..", "limitOfParticipants":15, "encryption":"./tmp/test_public.key"}'
+// eg: truffle migrate --config '{"name":"CodeUp No..", "limitOfParticipants":15}'
 if (yargs.argv.config) {
   config = JSON.parse(yargs.argv.config);
 }
@@ -28,13 +27,9 @@ module.exports = function(deployer) {
     limitOfParticipants = config.limitOfParticipants;
   }
 
-  if (config.encryption) {
-    encryption = fs.readFileSync(config.encryption, {encoding: 'ascii'});
-  }
-
   return deployer.deploy(Deployer)
     .then(() => {
-      console.log([name, deposit,limitOfParticipants, coolingPeriod, encryption].join(','));
-      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, encryption, '0x0');
+      console.log([name, deposit,limitOfParticipants, coolingPeriod].join(','));
+      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, '0x0');
     })
   };
