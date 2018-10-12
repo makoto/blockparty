@@ -158,8 +158,7 @@ Deploying new party
       id,
       deposit.toWei().toString(16),
       toHex(maxParticipants),
-      toHex(coolingPeriod),
-      'encKey'
+      toHex(coolingPeriod)
     )
     .send({ from: account, gas: 4000000 }))
 

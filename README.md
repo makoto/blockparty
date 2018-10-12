@@ -83,7 +83,7 @@ yarn test
 To deploy a new party onto the local test network:
 
 ```shell
-yarn seed:party
+yarn seed:party -i test
 ```
 
 This command has a number of options which allow you additionally simulate the
@@ -114,7 +114,7 @@ registered, with 25 having actually attended, and 12 having withdrawn their
 payouts after the party has ended. With an added cooling period of 1 millisecond to allow your to test the clear functionality immediately.
 
 ```shell
-yarn seed:party -p 100  -r 50 -a 25 -w 12 -e -t 1
+yarn seed:party -i test -p 100  -r 50 -a 25 -w 12 -e -t 1
 ```
 
 The script actually uses `truffle-config.js` to work out how to connect to the
@@ -122,7 +122,7 @@ development network. If you want to seed a party on Ropsten then you can do by
 supplying the `--ropsten` flag:
 
 ```shell
-yarn seed:party --ropsten -p 100  -r 50 -a 25 -w 12 -e -t 1
+yarn seed:party --ropsten -i test -p 100  -r 50 -a 25 -w 12 -e -t 1
 ```
 
 _Note: For Ropsten seeding to work you will need to have configured valid values in `.deployment.js` (see "Deployment to public networks" below)._
