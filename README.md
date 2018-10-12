@@ -32,7 +32,7 @@ async init = () => {
   const deployer = await contract.deployed()
 
   // deploy a new party (see Deployer.sol for parameter documentation)
-  await deployer.deploy('My event', 0, 0, 0, 'Encryption key')
+  await deployer.deploy('My event', 0, 0, 0)
 
   const events = await promisify(deployer.contract.getPastEvents, deployer.contract)('NewParty')
 
@@ -96,13 +96,13 @@ Usage: deployNewParty [options]
 
 Options:
 
+  -i, --id <id>            Id of party (obtain from UI /create page)
   --ropsten                Use Ropsten instead of local development network
   --admins <n>             Number of additional party admins to have
   -c, --cancelled          Whether to mark the party as cancelled
   -t, --coolingPeriod [n]  How long the cooling period is in seconds (default: 604800)
   -d, --deposit [n]        Amount of ETH attendees must deposit (default: 0.02)
   -f, --finalize <n>       Finalize the party with the given no. of attendees
-  -n, --name [n]           Name of party (default: test)
   -p, --participants <n>   Maximum number of participants
   -r, --register <n>       Number of participants to register
   -w, --withdraw <n>       Number of attendees to withdraw payouts for

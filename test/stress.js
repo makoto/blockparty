@@ -48,7 +48,6 @@ const formatArray = function(array){
 const reportTest = async function (participants, accounts, finalize){
   const addresses = [];
   const transactions = [];
-  const encrypted_codes = [];
   const owner = accounts[0];
   conference = await Conference.new('Test', '0', participants, '0', '0x0', {from: accounts[0], gasPrice:gasPrice});
   transactions.push(await getTransaction('create   ', conference.transactionHash))
