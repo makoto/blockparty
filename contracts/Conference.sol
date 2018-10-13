@@ -153,7 +153,7 @@ contract Conference is GroupAdmin {
         else {
             Participant storage p = participants[_addr];
             uint256 pIndex = p.index - 1;
-            uint256 map = attendanceMaps[uint(pIndex / 256)];
+            uint256 map = attendanceMaps[uint256(pIndex / 256)];
             return (0 < (map & (2 ** (pIndex % 256))));
         }
     }
@@ -217,7 +217,7 @@ contract Conference is GroupAdmin {
         attendanceMaps = _maps;
         ended = true;
         endedAt = now;
-        uint _totalAttended = 0;
+        uint256 _totalAttended = 0;
         // calculate total attended
         for (uint256 i = 0; i < attendanceMaps.length; i++) {
             uint256 map = attendanceMaps[i];
@@ -231,7 +231,7 @@ contract Conference is GroupAdmin {
         totalAttended = _totalAttended < registered ? _totalAttended : registered;
 
         if (totalAttended > 0) {
-            payoutAmount = uint(totalBalance()) / totalAttended;
+            payoutAmount = uint256(totalBalance()) / totalAttended;
         }
 
         emit FinalizeEvent(attendanceMaps, payoutAmount);
