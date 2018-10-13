@@ -245,10 +245,10 @@ Register participants
     for (let i = 0; numRegistrations > i; i += 1) {
       const twitterId = `@${faker.lorem.word(1).toLowerCase()}`
 
-      console.log(`${accounts[i]} - ${twitterId}`)
+      console.log(accounts[i])
 
       promises.push(
-        waitTx(party.methods.register(twitterId).send({
+        waitTx(party.methods.register().send({
           value: deposit.toWei().toString(16),
           from: accounts[i],
           gas: 200000
@@ -297,12 +297,12 @@ Mark party as cancelled
 }
 
   if (numWithdrawals) {
-    const payout = await party.payoutAmount().call()
+    const payout = new EthVal(await party.methods.payoutAmount().call())
 
     console.log(
       `
 
-Withdraw payout - ${fromWei(payout, 'ether')} ETH
+Withdraw payout - ${payout.toEth().toFixed(4)} ETH
 -----------------------------`
     )
 
