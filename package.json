@@ -1,6 +1,6 @@
 {
   "name": "@noblocknoparty/contracts",
-  "version": "0.17.0",
+  "version": "1.0.0",
   "description": "Kickback smart contracts",
   "main": "index.js",
   "directories": {
