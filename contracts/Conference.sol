@@ -5,27 +5,27 @@ import './GroupAdmin.sol';
 contract Conference is GroupAdmin {
     string public name;
     uint256 public deposit;
-    uint public limitOfParticipants;
-    uint public registered;
+    uint256 public limitOfParticipants;
+    uint256 public registered;
     bool public ended;
     bool public cancelled;
-    uint public endedAt;
-    uint public totalAttended;
-    uint public coolingPeriod;
+    uint256 public endedAt;
+    uint256 public totalAttended;
+    uint256 public coolingPeriod;
     uint256 public payoutAmount;
-    uint[] public attendanceMaps;
+    uint256[] public attendanceMaps;
 
     mapping (address => Participant) public participants;
-    mapping (uint => address) public participantsIndex;
+    mapping (uint256 => address) public participantsIndex;
 
     struct Participant {
-        uint index;
+        uint256 index;
         address addr;
         bool paid;
     }
 
-    event RegisterEvent(address addr, uint index);
-    event FinalizeEvent(uint[] maps, uint256 payout);
+    event RegisterEvent(address addr, uint256 index);
+    event FinalizeEvent(uint256[] maps, uint256 payout);
     event WithdrawEvent(address addr, uint256 payout);
     event CancelEvent();
     event ClearEvent(address addr, uint256 leftOver);
@@ -58,8 +58,8 @@ contract Conference is GroupAdmin {
     constructor (
         string _name,
         uint256 _deposit,
-        uint _limitOfParticipants,
-        uint _coolingPeriod,
+        uint256 _limitOfParticipants,
+        uint256 _coolingPeriod,
         address _owner
     ) public {
         if (_owner != address(0)) {
@@ -152,8 +152,8 @@ contract Conference is GroupAdmin {
         // check the attendance maps
         else {
             Participant storage p = participants[_addr];
-            uint pIndex = p.index - 1;
-            uint map = attendanceMaps[uint(pIndex / 256)];
+            uint256 pIndex = p.index - 1;
+            uint256 map = attendanceMaps[uint256(pIndex / 256)];
             return (0 < (map & (2 ** (pIndex % 256))));
         }
     }
@@ -186,7 +186,7 @@ contract Conference is GroupAdmin {
     */
     function clear() external onlyOwner onlyEnded{
         require(now > endedAt + coolingPeriod, 'still in cooling period');
-        uint leftOver = totalBalance();
+        uint256 leftOver = totalBalance();
         owner.transfer(leftOver);
         emit ClearEvent(owner, leftOver);
     }
@@ -195,7 +195,7 @@ contract Conference is GroupAdmin {
      * @dev Change the capacity of the event. The owner can change it until event is over.
      * @param _limitOfParticipants the number of the capacity of the event.
      */
-    function setLimitOfParticipants(uint _limitOfParticipants) external onlyOwner onlyActive{
+    function setLimitOfParticipants(uint256 _limitOfParticipants) external onlyOwner onlyActive{
         limitOfParticipants = _limitOfParticipants;
     }
 
@@ -211,16 +211,16 @@ contract Conference is GroupAdmin {
      * @dev Mark participants as attended and enable payouts. The attendance cannot be undone.
      * @param _maps The attendance status of participants represented by uint256 values.
      */
-    function finalize(uint[] _maps) external onlyAdmin onlyActive {
-        uint totalBits = _maps.length * 256;
+    function finalize(uint256[] _maps) external onlyAdmin onlyActive {
+        uint256 totalBits = _maps.length * 256;
         require(totalBits >= registered && totalBits - registered < 256, 'incorrect no. of bitmaps provided');
         attendanceMaps = _maps;
         ended = true;
         endedAt = now;
-        uint _totalAttended = 0;
+        uint256 _totalAttended = 0;
         // calculate total attended
-        for (uint i = 0; i < attendanceMaps.length; i++) {
-            uint map = attendanceMaps[i];
+        for (uint256 i = 0; i < attendanceMaps.length; i++) {
+            uint256 map = attendanceMaps[i];
             // brian kerninghan bit-counting method - O(log(n))
             while (map != 0) {
                 map &= (map - 1);
@@ -231,7 +231,7 @@ contract Conference is GroupAdmin {
         totalAttended = _totalAttended < registered ? _totalAttended : registered;
 
         if (totalAttended > 0) {
-            payoutAmount = uint(totalBalance()) / totalAttended;
+            payoutAmount = uint256(totalBalance()) / totalAttended;
         }
 
         emit FinalizeEvent(attendanceMaps, payoutAmount);
