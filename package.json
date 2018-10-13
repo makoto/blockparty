@@ -14,6 +14,7 @@
   ],
   "scripts": {
     "truffle": "babel-node node_modules/.bin/truffle",
+    "deploy:mainnet": "yarn truffle migrate --network mainnet && scripts/local/extractDeployedAddresses.js",
     "deploy:ropsten": "yarn truffle migrate --network ropsten && scripts/local/extractDeployedAddresses.js",
     "deploy:local": "yarn truffle migrate && scripts/local/updateOtherReposWithDeployerAddress.js",
     "cleanup": "yarn truffle networks --clean",

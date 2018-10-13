@@ -148,7 +148,8 @@ Releases are done automatically via CI. Prior to doing a release, ensure the
 latest compiled contracts have been deployed to both `ropsten` and `mainnet`:
 
 ```
-yarn deploy:ropsten
+$ yarn deploy:ropsten
+$ yarn deploy:mainnet
 ```
 
 _Note: ensure `.deployment.js` is accurately setup for the above to work_.

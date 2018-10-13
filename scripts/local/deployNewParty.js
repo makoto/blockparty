@@ -27,6 +27,7 @@ async function init() {
     .usage('[options]')
     .option('-i, --id <id>', 'Id of party (obtain from UI /create page)')
     .option('--ropsten', 'Use Ropsten instead of local development network')
+    .option('--mainnet', 'Use Mainnet instead of local development network')
     .option(
       '--admins <n>',
       'Number of additional party admins to have',
@@ -68,12 +69,13 @@ async function init() {
   const deposit = new EthVal(program.deposit, 'eth')
   const coolingPeriod = program.coolingPeriod
   const ropsten = program.ropsten
+  const mainnet = program.mainnet
 
   console.log(
     `
 Config
 ------
-Network:                ${ropsten ? 'ropsten' : 'development'}
+Network:                ${ropsten ? 'ropsten' : (mainnet ? 'mainnet' : 'development')}
 Party id:               ${id}
 Deposit level:          ${deposit.toFixed(3)} ETH
 Cooling Period:         ${coolingPeriod} seconds
@@ -94,6 +96,9 @@ Payout withdrawals:     ${numWithdrawals}
 
   if (ropsten) {
     provider = networks.ropsten.provider(maxAccountsNeeded)
+  }
+  else if (mainnet) {
+    provider = networks.mainnet.provider(maxAccountsNeeded)
   }
 
   const web3 = new Web3(provider)
