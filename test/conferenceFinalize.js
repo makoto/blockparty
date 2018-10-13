@@ -9,11 +9,6 @@ const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
 const twitterHandle = '@bighero6';
 const gas = 1000000;
 const gasPrice = 1;
-const participantAttributes = ['participantIndex', 'participantName', 'addr', 'attended', 'paid'];
-
-const getParticipantDetail = function(participant, detail){
-  return participant[participantAttributes.indexOf(detail)];
-}
 
 contract('Conference - large party', function(accounts) {
   const owner = accounts[0];
@@ -32,7 +27,7 @@ contract('Conference - large party', function(accounts) {
       conference = await Conference.new('', 0, 500, 0, '0x0');
 
       for (let i = 0; i < numRegistered; ++i) {
-        await conference.register(`p${i}`, {value:deposit, from:accounts[10 + i]});
+        await conference.register({value:deposit, from:accounts[10 + i]});
       }
     })
 
@@ -42,6 +37,10 @@ contract('Conference - large party', function(accounts) {
 
     it('cannot have too many bitmaps', async () => {
       await conference.finalize([1, 1, 1], {from:owner}).should.be.rejected;
+    })
+
+    it('cannot have no bitmaps', async () => {
+      await conference.finalize([], {from:owner}).should.be.rejected;
     })
 
     it('correctly updates attendee records - p1, p2, p256, p257, p298, p299', async function(){
@@ -76,7 +75,7 @@ contract('Conference - large party', function(accounts) {
 
       await conference.totalAttended().should.eventually.eq(6)
 
-      const payout = await conference.payout()
+      const payout = await conference.payoutAmount()
       const expectedPayout = deposit.mul(toBN(numRegistered)).div(toBN(6))
       payout.should.eq(expectedPayout)
       await conference.payoutAmount().should.eventually.eq(payout)
@@ -108,7 +107,7 @@ contract('Conference - large party', function(accounts) {
 
       await conference.totalAttended().should.eventually.eq(1)
 
-      const payout = await conference.payout()
+      const payout = await conference.payoutAmount()
       const expectedPayout = deposit.mul(toBN(numRegistered))
       payout.should.eq(expectedPayout)
       await conference.payoutAmount().should.eventually.eq(payout)
@@ -139,7 +138,7 @@ contract('Conference - large party', function(accounts) {
 
       await conference.totalAttended().should.eventually.eq(1)
 
-      const payout = await conference.payout()
+      const payout = await conference.payoutAmount()
       const expectedPayout = deposit.mul(toBN(numRegistered))
       payout.should.eq(expectedPayout)
       await conference.payoutAmount().should.eventually.eq(payout)
@@ -170,7 +169,7 @@ contract('Conference - large party', function(accounts) {
 
       await conference.totalAttended().should.eventually.eq(2)
 
-      const payout = await conference.payout()
+      const payout = await conference.payoutAmount()
       const expectedPayout = deposit.mul(toBN(numRegistered)).div(toBN(2))
       payout.should.eq(expectedPayout)
       await conference.payoutAmount().should.eventually.eq(payout)
@@ -196,7 +195,7 @@ contract('Conference - large party', function(accounts) {
 
       await conference.totalAttended().should.eventually.eq(0)
 
-      const payout = await conference.payout()
+      const payout = await conference.payoutAmount()
       const expectedPayout = toBN(0)
       payout.should.eq(expectedPayout)
       await conference.payoutAmount().should.eventually.eq(payout)
@@ -226,7 +225,7 @@ contract('Conference - large party', function(accounts) {
 
       await conference.totalAttended().should.eventually.eq(numRegistered)
 
-      const payout = await conference.payout()
+      const payout = await conference.payoutAmount()
       const expectedPayout = deposit
       payout.should.eq(expectedPayout)
       await conference.payoutAmount().should.eventually.eq(payout)

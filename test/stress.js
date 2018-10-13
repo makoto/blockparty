@@ -54,7 +54,7 @@ const reportTest = async function (participants, accounts, finalize){
   deposit = await conference.deposit()
 
   for (var i = 0; i < participants; i++) {
-    var registerTrx = await conference.register('test', {from:accounts[i], value:deposit, gasPrice:gasPrice});
+    var registerTrx = await conference.register({from:accounts[i], value:deposit, gasPrice:gasPrice});
     if ((i % 100) == 0 && i != 0) {
       console.log('register', i)
     }
