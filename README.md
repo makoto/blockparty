@@ -3,7 +3,7 @@
 [![Build Status](https://api.travis-ci.org/noblocknoparty/contracts.svg?branch=master)](https://travis-ci.org/noblocknoparty/contracts)
 [![Coverage Status](https://coveralls.io/repos/github/noblocknoparty/contracts/badge.svg?branch=master)](https://coveralls.io/github/noblocknoparty/contracts?branch=master)
 
-This repo contains all the BlockParty contracts. The `master` branch is the
+This repo contains all the Kickback contracts. The `master` branch is the
 main branch, and contains the productions versions of the contracts.
 
 # Using the contracts
