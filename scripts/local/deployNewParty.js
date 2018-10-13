@@ -17,6 +17,7 @@ const { networks } = require('../../truffle-config.js')
 async function waitTx (promise) {
   const txReceipt = await promise
   if (txReceipt.status !== '0x1') {
+    console.error(JSON.stringify(txReceipt, null, 2))
     throw new Error('transaction failed')
   }
   return txReceipt
