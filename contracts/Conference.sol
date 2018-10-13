@@ -217,18 +217,18 @@ contract Conference is GroupAdmin {
         attendanceMaps = _maps;
         ended = true;
         endedAt = now;
-
+        uint _totalAttended = 0;
         // calculate total attended
         for (uint256 i = 0; i < attendanceMaps.length; i++) {
             uint256 map = attendanceMaps[i];
             // brian kerninghan bit-counting method - O(log(n))
             while (map != 0) {
                 map &= (map - 1);
-                totalAttended++;
+                _totalAttended++;
             }
         }
         // since maps can contain more bits than there are registrants, we cap the value!
-        totalAttended = totalAttended < registered ? totalAttended : registered;
+        totalAttended = _totalAttended < registered ? _totalAttended : registered;
 
         if (totalAttended > 0) {
             payoutAmount = uint(totalBalance()) / totalAttended;
