@@ -25,14 +25,13 @@ module.exports = {
     },
     rinkeby: {
       provider: (num_addresses = 1) => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/${infuraKey}`, 0, num_addresses),
-      network_id: 4,
-      port: 8545,
-      gasPrice: 50000000000 // 50 gwei,
+      gasPrice: 50000000000, // 50 gwei,
+      network_id: 4
     },
     ropsten: {
       provider: (num_addresses = 1) => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/${infuraKey}`, 0, num_addresses),
       gasPrice: 50000000000, // 50 gwei,
-      network_id: 3,
+      network_id: 3
     },
     mainnet: {
       // gas: 5000000,

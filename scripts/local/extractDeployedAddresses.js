@@ -17,6 +17,7 @@ Object.keys(deployedAddresses).forEach(key => {
   switch (key) {
     case '1': // mainnet
     case '3': // ropsten
+    case '4': // rinkeby
       break
     default:
       delete deployedAddresses[key]

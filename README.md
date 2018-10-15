@@ -98,6 +98,8 @@ Options:
 
   -i, --id <id>            Id of party (obtain from UI /create page)
   --ropsten                Use Ropsten instead of local development network
+  --rinkeby                Use Rinkeby instead of local development network
+  --mainnet                Use Mainnet instead of local development network
   --admins <n>             Number of additional party admins to have
   -c, --cancelled          Whether to mark the party as cancelled
   -t, --coolingPeriod [n]  How long the cooling period is in seconds (default: 604800)
@@ -118,14 +120,15 @@ yarn seed:party -i test -p 100  -r 50 -a 25 -w 12 -e -t 1
 ```
 
 The script actually uses `truffle-config.js` to work out how to connect to the
-development network. If you want to seed a party on Ropsten then you can do by
+development network. If you want to seed a party on e.g. Ropsten then you can do by
 supplying the `--ropsten` flag:
 
 ```shell
 yarn seed:party --ropsten -i test -p 100  -r 50 -a 25 -w 12 -e -t 1
 ```
 
-_Note: For Ropsten seeding to work you will need to have configured valid values in `.deployment.js` (see "Deployment to public networks" below)._
+_Note: For public network seeding to work you will need to have
+configured valid values in `.deployment.js` (see "Deployment to public networks" below)._
 
 ## Tests
 
@@ -145,10 +148,11 @@ Now run:
 ## NPM publishing
 
 Releases are done automatically via CI. Prior to doing a release, ensure the
-latest compiled contracts have been deployed to both `ropsten` and `mainnet`:
+latest compiled contracts have been deployed to both test nets and the `mainnet`:
 
 ```
 $ yarn deploy:ropsten
+$ yarn deploy:rinkeby
 $ yarn deploy:mainnet
 ```
 
