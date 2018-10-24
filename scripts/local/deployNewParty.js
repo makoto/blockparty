@@ -200,7 +200,7 @@ Ensuring accounts have enough ETH in them
         throw new Error(`Main account ${owner} does not enough ETH to share with ${accounts[i]}.` )
       }
 
-      console.log(`${accounts[0]} -> ${accounts[1]}: ${rem.toEth().toFixed(4)} ETH`)
+      console.log(`${accounts[0]} -> ${accounts[i]} (${i}): ${rem.toEth().toFixed(4)} ETH`)
 
       await waitTx(web3.eth.sendTransaction({
         from: accounts[0],
@@ -226,7 +226,7 @@ Register extra admins
       numAdmins >= i;
       i += 1
     ) {
-      console.log(accounts[i])
+      console.log(`${accounts[i]} (${i})`)
 
       promises.push(
         waitTx(party.methods
@@ -249,9 +249,7 @@ Register participants
 
     const promises = []
     for (let i = 0; numRegistrations > i; i += 1) {
-      const twitterId = `@${faker.lorem.word(1).toLowerCase()}`
-
-      console.log(accounts[i])
+      console.log(`${accounts[i]} (${i})`)
 
       promises.push(
         waitTx(party.methods.register().send({
@@ -277,7 +275,7 @@ Mark as finalized (${numFinalized} attendees)
     const maps = []
     let currentMap = toBN(0)
     for (let i = 0; numFinalized > i; i += 1) {
-      console.log(accounts[i])
+      console.log(`${accounts[i]} (${i})`)
 
       if (i % 256 === 0) {
         maps.push(toBN(0))
@@ -314,7 +312,7 @@ Withdraw payout - ${payout.toEth().toFixed(4)} ETH
 
     const promises = []
     for (let i = 0; numWithdrawals > i; i += 1) {
-      console.log(accounts[i])
+      console.log(`${accounts[i]} (${i})`)
 
       promises.push(
         waitTx(party.methods.withdraw().send({ from: accounts[i], gas: 200000 }))
