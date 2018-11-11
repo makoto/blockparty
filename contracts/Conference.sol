@@ -25,10 +25,11 @@ contract Conference is GroupAdmin {
     }
 
     event RegisterEvent(address addr, uint256 index);
-    event FinalizeEvent(uint256[] maps, uint256 payout);
+    event FinalizeEvent(uint256[] maps, uint256 payout, uint256 endedAt);
     event WithdrawEvent(address addr, uint256 payout);
-    event CancelEvent();
+    event CancelEvent(uint256 endedAt);
     event ClearEvent(address addr, uint256 leftOver);
+    event UpdateParticipantLimit(uint256 limit);
 
     /* Modifiers */
     modifier onlyActive {
@@ -178,7 +179,7 @@ contract Conference is GroupAdmin {
         cancelled = true;
         ended = true;
         endedAt = now;
-        emit CancelEvent();
+        emit CancelEvent(endedAt);
     }
 
     /**
@@ -197,6 +198,8 @@ contract Conference is GroupAdmin {
      */
     function setLimitOfParticipants(uint256 _limitOfParticipants) external onlyOwner onlyActive{
         limitOfParticipants = _limitOfParticipants;
+
+        emit UpdateParticipantLimit(limitOfParticipants);
     }
 
     /**
@@ -234,6 +237,6 @@ contract Conference is GroupAdmin {
             payoutAmount = uint256(totalBalance()) / totalAttended;
         }
 
-        emit FinalizeEvent(attendanceMaps, payoutAmount);
+        emit FinalizeEvent(attendanceMaps, payoutAmount, endedAt);
     }
 }
