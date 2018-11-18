@@ -1,6 +1,6 @@
 {
   "name": "@wearekickback/contracts",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Kickback smart contracts",
   "main": "index.js",
   "publishConfig": {
@@ -24,7 +24,7 @@
     "cleanup": "yarn truffle networks --clean",
     "seed:party": "scripts/local/deployNewParty.js",
     "prepublishOnly": "yarn truffle compile && yarn cleanup && scripts/local/injectDeployedAddresses.js",
-    "postinstall": "[[ -f .deployment.js ]] || cp .deployment-sample.js .deployment.js",
+    "setup": "[[ -f .deployment.js ]] || cp .deployment-sample.js .deployment.js",
     "lint": "solium --dir ./contracts",
     "test": "yarn truffle migrate --network test && yarn truffle test --network test",
     "coverage": "solidity-coverage",

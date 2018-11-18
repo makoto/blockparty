@@ -54,10 +54,11 @@ Pre-requisites:
 Copy `.deployment-sample.js` to `.deployment.js` and edit the values
 accordingly.
 
-**Install dependencies**
+**Install dependencies and do basic setup**
 
 ```
 yarn
+yarn setup
 ```
 
 Setup parameters for Truffle config:
