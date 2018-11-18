@@ -15,5 +15,6 @@ contract('NPM exports', () => {
     assert.isOk(packageExport.events.AddAdmin.name)
     assert.isOk(packageExport.events.RemoveAdmin.name)
     assert.isOk(packageExport.events.ChangeOwner.name)
+    assert.isOk(packageExport.events.UpdateParticipantLimit.name)
   })
 })
