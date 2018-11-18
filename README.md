@@ -1,7 +1,7 @@
 # Contracts
 
-[![Build Status](https://api.travis-ci.org/noblocknoparty/contracts.svg?branch=master)](https://travis-ci.org/noblocknoparty/contracts)
-[![Coverage Status](https://coveralls.io/repos/github/noblocknoparty/contracts/badge.svg?branch=master)](https://coveralls.io/github/noblocknoparty/contracts?branch=master)
+[![Build Status](https://api.travis-ci.org/wearekickback/contracts.svg?branch=master)](https://travis-ci.org/wearekickback/contracts)
+[![Coverage Status](https://coveralls.io/repos/github/wearekickback/contracts/badge.svg?branch=master)](https://coveralls.io/github/wearekickback/contracts?branch=master)
 
 This repo contains all the Kickback contracts. The `master` branch is the
 main branch, and contains the productions versions of the contracts.
@@ -11,7 +11,7 @@ main branch, and contains the productions versions of the contracts.
 To use these contracts in a Dapp first install our NPM org:
 
 ```
-npm i @noblocknoparty/contracts
+npm i @wearekickback/contracts
 ```
 
 Then, using [truffle-contract](https://github.com/trufflesuite/truffle/tree/develop/packages/truffle-contract) you can import and use the
@@ -21,7 +21,7 @@ Then, using [truffle-contract](https://github.com/trufflesuite/truffle/tree/deve
 const promisify = require('es6-promisify')
 const TruffleContract = require('truffle-contract')
 const Web3 = require('web3')
-const { Deployer } = require('@noblocknoparty/contracts')
+const { Deployer } = require('@wearekickback/contracts')
 
 async init = () => {
   const web3 = new Web3(/* Ropsten or Mainnet HTTP RPC endpoint */)
