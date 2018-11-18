@@ -4,9 +4,8 @@ git:
 node_js: lts/*
 cache: yarn
 install:
-- yarn global add ganache-cli
 - yarn
-- npm install -g npm@6.2.0
+- yarn global add ganache-cli@6.1.8
 before_script:
 - cp .deployment-sample.js .deployment.js
 - ganache-cli --accounts 500 >ganache.log 2>&1 &
