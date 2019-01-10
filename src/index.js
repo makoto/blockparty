@@ -246,13 +246,33 @@ window.onload = function() {
       window.gasPrice = web3.toWei(res.safeLow / 10, 'gwei'); // for some reason the gast price is 10 times more expensive the one displayed on the web page.
     })
     window.eventEmitter = eventEmitter;
-    function action(name, address, args) {
+
+    //Returns the exact amount of gas it takes for an account to call a function + 2000 for unexpected variance
+    function estimateGas(_account, _function) {
+      return new Promise(function(resolve, reject){
+        _function.estimateGas({
+          from: _account
+        }, function(error, data){
+          if(!error){ 
+            resolve(data + 2000);
+          }else{
+            resolve(gas);
+          }
+        })
+      });
+    }
+
+    async function action(name, address, args) {
       var options = {from:address, gas:gas, gasPrice:window.gasPrice }
       eventEmitter.emit('notification', {status:'info', message:'Requested'});
       if (!args) {
         args = [];
       }
       if (name == "register" || name == "registerWithEncryption") {
+        if (name == "register") {
+          //Set gas based on estimate (assuming args[0] is the name string)
+          options.gas = await(estimateGas(address, contract.methods.register(args[0]))):
+        }
         options.value = Math.pow(10,18) / 50; // 0.02 ETH deposit
       }
       args.push(options);
