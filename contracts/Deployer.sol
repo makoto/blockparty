@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
-import './zeppelin/lifecycle/Destructible.sol';
-import './Conference.sol';
+import './lifecycle/Destructible.sol';
+import './Event.sol';
 
 /**
  * This is responsible for deploying a new Party.
@@ -10,10 +10,13 @@ contract Deployer is Destructible {
     /**
      * Notify that a new party has been deployed.
      */
-    event NewParty(
-        address indexed deployedAddress,
-        address indexed deployer
-    );
+    event NewParty(address indexed deployedAddress, address indexed deployer);
+
+    address userPot;
+
+    constructor (address _userPot) public {
+      userPot = _userPot;
+    }
 
     /**
      * Deploy a new contract.
@@ -30,7 +33,8 @@ contract Deployer is Destructible {
     ) external {
         address owner = msg.sender;
 
-        Conference c = new Conference(
+        Event c = new Event(
+          userPot,
           _name,
           _deposit,
           _limitOfParticipants,
@@ -41,10 +45,7 @@ contract Deployer is Destructible {
         emit NewParty(address(c), owner);
     }
 
-    /**
-     * Don't allow arbitrary calls
-     */
-    function () public {
+    function () external {
         revert('no fallback function');
     }
 }
