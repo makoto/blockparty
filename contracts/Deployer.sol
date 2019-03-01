@@ -31,11 +31,11 @@ contract Deployer is Destructible {
         address payable owner = msg.sender;
 
         Conference c = new Conference(
-          _name,
-          _deposit,
-          _limitOfParticipants,
-          _coolingPeriod,
-          owner
+            _name,
+            _deposit,
+            _limitOfParticipants,
+            _coolingPeriod,
+            owner
         );
 
         emit NewParty(address(c), owner);

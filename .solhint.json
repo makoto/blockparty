@@ -1,0 +1,10 @@
+{
+  "extends": "solhint:recommended",
+  "plugins": [],
+  "rules": {
+    "use-forbidden-name": false,
+    "imports-on-top": false,
+    "indentation": ["error", 4],
+    "quotes": ["error", "single"]
+  }
+}
