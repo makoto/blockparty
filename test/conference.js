@@ -110,7 +110,7 @@ contract('Conference', function(accounts) {
     })
 
     it('can set config values', async function(){
-      conference = await Conference.new('Test 1', parseInt(toWei('2', "ether")), 100, 2, '0x0000000000000000000000000000000000000000');
+      conference = await Conference.new('Test 1', toWei('2', 'ether'), 100, 2, '0x0000000000000000000000000000000000000000');
 
       await conference.name().should.eventually.eq('Test 1')
       await conference.deposit().should.eventually.eq(toWei('2', "ether"))
