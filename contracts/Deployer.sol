@@ -28,16 +28,14 @@ contract Deployer is Destructible {
         uint _limitOfParticipants,
         uint _coolingPeriod
     ) external {
-        address payable owner = msg.sender;
-
         Conference c = new Conference(
             _name,
             _deposit,
             _limitOfParticipants,
             _coolingPeriod,
-            owner
+            msg.sender
         );
 
-        emit NewParty(address(c), owner);
+        emit NewParty(address(c), msg.sender);
     }
 }
