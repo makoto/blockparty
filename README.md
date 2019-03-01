@@ -46,7 +46,7 @@ async init = () => {
 
 Pre-requisites:
 
-- [Node 8.11.4+](https://nodejs.org/)
+- [Node 10.4+](https://nodejs.org/)
 - [Yarn](https://yarnpkg.com)
 
 **Setup Truffle config**

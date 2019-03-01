@@ -22,13 +22,13 @@ contract('Conference', function(accounts) {
   let conference, deposit;
 
   beforeEach(async function(){
-    conference = await Conference.new('', 0, 0, 0, '0x0');
+    conference = await Conference.new('', 0, 0, 0, '0x0000000000000000000000000000000000000000');
     deposit = await conference.deposit();
   })
 
   describe('can override owner', function() {
     it('unless given address is empty', async () => {
-      conference = await Conference.new('', 0, 0, 0, '0x0');
+      conference = await Conference.new('', 0, 0, 0, '0x0000000000000000000000000000000000000000');
 
       await conference.owner().should.eventually.eq(owner)
     })
@@ -110,7 +110,7 @@ contract('Conference', function(accounts) {
     })
 
     it('can set config values', async function(){
-      conference = await Conference.new('Test 1', parseInt(toWei('2', "ether")), 100, 2, '0x0');
+      conference = await Conference.new('Test 1', parseInt(toWei('2', "ether")), 100, 2, '0x0000000000000000000000000000000000000000');
 
       await conference.name().should.eventually.eq('Test 1')
       await conference.deposit().should.eventually.eq(toWei('2', "ether"))
@@ -440,13 +440,13 @@ contract('Conference', function(accounts) {
     })
 
     it('cooling period can be set', async function(){
-      conference = await Conference.new('', 0, 0, 10, '0x0');
+      conference = await Conference.new('', 0, 0, 10, '0x0000000000000000000000000000000000000000');
 
       await conference.coolingPeriod().should.eventually.eq(10)
     })
 
     it('cannot be cleared by non owner', async function(){
-      conference = await Conference.new('', 0, 0, 10, '0x0');
+      conference = await Conference.new('', 0, 0, 10, '0x0000000000000000000000000000000000000000');
 
       deposit = await conference.deposit()
 
@@ -482,7 +482,7 @@ contract('Conference', function(accounts) {
     })
 
     it('owner receives the remaining if cooling period is passed', async function(){
-      conference = await Conference.new('', 0, 0, 1, '0x0')
+      conference = await Conference.new('', 0, 0, 1, '0x0000000000000000000000000000000000000000')
       deposit = await conference.deposit()
 
       await conference.register({value:deposit});

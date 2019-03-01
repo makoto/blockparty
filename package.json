@@ -58,15 +58,19 @@
     "moment": "^2.18.1",
     "prompt": "^1.0.0",
     "sol-merger": "^0.1.2",
+    "solc": "^0.5.4",
     "solgraph": "^0.3.2",
-    "solidity-coverage": "^0.5.5",
+    "solidity-coverage": "leapdao/solidity-coverage#94793286a049c4264448ce61cfe7aa5f68c5d977",
     "solium": "^1.1.7",
-    "truffle": "^5.0.0-beta.0",
+    "truffle": "5.0.5",
     "truffle-hdwallet-provider": "^1.0.0-web3one.0",
     "uuid": "^3.0.1",
     "web3": "1.0.0-beta.33",
     "web3-utils": "^1.0.0-beta.36",
     "yargs": "^9.0.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "engines": {
+    "node": ">=10.4.0"
+  }
 }

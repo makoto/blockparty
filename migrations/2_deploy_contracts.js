@@ -30,6 +30,6 @@ module.exports = function(deployer) {
   return deployer.deploy(Deployer)
     .then(() => {
       console.log([name, deposit,limitOfParticipants, coolingPeriod].join(','));
-      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, '0x0');
+      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, '0x0000000000000000000000000000000000000000');
     })
   };
