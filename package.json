@@ -25,7 +25,7 @@
     "seed:party": "scripts/local/deployNewParty.js",
     "prepublishOnly": "yarn truffle compile && yarn cleanup && scripts/local/injectDeployedAddresses.js",
     "setup": "[[ -f .deployment.js ]] || cp .deployment-sample.js .deployment.js",
-    "lint": "solium --dir ./contracts",
+    "lint": "solhint contracts/**/*.sol",
     "test": "yarn truffle migrate --network test && yarn truffle test --network test",
     "coverage": "solidity-coverage",
     "sol-merger": "sol-merger './contracts/*.sol' ./build",
@@ -58,15 +58,19 @@
     "moment": "^2.18.1",
     "prompt": "^1.0.0",
     "sol-merger": "^0.1.2",
+    "solc": "^0.5.4",
     "solgraph": "^0.3.2",
-    "solidity-coverage": "^0.5.5",
-    "solium": "^1.1.7",
-    "truffle": "^5.0.0-beta.0",
+    "solhint": "^2.0.0",
+    "solidity-coverage": "wearekickback/solidity-coverage#leapdao-decoder",
+    "truffle": "5.0.5",
     "truffle-hdwallet-provider": "^1.0.0-web3one.0",
     "uuid": "^3.0.1",
     "web3": "1.0.0-beta.33",
     "web3-utils": "^1.0.0-beta.36",
     "yargs": "^9.0.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "engines": {
+    "node": ">=8.12.0"
+  }
 }

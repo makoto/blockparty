@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.4;
 
 import './lifecycle/Destructible.sol';
 import './Event.sol';
@@ -26,26 +26,20 @@ contract Deployer is Destructible {
      * @param _coolingPeriod The period participants should withdraw their deposit after the event ends. After the cooling period, the event owner can claim the remining deposits.
      */
     function deploy(
-        string _name,
+        string calldata _name,
         uint256 _deposit,
         uint _limitOfParticipants,
         uint _coolingPeriod
     ) external {
-        address owner = msg.sender;
-
         Event c = new Event(
           userPot,
           _name,
           _deposit,
           _limitOfParticipants,
           _coolingPeriod,
-          owner
+          msg.sender
         );
 
-        emit NewParty(address(c), owner);
-    }
-
-    function () external {
-        revert('no fallback function');
+        emit NewParty(address(c), msg.sender);
     }
 }

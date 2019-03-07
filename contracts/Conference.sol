@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity ^0.5.4;
 
 import './GroupAdmin.sol';
 
@@ -20,7 +20,7 @@ contract Conference is GroupAdmin {
 
     struct Participant {
         uint256 index;
-        address addr;
+        address payable addr;
         bool paid;
     }
 
@@ -57,11 +57,11 @@ contract Conference is GroupAdmin {
      * @param _owner Who the owner of this contract should be
      */
     constructor (
-        string _name,
+        string memory _name,
         uint256 _deposit,
         uint256 _limitOfParticipants,
         uint256 _coolingPeriod,
-        address _owner
+        address payable _owner
     ) public {
         if (_owner != address(0)) {
             owner = _owner;
@@ -206,7 +206,7 @@ contract Conference is GroupAdmin {
      * @dev Change the name of the event. The owner can change it as long as no one has registered yet.
      * @param _name the name of the event.
      */
-    function changeName(string _name) external onlyOwner noOneRegistered{
+    function changeName(string calldata _name) external onlyOwner noOneRegistered{
         name = _name;
     }
 
@@ -214,7 +214,7 @@ contract Conference is GroupAdmin {
      * @dev Mark participants as attended and enable payouts. The attendance cannot be undone.
      * @param _maps The attendance status of participants represented by uint256 values.
      */
-    function finalize(uint256[] _maps) external onlyAdmin onlyActive {
+    function finalize(uint256[] calldata _maps) external onlyAdmin onlyActive {
         uint256 totalBits = _maps.length * 256;
         require(totalBits >= registered && totalBits - registered < 256, 'incorrect no. of bitmaps provided');
         attendanceMaps = _maps;

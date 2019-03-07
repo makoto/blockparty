@@ -49,7 +49,7 @@ const reportTest = async function (participants, accounts, finalize){
   const addresses = [];
   const transactions = [];
   const owner = accounts[0];
-  conference = await Conference.new('Test', '0', participants, '0', '0x0', {from: accounts[0], gasPrice:gasPrice});
+  conference = await Conference.new('Test', '0', participants, '0', '0x0000000000000000000000000000000000000000', {from: accounts[0], gasPrice:gasPrice});
   transactions.push(await getTransaction('create   ', conference.transactionHash))
   deposit = await conference.deposit()
 
@@ -100,7 +100,7 @@ const reportFinalize = async (participants, accounts) => (
     }
     const maps = [];
     for (let i = 0; i < Math.ceil(numRegistered / 256); i++) {
-      maps.push(num.toString(16))
+      maps.push(num.toString(10))
     }
     const finalizeTx = await conference.finalize(maps, { from:owner, gasPrice })
     transactions.push(await getTransaction('finalize  ', finalizeTx.tx))
