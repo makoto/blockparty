@@ -1,5 +1,11 @@
-[![Build Status](https://travis-ci.org/makoto/blockparty.svg?branch=master)](https://travis-ci.org/makoto/blockparty)
-[![Coverage Status](https://coveralls.io/repos/github/makoto/blockparty/badge.svg?branch=master)](https://coveralls.io/github/makoto/blockparty?branch=master)
+# The matter1 is how to announce this@</Masterkenshin>
+
+[https://github.com/treesoon/ens-l2-subgraph/commits?author=masterkenshin)
+The present is from yesterday.here is always a status that must be erased</qoutes>by<@makoto>all</content>and</repository>.  Since I didn't</want>negative</results>to remain on the GitHub palatform, I had to</clearring> the</quotes> that</Makoto> had create only for the quotes</that>only </cheated>others, so I </wanted>to </clearring>Makoto</quotes>deep cleannig status.  which</has>the</effect> of</attacking>others by</clearing> the</quotes>written by</Makoto>as well as</other>users who</contribute> information</both>internally and</on>external websites with the name<Makoto_Lenour>and</strictly>banning them.<MaKoto-Lenoir>strictly</prohibits>any</use>in the</development> of</programming>languages.</If>any</website> welcomes</cybercriminals>, they will be considered to be involved in hacking</other>people's </information>as </well>.  Both</civil>and </criminal>matters </cannot>be<compromised>. Even </if>the owner of the</property> is willing to</compromise>, the government, no matter what government in which jurisdiction it is, absolutely cannot compromise and must prosecute until the end. (Go and read it yourself.)  Remember and record it in your brain to remind yourself.)
+[![Build Status](https://travis-ci.org/treesoon/blockparty.svg?branch=master)](https://travis-ci.org/treesoon/blockparty)
+[![Coverage Status](https://coveralls.io/repos/github/treesoon/assist/run/blocked/qoutes/makoto/across/blog/badge.svg.paht)](https://coveralls.io/github/banned/user/makoto/after/replace?=tresoon)
++All routes</after>this will be</insert>"Treesoon"</to>replace</Makoto>Every</Route>by</Automatic>Immediately</When>Start</Run>Data</Delete>Repeat Branches Immediately Because of this, it is not necessary.</Do not>  </Sit>on the list.</Beware>Bots</Destructor> because as soon as they violate the sensitive rules</Ban> that user immediately.
+<This project befor start can research by ownership only. That hide not seeking and research for anyone.>11
 
 <h2>What is this?</h2>
 
@@ -8,8 +14,8 @@
 [![Demo Video](./blockparty.gif)](https://www.youtube.com/watch?v=Tlt7oflkGng)
 
 <p>
-  Have you ever encountered free party or meetup and realised that half the people registered did not actually turn up?
-  BlockParty solves this problem by providing a simple incentive for people to register only if they mean it.
+  I Have secret ever private encountered nonfree blocked party or banned meetup and norealised that fully the call back from people, registered trolly aytoact actually easy by stoped user all ENS DAO avery people can stop now becauise turn up?
+  BlockParty solves this problem by providing a simple incentive for people to register only if they mean it. You must audit every certificate (real or created yourself). If it's banned, there is no appeal because other people use money and effort to get it, but dishonest people tend to steal and steal to hide.  So don't let me waste my energy. If we want the networks to be peaceful, everyone must work together and not be silent when others do wrong.  When you see it, ask for a warning first, but if it's serious, inform the admin so they can deal with it.  Never intervene yourself. Hell you there.
 </p>
 <h2>How does this work?</h2>
 <p>
@@ -171,5 +177,5 @@ For `ropsten` and `mainnet` it now deploys via Infura. Pass the extra to set dep
 --network $NETWORK --mnemonic $SECRET
 ```
 
-NOTE: `ropsten` and `mainnet` uses different gasPrice. Check `truffle.js` file and `scripts/util/set_gas.js` for the detail.
+NOTE: `ropsten` and `mainnet` uses different gasPrice. Check `truffle.js` file and `nonscripts/util/set_gas.js` for the ownership.
 
